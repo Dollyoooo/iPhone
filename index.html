@@ -2,2618 +2,2047 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>SillyTavern助手 · 江窈手机站</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>SmartPhone RP</title>
 <style>
-  :root{
-    --bg:#0b0d12;
-    --bg2:#11141b;
-    --bg3:#171b24;
-    --card:rgba(255,255,255,.06);
-    --card2:rgba(255,255,255,.08);
-    --text:#f5f7fb;
-    --text2:#d8deea;
-    --text3:#9ea8bb;
-    --line:rgba(255,255,255,.08);
-    --line2:rgba(255,255,255,.12);
-    --blue:#2d8cff;
-    --green:#34c759;
-    --orange:#ff9f0a;
-    --pink:#ff5c93;
-    --purple:#8b7cff;
-    --shadow:0 20px 60px rgba(0,0,0,.45);
-    --glass:blur(22px) saturate(180%);
-    --danger:#ff5a5f;
-    --success:#2fd17b;
-  }
-  body.light{
-    --bg:#eef2f8;
-    --bg2:#f7f9fd;
-    --bg3:#ffffff;
-    --card:rgba(255,255,255,.72);
-    --card2:rgba(255,255,255,.92);
-    --text:#10131a;
-    --text2:#293241;
-    --text3:#6d7990;
-    --line:rgba(18,24,40,.08);
-    --line2:rgba(18,24,40,.12);
-    --blue:#007aff;
-    --green:#28c76f;
-    --orange:#ff9500;
-    --pink:#ff477e;
-    --purple:#7068ff;
-    --shadow:0 18px 50px rgba(31,45,61,.15);
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue",Arial,sans-serif;color:var(--text);background:var(--bg);overflow:hidden}
-  body{
-    background:
-      radial-gradient(circle at 15% 20%, rgba(102,114,255,.20), transparent 30%),
-      radial-gradient(circle at 82% 16%, rgba(255,95,148,.16), transparent 28%),
-      radial-gradient(circle at 50% 100%, rgba(45,140,255,.16), transparent 32%),
-      linear-gradient(180deg, #0a0c11, #0f131c 55%, #0a0d12 100%);
-  }
-  body.light{
-    background:
-      radial-gradient(circle at 15% 20%, rgba(102,114,255,.14), transparent 30%),
-      radial-gradient(circle at 82% 16%, rgba(255,95,148,.10), transparent 28%),
-      radial-gradient(circle at 50% 100%, rgba(45,140,255,.10), transparent 32%),
-      linear-gradient(180deg, #eef3fa, #f7f9fd 55%, #edf2f8 100%);
-  }
-  .page-wrap{
-    position:relative;
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:26px 18px;
-  }
-  .site-badge{
-    position:fixed;
-    top:16px;
-    left:16px;
-    z-index:20;
-    padding:10px 14px;
-    border-radius:16px;
-    background:var(--card);
-    backdrop-filter:var(--glass);
-    -webkit-backdrop-filter:var(--glass);
-    border:1px solid var(--line);
-    box-shadow:var(--shadow);
-    color:var(--text2);
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:.2px;
-  }
-  .site-badge small{
-    display:block;
-    margin-top:3px;
-    color:var(--text3);
-    font-weight:500;
-    font-size:11px;
-  }
-  .toolbar{
-    position:fixed;
-    top:16px;
-    right:16px;
-    z-index:20;
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:flex-end;
-    max-width:min(92vw,620px);
-  }
-  .tb-btn,.tb-label,.icon-btn,.mini-btn,.refresh-btn,.tab-btn,.send-btn,.save-btn,.ghost-btn,.danger-btn,.tool-btn{
-    border:none;
-    outline:none;
-    cursor:pointer;
-    font-family:inherit;
-    transition:.18s ease;
-  }
-  .tb-btn,.tb-label{
-    padding:10px 14px;
-    border-radius:16px;
-    background:var(--card);
-    color:var(--text2);
-    border:1px solid var(--line);
-    backdrop-filter:var(--glass);
-    -webkit-backdrop-filter:var(--glass);
-    box-shadow:var(--shadow);
-    font-size:13px;
-    font-weight:700;
-  }
-  .tb-btn:hover,.tb-label:hover,.icon-btn:hover,.mini-btn:hover,.refresh-btn:hover,.tool-btn:hover{transform:translateY(-1px)}
-  .tb-btn:active,.tb-label:active,.icon-btn:active,.mini-btn:active,.refresh-btn:active,.tab-btn:active,.send-btn:active,.save-btn:active,.ghost-btn:active,.danger-btn:active,.tool-btn:active{transform:scale(.97)}
-  .phone-shell{
-    position:relative;
-    width:min(430px, 95vw);
-    height:min(870px, 92vh);
-    border-radius:44px;
-    padding:10px;
-    background:linear-gradient(155deg,#20242d,#12151d 45%,#0b0d12 100%);
-    box-shadow:
-      0 0 0 1.2px rgba(255,255,255,.08),
-      0 0 0 3px rgba(0,0,0,.18),
-      0 40px 100px rgba(0,0,0,.55),
-      inset 0 1px 1px rgba(255,255,255,.08);
-  }
-  body.light .phone-shell{
-    background:linear-gradient(155deg,#cfd7e4,#bfc8d9 45%,#dce3ef 100%);
-    box-shadow:
-      0 0 0 1.2px rgba(0,0,0,.05),
-      0 0 0 3px rgba(255,255,255,.58),
-      0 30px 70px rgba(64,90,125,.18),
-      inset 0 1px 1px rgba(255,255,255,.6);
-  }
-  .phone{
-    position:relative;
-    width:100%;
-    height:100%;
-    border-radius:36px;
-    overflow:hidden;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)),
-      var(--bg2);
-  }
-  .camera-island{
-    position:absolute;
-    top:10px;
-    left:50%;
-    transform:translateX(-50%);
-    width:124px;
-    height:34px;
-    border-radius:22px;
-    background:#000;
-    z-index:15;
-    box-shadow:inset 0 1px 1px rgba(255,255,255,.06);
-  }
-  .statusbar{
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:46px;
-    z-index:14;
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    padding:13px 18px 0;
-    color:var(--text);
-    font-size:14px;
-    font-weight:700;
-    letter-spacing:.2px;
-    pointer-events:none;
-  }
-  .status-right{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    color:var(--text3);
-    font-size:12px;
-    font-weight:600;
-  }
-  .screens{
-    position:absolute;
-    inset:46px 0 78px 0;
-  }
-  .screen{
-    position:absolute;
-    inset:0;
-    display:none;
-    flex-direction:column;
-  }
-  .screen.active{display:flex}
-  .section-header{
-    padding:14px 16px 12px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-shrink:0;
-  }
-  .section-header.border{
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));
-  }
-  .head-main{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    min-width:0;
-    flex:1;
-  }
-  .avatar{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    overflow:hidden;
-    background:linear-gradient(135deg,rgba(98,121,255,.55),rgba(255,90,126,.55));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-shrink:0;
-    color:#fff;
-    font-weight:800;
-    font-size:16px;
-    box-shadow:0 8px 22px rgba(0,0,0,.18);
-  }
-  .avatar.sm{width:28px;height:28px;font-size:12px}
-  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-  .title-group{min-width:0}
-  .title-group .title{
-    font-size:17px;
-    font-weight:800;
-    color:var(--text);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .title-group .sub{
-    margin-top:3px;
-    font-size:11px;
-    color:var(--text3);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .icon-btn,.mini-btn,.refresh-btn,.ghost-btn,.danger-btn,.save-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:14px;
-    background:var(--card);
-    color:var(--text2);
-    border:1px solid var(--line);
-    backdrop-filter:var(--glass);
-    -webkit-backdrop-filter:var(--glass);
-  }
-  .icon-btn{width:38px;height:38px;font-size:16px}
-  .mini-btn{
-    padding:8px 12px;
-    font-size:12px;
-    font-weight:700;
-  }
-  .refresh-btn{
-    height:38px;
-    padding:0 13px;
-    font-size:12px;
-    font-weight:800;
-    color:#fff;
-    background:linear-gradient(135deg,var(--blue),#5d9fff);
-    border:none;
-    box-shadow:0 8px 20px rgba(45,140,255,.28);
-  }
-  .refresh-btn[disabled],.send-btn[disabled],.save-btn[disabled]{opacity:.55;cursor:not-allowed}
-  .scroll{
-    flex:1;
-    overflow:auto;
-    padding:0 16px 16px;
-    scrollbar-width:none;
-  }
-  .scroll::-webkit-scrollbar{display:none}
-  .system-prompt-card{
-    position:sticky;
-    top:0;
-    z-index:8;
-    margin:4px 0 10px;
-    padding:14px;
-    border-radius:22px;
-    background:
-      linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.08)),
-      linear-gradient(135deg, rgba(57,68,92,.95), rgba(36,40,58,.95));
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 10px 26px rgba(0,0,0,.22);
-    cursor:pointer;
-  }
-  body.light .system-prompt-card{
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.88)),
-      linear-gradient(135deg, rgba(221,230,245,.96), rgba(205,216,236,.96));
-    border:1px solid rgba(20,30,48,.08);
-    box-shadow:0 10px 26px rgba(93,112,150,.12);
-  }
-  .sp-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-  }
-  .sp-top strong{
-    font-size:12px;
-    letter-spacing:.4px;
-    color:#fff;
-  }
-  body.light .sp-top strong{color:#152033}
-  .sp-top span{
-    font-size:11px;
-    color:rgba(255,255,255,.72);
-  }
-  body.light .sp-top span{color:#5c6880}
-  .sp-preview{
-    margin-top:8px;
-    font-size:12px;
-    line-height:1.7;
-    color:rgba(255,255,255,.9);
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-    white-space:pre-line;
-  }
-  body.light .sp-preview{color:#1e2a3f}
-  .context-badge{
-    margin:0 0 10px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 11px;
-    border-radius:999px;
-    background:var(--card);
-    border:1px solid var(--line);
-    color:var(--text3);
-    font-size:11px;
-    font-weight:700;
-  }
-  .messages{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    padding-bottom:12px;
-  }
-  .msg-row{
-    display:flex;
-    gap:8px;
-    align-items:flex-end;
-  }
-  .msg-row.self{justify-content:flex-end}
-  .msg-row.system{
-    justify-content:center;
-    align-items:center;
-  }
-  .msg-col{
-    max-width:78%;
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-  }
-  .msg-row.self .msg-col{align-items:flex-end}
-  .msg-meta{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:10px;
-    color:var(--text3);
-    padding:0 2px;
-  }
-  .bubble{
-    position:relative;
-    padding:10px 13px;
-    border-radius:20px;
-    font-size:14px;
-    line-height:1.6;
-    word-break:break-word;
-    white-space:pre-wrap;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-  }
-  .bubble.other{
-    background:var(--bg3);
-    color:var(--text2);
-    border-bottom-left-radius:8px;
-    border:1px solid var(--line);
-  }
-  .bubble.self{
-    background:linear-gradient(135deg,var(--blue),#5d9fff);
-    color:#fff;
-    border-bottom-right-radius:8px;
-  }
-  .msg-edit{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    border:1px solid var(--line);
-    background:var(--card);
-    color:var(--text3);
-    cursor:pointer;
-    font-size:13px;
-    flex-shrink:0;
-  }
-  .system-bubble{
-    max-width:92%;
-    padding:12px 14px;
-    border-radius:18px;
-    background:linear-gradient(135deg, rgba(43,49,69,.96), rgba(27,31,46,.96));
-    color:#eef3ff;
-    border:1px solid rgba(255,255,255,.08);
-    font-size:12px;
-    line-height:1.7;
-    box-shadow:0 8px 24px rgba(0,0,0,.16);
-  }
-  body.light .system-bubble{
-    background:linear-gradient(135deg, rgba(219,228,245,.96), rgba(205,217,237,.96));
-    color:#10203a;
-    border:1px solid rgba(21,33,53,.08);
-  }
-  .image-card{
-    overflow:hidden;
-    border-radius:16px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.08);
-  }
-  body.light .image-card{
-    background:rgba(0,0,0,.03);
-    border:1px solid rgba(0,0,0,.06);
-  }
-  .image-card img{
-    width:100%;
-    display:block;
-    max-height:240px;
-    object-fit:cover;
-  }
-  .image-caption{
-    padding:10px 12px;
-    font-size:12px;
-    color:var(--text3);
-  }
-  .image-placeholder,.sticker-fallback,.voice-card,.rp-card{
-    border-radius:16px;
-    overflow:hidden;
-  }
-  .image-placeholder{
-    padding:16px;
-    background:rgba(255,255,255,.06);
-    border:1px solid var(--line);
-    color:var(--text2);
-    font-size:13px;
-  }
-  .sticker-img{
-    display:block;
-    width:132px;
-    max-width:100%;
-    border-radius:18px;
-  }
-  .sticker-fallback{
-    padding:12px 14px;
-    background:rgba(255,255,255,.06);
-    border:1px solid var(--line);
-    font-size:13px;
-    color:var(--text2);
-  }
-  .voice-card{
-    padding:12px 14px;
-    min-width:170px;
-    background:linear-gradient(135deg, rgba(67,94,255,.22), rgba(45,140,255,.12));
-    border:1px solid rgba(67,94,255,.24);
-  }
-  .voice-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    font-size:12px;
-    color:var(--text2);
-    font-weight:800;
-  }
-  .voice-text{
-    margin-top:7px;
-    font-size:13px;
-    line-height:1.65;
-    color:var(--text2);
-  }
-  .rp-card{
-    min-width:200px;
-    background:linear-gradient(135deg,#ff7a18,#ff3d57);
-    color:#fff;
-    box-shadow:0 10px 26px rgba(255,95,95,.26);
-  }
-  .rp-head{
-    padding:12px 14px 8px;
-    font-size:12px;
-    font-weight:800;
-    opacity:.92;
-  }
-  .rp-body{
-    padding:0 14px 16px;
-  }
-  .rp-amt{
-    font-size:28px;
-    font-weight:900;
-    letter-spacing:.3px;
-  }
-  .rp-note{
-    margin-top:6px;
-    font-size:12px;
-    line-height:1.6;
-    opacity:.95;
-  }
-  .typing{
-    display:flex;
-    gap:6px;
-    padding:12px 14px;
-    border-radius:20px;
-    width:max-content;
-    background:var(--bg3);
-    border:1px solid var(--line);
-  }
-  .typing i{
-    width:7px;height:7px;border-radius:50%;background:var(--text3);display:block;
-    animation:typing 1s infinite ease-in-out;
-  }
-  .typing i:nth-child(2){animation-delay:.12s}
-  .typing i:nth-child(3){animation-delay:.24s}
-  @keyframes typing{
-    0%,80%,100%{transform:translateY(0);opacity:.4}
-    40%{transform:translateY(-4px);opacity:1}
-  }
-  .composer{
-    flex-shrink:0;
-    padding:10px 14px 14px;
-    display:flex;
-    align-items:flex-end;
-    gap:10px;
-    background:linear-gradient(180deg, transparent, rgba(0,0,0,.05));
-  }
-  .plus-btn{
-    width:38px;height:38px;border-radius:50%;
-    border:1px solid var(--line);
-    background:var(--card);
-    color:var(--text2);
-    font-size:22px;font-weight:500;
-    cursor:pointer;
-    flex-shrink:0;
-  }
-  .input-wrap{
-    flex:1;
-    min-height:42px;
-    border-radius:24px;
-    border:1px solid var(--line);
-    background:var(--card);
-    display:flex;
-    align-items:flex-end;
-    padding:10px 12px;
-    backdrop-filter:var(--glass);
-    -webkit-backdrop-filter:var(--glass);
-  }
-  .chat-input{
-    width:100%;
-    min-height:22px;
-    max-height:110px;
-    resize:none;
-    background:transparent;
-    border:none;
-    outline:none;
-    color:var(--text);
-    font-size:14px;
-    line-height:1.6;
-    font-family:inherit;
-  }
-  .chat-input::placeholder{color:var(--text3)}
-  .send-btn{
-    height:42px;
-    padding:0 16px;
-    border-radius:21px;
-    background:linear-gradient(135deg,var(--blue),#5d9fff);
-    color:#fff;
-    font-size:13px;
-    font-weight:800;
-    box-shadow:0 10px 24px rgba(45,140,255,.26);
-  }
-  .hero-card,.feed-card,.forum-card,.wallet-card,.note-card,.browser-card,.setting-block{
-    border-radius:24px;
-    background:var(--card2);
-    border:1px solid var(--line);
-    backdrop-filter:var(--glass);
-    -webkit-backdrop-filter:var(--glass);
-    box-shadow:0 10px 28px rgba(0,0,0,.08);
-  }
-  .hero-card{
-    padding:18px;
-    margin-bottom:14px;
-    background:
-      linear-gradient(135deg, rgba(88,102,255,.22), rgba(255,92,147,.18)),
-      var(--card2);
-  }
-  .hero-top{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:12px;
-  }
-  .hero-sign{
-    margin-top:14px;
-    color:var(--text2);
-    font-size:13px;
-    line-height:1.7;
-  }
-  .feed-list,.forum-list,.note-list,.browser-list,.wallet-list{
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-  }
-  .feed-card,.forum-card,.note-card,.browser-card{padding:16px}
-  .feed-head,.forum-head,.note-head{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:12px;
-  }
-  .name-time{
-    min-width:0;
-    flex:1;
-  }
-  .name-time strong{
-    display:block;
-    font-size:14px;
-    color:var(--text);
-  }
-  .name-time span{
-    display:block;
-    margin-top:3px;
-    font-size:11px;
-    color:var(--text3);
-  }
-  .feed-text,.forum-body,.note-content{
-    white-space:pre-wrap;
-    word-break:break-word;
-    font-size:14px;
-    line-height:1.75;
-    color:var(--text2);
-  }
-  .feed-comments,.forum-replies{
-    margin-top:12px;
-    padding:12px;
-    border-radius:16px;
-    background:rgba(255,255,255,.05);
-    border:1px solid var(--line);
-  }
-  body.light .feed-comments,body.light .forum-replies{
-    background:rgba(0,0,0,.025);
-  }
-  .feed-comments strong,.forum-replies strong{
-    display:block;
-    font-size:11px;
-    color:var(--text3);
-    letter-spacing:.4px;
-    margin-bottom:8px;
-  }
-  .comment-line,.reply-line,.txn-line,.browser-line{
-    font-size:13px;
-    line-height:1.7;
-    color:var(--text2);
-    padding:4px 0;
-    word-break:break-word;
-  }
-  .forum-title{
-    font-size:15px;
-    font-weight:800;
-    color:var(--text);
-    line-height:1.5;
-    margin-bottom:10px;
-  }
-  .wallet-card{
-    padding:20px;
-    background:
-      linear-gradient(135deg, rgba(36,42,68,.98), rgba(18,22,36,.98)),
-      var(--card2);
-    border-color:rgba(255,255,255,.08);
-  }
-  body.light .wallet-card{
-    background:
-      linear-gradient(135deg, rgba(242,245,252,.98), rgba(228,235,247,.98)),
-      var(--card2);
-    border-color:rgba(0,0,0,.06);
-  }
-  .wallet-top{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:12px;
-  }
-  .wallet-label{
-    font-size:12px;
-    color:rgba(255,255,255,.62);
-    font-weight:700;
-    letter-spacing:.4px;
-  }
-  body.light .wallet-label{color:#546074}
-  .wallet-balance{
-    margin-top:8px;
-    font-size:34px;
-    font-weight:900;
-    color:#fff;
-    letter-spacing:.5px;
-  }
-  body.light .wallet-balance{color:#10131a}
-  .wallet-eye{
-    width:34px;height:34px;border-radius:50%;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.06);
-    color:#fff;
-  }
-  body.light .wallet-eye{
-    border:1px solid rgba(0,0,0,.06);
-    background:rgba(0,0,0,.03);
-    color:#10131a;
-  }
-  .wallet-sub{
-    margin-top:14px;
-    padding-top:14px;
-    border-top:1px solid rgba(255,255,255,.08);
-    color:rgba(255,255,255,.72);
-    font-size:12px;
-  }
-  body.light .wallet-sub{
-    border-top:1px solid rgba(0,0,0,.06);
-    color:#5d6a80;
-  }
-  .wallet-list{margin-top:14px}
-  .txn-item,.browser-item{
-    padding:14px 16px;
-    border-radius:18px;
-    background:var(--card2);
-    border:1px solid var(--line);
-  }
-  .browser-search{
-    margin-bottom:14px;
-    padding:12px 14px;
-    border-radius:16px;
-    background:var(--card);
-    border:1px solid var(--line);
-    color:var(--text3);
-    font-size:13px;
-  }
-  .empty{
-    text-align:center;
-    color:var(--text3);
-    padding:28px 16px;
-    font-size:13px;
-    line-height:1.7;
-  }
-  .tabbar{
-    position:absolute;
-    left:12px;
-    right:12px;
-    bottom:12px;
-    height:58px;
-    border-radius:24px;
-    background:rgba(20,24,34,.62);
-    border:1px solid rgba(255,255,255,.08);
-    backdrop-filter:var(--glass);
-    -webkit-backdrop-filter:var(--glass);
-    display:flex;
-    align-items:center;
-    justify-content:space-around;
-    z-index:10;
-    box-shadow:0 16px 40px rgba(0,0,0,.18);
-  }
-  body.light .tabbar{
-    background:rgba(255,255,255,.72);
-    border:1px solid rgba(0,0,0,.06);
-  }
-  .tab-btn{
-    flex:1;
-    height:100%;
-    background:transparent;
-    color:var(--text3);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:3px;
-    font-size:11px;
-    font-weight:700;
-  }
-  .tab-btn .ico{
-    font-size:18px;
-    line-height:1;
-  }
-  .tab-btn.active{color:var(--blue)}
-  .modal,.sheet{
-    position:fixed;
-    inset:0;
-    z-index:40;
-    display:none;
-    background:rgba(5,8,14,.48);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
-    padding:18px;
-  }
-  .modal.show,.sheet.show{display:flex}
-  .modal{align-items:center;justify-content:center}
-  .sheet{align-items:flex-end;justify-content:center}
-  .modal-card,.sheet-card{
-    width:min(960px, 100%);
-    max-height:min(88vh, 920px);
-    overflow:auto;
-    border-radius:30px;
-    background:var(--bg2);
-    border:1px solid var(--line);
-    box-shadow:var(--shadow);
-  }
-  .sheet-card{
-    width:min(560px, 100%);
-    max-height:72vh;
-    border-radius:28px 28px 18px 18px;
-  }
-  .modal-head,.sheet-head{
-    position:sticky;
-    top:0;
-    z-index:2;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:18px 18px 14px;
-    background:linear-gradient(180deg, var(--bg2) 70%, rgba(0,0,0,0));
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-  }
-  .modal-head strong,.sheet-head strong{
-    font-size:18px;
-    color:var(--text);
-  }
-  .modal-body{
-    padding:0 18px 18px;
-  }
-  .setting-block{
-    padding:16px;
-    margin-bottom:14px;
-  }
-  .setting-block h3{
-    margin:0 0 12px;
-    font-size:14px;
-    color:var(--text);
-  }
-  .grid-2,.grid-3{
-    display:grid;
-    gap:12px;
-  }
-  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .field{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  .field label{
-    font-size:12px;
-    color:var(--text3);
-    font-weight:700;
-  }
-  .field input,.field textarea,.field select{
-    width:100%;
-    border:none;
-    outline:none;
-    border-radius:16px;
-    padding:12px 14px;
-    background:var(--card);
-    border:1px solid var(--line);
-    color:var(--text);
-    font-size:14px;
-    font-family:inherit;
-  }
-  .field textarea{
-    min-height:110px;
-    resize:vertical;
-    line-height:1.7;
-  }
-  .inline{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
-  }
-  .checkbox{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:10px 12px;
-    border-radius:14px;
-    background:var(--card);
-    border:1px solid var(--line);
-    color:var(--text2);
-    font-size:13px;
-    font-weight:700;
-  }
-  .checkbox input{accent-color:var(--blue)}
-  .modal-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    padding-top:4px;
-  }
-  .save-btn{
-    padding:12px 16px;
-    font-size:13px;
-    font-weight:800;
-    color:#fff;
-    background:linear-gradient(135deg,var(--blue),#5d9fff);
-    border:none;
-  }
-  .ghost-btn{
-    padding:12px 16px;
-    font-size:13px;
-    font-weight:800;
-    color:var(--text2);
-    background:var(--card);
-    border:1px solid var(--line);
-  }
-  .danger-btn{
-    padding:12px 16px;
-    font-size:13px;
-    font-weight:800;
-    color:#fff;
-    background:linear-gradient(135deg,#ff6a6f,#ff4d58);
-    border:none;
-  }
-  .memory-list,.sticker-manage,.sticker-grid,.tool-grid{
-    display:grid;
-    gap:10px;
-  }
-  .memory-item,.sticker-item{
-    border-radius:18px;
-    padding:12px;
-    background:var(--card);
-    border:1px solid var(--line);
-  }
-  .memory-item strong{
-    display:block;
-    font-size:12px;
-    color:var(--text2);
-    margin-bottom:6px;
-  }
-  .memory-item p{
-    margin:0;
-    white-space:pre-wrap;
-    line-height:1.7;
-    font-size:12px;
-    color:var(--text3);
-  }
-  .memory-actions,.sticker-actions{
-    display:flex;
-    gap:8px;
-    margin-top:10px;
-  }
-  .sticker-manage{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .sticker-item img{
-    width:100%;
-    aspect-ratio:1/1;
-    object-fit:cover;
-    border-radius:18px;
-    display:block;
-    background:rgba(255,255,255,.05);
-  }
-  .sticker-item strong{
-    display:block;
-    margin-top:10px;
-    font-size:13px;
-    color:var(--text);
-  }
-  .sticker-grid{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    padding:0 18px 18px;
-  }
-  .sticker-pick{
-    padding:10px;
-    border-radius:22px;
-    border:1px solid var(--line);
-    background:var(--card);
-    cursor:pointer;
-  }
-  .sticker-pick img{
-    width:100%;
-    aspect-ratio:1/1;
-    object-fit:cover;
-    display:block;
-    border-radius:18px;
-  }
-  .sticker-pick span{
-    display:block;
-    margin-top:8px;
-    text-align:center;
-    font-size:12px;
-    color:var(--text2);
-    font-weight:700;
-  }
-  .tool-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    padding:0 18px 18px;
-  }
-  .tool-btn{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    min-height:112px;
-    border-radius:24px;
-    background:var(--card);
-    border:1px solid var(--line);
-    color:var(--text2);
-    font-size:13px;
-    font-weight:800;
-  }
-  .tool-btn .ico{
-    font-size:28px;
-  }
-  .editor-help{
-    margin-top:8px;
-    font-size:12px;
-    color:var(--text3);
-    line-height:1.6;
-  }
-  .toast{
-    position:fixed;
-    left:50%;
-    bottom:104px;
-    transform:translateX(-50%) translateY(14px);
-    z-index:80;
-    opacity:0;
-    pointer-events:none;
-    transition:.24s ease;
-    padding:12px 16px;
-    border-radius:16px;
-    max-width:min(88vw,520px);
-    background:rgba(12,16,24,.9);
-    color:#fff;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:var(--shadow);
-    font-size:13px;
-    line-height:1.6;
-  }
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .muted{
-    color:var(--text3);
-    font-size:12px;
-    line-height:1.7;
-  }
-  .hr{
-    height:1px;
-    background:var(--line);
-    margin:14px 0;
-  }
-  @media (max-width:680px){
-    .site-badge{display:none}
-    .toolbar{left:10px;right:10px;top:auto;bottom:18px;justify-content:center;z-index:18}
-    .tb-btn,.tb-label{padding:9px 12px;font-size:12px}
-    .page-wrap{padding:10px}
-    .phone-shell{height:100%;max-height:none;width:min(430px,100%)}
-    .grid-2,.grid-3,.sticker-manage{grid-template-columns:1fr}
-    .sticker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--pw:375px;--ph:720px;--pr:46px;--bz:9px}
+body{font-family:-apple-system,'SF Pro Display','SF Pro Text','PingFang SC','Helvetica Neue',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#111;user-select:none;-webkit-user-select:none}
+
+/* Phone Frame */
+.phone-frame{position:relative;width:var(--pw);height:var(--ph);border-radius:var(--pr);background:linear-gradient(145deg,#2a2a2a,#1a1a1a);padding:var(--bz);box-shadow:0 0 0 1.5px #444,0 0 0 3px #1a1a1a,0 24px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
+.frame-btn-l1{position:absolute;left:-3px;top:100px;width:3px;height:26px;background:linear-gradient(90deg,#2a2a2a,#3a3a3a);border-radius:2px 0 0 2px}
+.frame-btn-l2{position:absolute;left:-3px;top:140px;width:3px;height:46px;background:linear-gradient(90deg,#2a2a2a,#3a3a3a);border-radius:2px 0 0 2px}
+.frame-btn-l3{position:absolute;left:-3px;top:196px;width:3px;height:46px;background:linear-gradient(90deg,#2a2a2a,#3a3a3a);border-radius:2px 0 0 2px}
+.frame-btn-r{position:absolute;right:-3px;top:155px;width:3px;height:60px;background:linear-gradient(270deg,#2a2a2a,#3a3a3a);border-radius:0 2px 2px 0}
+
+/* Screen & Theme */
+.screen{position:relative;width:100%;height:100%;border-radius:calc(var(--pr) - var(--bz));overflow:hidden;background:var(--bg);transition:background .35s ease;font-size:14px;line-height:1.5}
+.screen{--bg:#000;--bg2:#0c0c0c;--bg3:#1c1c1e;--card:rgba(255,255,255,.04);--card2:rgba(255,255,255,.07);--fg:#fff;--fg2:#e5e5ea;--fg3:#8e8e93;--fg4:rgba(255,255,255,.5);--sep:rgba(255,255,255,.06);--acc:#0a84ff;--acc2:rgba(10,132,255,.15);--glass:rgba(28,28,30,.82);--glass2:rgba(44,44,46,.6);--bubble-other:#2c2c2e;--bubble-self:#0a84ff;--danger:#ff453a;--success:#30d158;--warn:#ff9f0a}
+.screen.light{--bg:#f2f2f7;--bg2:#fff;--bg3:#e5e5ea;--card:rgba(0,0,0,.03);--card2:rgba(0,0,0,.05);--fg:#000;--fg2:#1c1c1e;--fg3:#8e8e93;--fg4:rgba(0,0,0,.4);--sep:rgba(0,0,0,.08);--acc:#007aff;--acc2:rgba(0,122,255,.1);--glass:rgba(255,255,255,.82);--glass2:rgba(245,245,247,.7);--bubble-other:#e9e9eb;--bubble-self:#007aff;--danger:#ff3b30;--success:#34c759;--warn:#ff9500}
+
+/* Status Bar */
+.status-bar{position:absolute;top:0;left:0;right:0;height:48px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;z-index:500;color:var(--fg);font-size:15px;font-weight:600;letter-spacing:.3px;pointer-events:none}
+.status-bar-r{display:flex;align-items:center;gap:5px}
+.status-bar-r svg{width:16px;height:16px;fill:currentColor}
+.batt{width:24px;height:11px;border:1.8px solid currentColor;border-radius:3.5px;position:relative;padding:1.5px}
+.batt::after{content:'';position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:1.8px;height:5px;background:currentColor;border-radius:0 1.5px 1.5px 0}
+.batt-in{width:68%;height:100%;background:currentColor;border-radius:1.5px}
+
+/* Dynamic Island */
+.di{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:17px;z-index:600;cursor:pointer;overflow:hidden;border:.5px solid rgba(255,255,255,.06);transition:all .45s cubic-bezier(.4,0,.2,1)}
+.di:not(.exp):hover{transform:translateX(-50%) scale(1.04)}
+.di.exp{width:calc(var(--pw) - var(--bz)*2 - 28px);height:180px;border-radius:26px;top:9px}
+.di-pill{display:flex;align-items:center;justify-content:center;height:34px;gap:6px;transition:opacity .2s}
+.di.exp .di-pill{opacity:0;pointer-events:none;height:0}
+.di-dot{width:8px;height:8px;background:radial-gradient(circle,#1a1a2e,#050510);border-radius:50%}
+.mini-eq{display:none;align-items:flex-end;gap:1.5px;height:10px}
+.mini-eq.on{display:flex}
+.mini-eq i{display:block;width:2px;background:#fff;border-radius:1px;height:3px}
+.mini-eq.on i{animation:meqA .45s ease-in-out infinite alternate}
+.mini-eq.on i:nth-child(2){animation-delay:.12s}
+.mini-eq.on i:nth-child(3){animation-delay:.25s}
+@keyframes meqA{0%{height:2px}100%{height:10px}}
+
+/* Player Panel */
+.player-panel{display:none;flex-direction:column;padding:14px 18px 10px;height:100%}
+.di.exp .player-panel{display:flex}
+.player-top{display:flex;align-items:center;gap:12px;flex:1}
+.vinyl{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle,#1a1a1a 0%,#111 35%,#0d0d0d 60%,#1a1a1a 61%,#111 100%);flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(0,0,0,.5);position:relative;border:.5px solid rgba(255,255,255,.08)}
+.vinyl::after{content:'';width:8px;height:8px;border-radius:50%;background:#0a0a0a;border:.5px solid rgba(255,255,255,.08);position:absolute}
+.vinyl.spin{animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.player-info{flex:1;min-width:0}
+.player-name{color:#fff;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-artist{color:rgba(255,255,255,.4);font-size:10px;margin-top:2px}
+.eq-bars{display:flex;align-items:flex-end;gap:2px;height:18px;margin-left:auto}
+.eq-bars i{display:block;width:3px;background:#fff;border-radius:1.5px;height:3px;transition:height .3s}
+.eq-bars.on i{animation:eqA .5s ease-in-out infinite alternate}
+.eq-bars.on i:nth-child(2){animation-delay:.1s}
+.eq-bars.on i:nth-child(3){animation-delay:.22s}
+.eq-bars.on i:nth-child(4){animation-delay:.07s}
+@keyframes eqA{0%{height:3px}100%{height:18px}}
+.player-progress{height:3px;background:rgba(255,255,255,.15);border-radius:3px;margin:10px 0 8px;overflow:hidden}
+.player-progress-fill{width:0%;height:100%;background:#fff;border-radius:3px;transition:width .3s linear}
+.player-controls{display:flex;align-items:center;justify-content:center;gap:22px}
+.p-btn{background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center}
+.p-btn:active{transform:scale(.82);transition:transform .08s}
+.p-btn svg{width:20px;height:20px;fill:#fff}
+.p-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.1);border-radius:50%}
+.p-btn.play-pause svg{width:15px;height:15px}
+.di-overlay{display:none;position:absolute;inset:0;z-index:550}
+.di-overlay.on{display:block}
+
+/* Common */
+.scroller{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroller::-webkit-scrollbar{display:none}
+.page{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;background:var(--bg);transition:background .35s}
+.page.active{display:flex}
+.glass-bar{background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(40px);backdrop-filter:saturate(180%) blur(40px)}
+.icon-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s}
+.icon-btn:active{background:var(--card2);transform:scale(.9)}
+.icon-btn svg{width:20px;height:20px;fill:var(--fg3)}
+.section-title{font-size:11px;font-weight:600;color:var(--fg4);letter-spacing:.5px;text-transform:uppercase;padding:16px 16px 8px;display:flex;align-items:center;gap:4px}
+
+/* Theme Toggle */
+.theme-toggle{position:absolute;bottom:86px;right:14px;z-index:400;width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(120,120,128,.22);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .3s}
+.theme-toggle:active{transform:scale(.84)}
+.theme-toggle svg{width:15px;height:15px;fill:var(--fg);transition:fill .3s}
+
+/* ===== HOME ===== */
+.pg-home{background:#000!important}
+.home-bg{position:absolute;inset:0;z-index:0}
+.home-bg img{width:100%;height:100%;object-fit:cover}
+.home-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.1) 60%,rgba(0,0,0,.45) 100%)}
+.home-content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;padding-top:50px}
+.home-clock{text-align:center;padding:4px 0 0}
+.home-clock-time{font-size:58px;font-weight:200;color:#fff;letter-spacing:.5px;line-height:1;text-shadow:0 2px 20px rgba(0,0,0,.3)}
+.home-clock-date{font-size:11px;color:rgba(255,255,255,.7);margin-top:4px;font-weight:400;letter-spacing:.3px}
+.home-apps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 0;padding:28px 26px 0}
+.home-app{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:transform .15s}
+.home-app:active{transform:scale(.82)}
+.app-icon{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+.app-icon svg{width:24px;height:24px;fill:#fff}
+.app-icon.ic-msg{background:linear-gradient(135deg,#34c759,#30d158)}
+.app-icon.ic-moments{background:linear-gradient(135deg,#ff6b6b,#ee5a24)}
+.app-icon.ic-forum{background:linear-gradient(135deg,#5e5ce6,#6c63ff)}
+.app-icon.ic-wallet{background:linear-gradient(135deg,#1c1c1e,#2c2c2e);border:.5px solid rgba(255,255,255,.08)}
+.app-icon.ic-diary{background:linear-gradient(135deg,#ff9f0a,#f7971e)}
+.app-icon.ic-browser{background:linear-gradient(135deg,#0a84ff,#007aff)}
+.app-icon.ic-settings{background:linear-gradient(135deg,#636366,#8e8e93)}
+.app-icon.ic-album{background:linear-gradient(135deg,#af52de,#bf5af2)}
+.app-label{font-size:10px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.55);font-weight:400}
+
+/* Dock */
+.dock{position:absolute;bottom:0;left:0;right:0;z-index:400;padding:0 12px 8px}
+.dock-inner{height:54px;border-radius:22px;display:flex;align-items:center;justify-content:space-around;padding:0 6px;border:.5px solid rgba(255,255,255,.04);transition:background .3s,border-color .3s}
+.screen.light .dock-inner{border-color:rgba(0,0,0,.04)}
+.dock-tab{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;background:none;border:none;padding:4px 8px 3px;transition:transform .1s;position:relative}
+.dock-tab:active{transform:scale(.85)}
+.dock-tab svg{width:21px;height:21px;fill:rgba(255,255,255,.5);transition:fill .2s}
+.dock-tab span{font-size:9px;color:rgba(255,255,255,.5);transition:color .2s;font-weight:500}
+.screen.light .dock-tab svg{fill:rgba(0,0,0,.35)}
+.screen.light .dock-tab span{color:rgba(0,0,0,.35)}
+.dock-tab.active svg{fill:var(--acc)}
+.dock-tab.active span{color:var(--acc)}
+.dock-badge{position:absolute;top:0;right:4px;min-width:16px;height:16px;background:var(--danger);color:#fff;font-size:10px;font-weight:600;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 4px;line-height:1}
+.dock-badge.show{display:flex}
+.home-indicator{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:100px;height:4px;background:rgba(255,255,255,.15);border-radius:99px;z-index:401}
+.screen.light .home-indicator{background:rgba(0,0,0,.15)}
+
+/* ===== CONTACTS ===== */
+.contacts-header{padding:50px 18px 12px;display:flex;align-items:center;justify-content:space-between}
+.contacts-title{font-size:28px;font-weight:700;color:var(--fg);letter-spacing:-.3px}
+.contacts-actions{display:flex;gap:4px}
+.contact-list{padding:0 16px 80px}
+.contact-item{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:background .15s;border-radius:12px}
+.contact-item:active{background:var(--card2)}
+.contact-avatar{width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.contact-avatar img{width:100%;height:100%;object-fit:cover}
+.contact-avatar.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--acc),#5856d6);color:#fff;font-size:18px;font-weight:600}
+.contact-info{flex:1;min-width:0}
+.contact-name{font-size:15px;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.contact-preview{font-size:13px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.contact-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.contact-time{font-size:11px;color:var(--fg3)}
+.contact-unread{width:18px;height:18px;background:var(--acc);color:#fff;font-size:10px;font-weight:600;border-radius:50%;display:none;align-items:center;justify-content:center}
+.contact-unread.show{display:flex}
+.contacts-empty{text-align:center;padding:60px 20px;color:var(--fg3);font-size:14px;line-height:2}
+.contacts-empty svg{width:48px;height:48px;fill:var(--fg3);opacity:.4;margin-bottom:12px}
+
+/* ===== CHAT ===== */
+.chat-header{position:sticky;top:0;z-index:10;padding:44px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:.5px solid var(--sep)}
+.chat-header-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.chat-header-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-header-avatar.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--acc),#5856d6);color:#fff;font-size:14px;font-weight:600}
+.chat-header-info{flex:1;min-width:0}
+.chat-header-name{font-size:15px;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-header-status{font-size:11px;color:var(--fg3)}
+.chat-messages{padding:12px 14px 8px;display:flex;flex-direction:column;gap:3px;min-height:100%}
+.msg-time-divider{text-align:center;font-size:11px;color:var(--fg3);padding:12px 0 6px;font-weight:400}
+.msg-bubble-wrap{display:flex;flex-direction:column;max-width:78%;cursor:pointer;transition:opacity .15s}
+.msg-bubble-wrap:active{opacity:.7}
+.msg-bubble-wrap.self{align-self:flex-end;align-items:flex-end}
+.msg-bubble-wrap.other{align-self:flex-start;align-items:flex-start}
+.msg-sender{font-size:11px;color:var(--fg3);margin-bottom:2px;padding:0 4px}
+.msg-bubble{padding:8px 13px;font-size:14px;line-height:1.55;word-break:break-word;white-space:pre-wrap;position:relative}
+.msg-bubble-wrap.other .msg-bubble{background:var(--bubble-other);color:var(--fg2);border-radius:18px 18px 18px 6px}
+.msg-bubble-wrap.self .msg-bubble{background:var(--bubble-self);color:#fff;border-radius:18px 18px 6px 18px;box-shadow:0 2px 8px var(--acc2)}
+.msg-bubble img{max-width:100%;border-radius:10px;margin:4px 0}
+.msg-notification{align-self:center;max-width:88%;background:var(--card2);border-radius:12px;padding:10px 14px;margin:8px 0;cursor:pointer;transition:background .2s;border:.5px solid var(--sep)}
+.msg-notification:active{background:var(--card)}
+.msg-notification-title{font-size:12px;font-weight:600;color:var(--acc);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.msg-notification-title svg{width:14px;height:14px;fill:var(--acc)}
+.msg-notification-body{font-size:13px;color:var(--fg2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chat-input-area{flex-shrink:0;border-top:.5px solid var(--sep);padding:6px 10px 28px;display:flex;align-items:flex-end;gap:8px;background:var(--bg);transition:background .35s}
+.chat-input-plus{width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--card2);flex-shrink:0;margin-bottom:3px;transition:transform .2s}
+.chat-input-plus:active{transform:scale(.88)}
+.chat-input-plus svg{width:16px;height:16px;fill:var(--fg3)}
+.chat-input-wrap{flex:1;display:flex;align-items:flex-end;min-height:34px;border-radius:18px;border:1px solid var(--sep);padding:4px 12px;background:var(--card);transition:border-color .2s}
+.chat-input-wrap:focus-within{border-color:var(--acc)}
+.chat-input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--fg);font-family:inherit;resize:none;max-height:100px;line-height:1.5;padding:2px 0}
+.chat-input::placeholder{color:var(--fg4)}
+.chat-send-btn{width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--acc);flex-shrink:0;margin-bottom:3px;transition:transform .15s,opacity .15s;opacity:0;pointer-events:none}
+.chat-send-btn.show{opacity:1;pointer-events:auto}
+.chat-send-btn:active{transform:scale(.85)}
+.chat-send-btn svg{width:16px;height:16px;fill:#fff}
+.chat-loading{align-self:flex-start;padding:8px 16px;display:none;align-items:center;gap:6px}
+.chat-loading.show{display:flex}
+.chat-loading-dot{width:6px;height:6px;background:var(--fg3);border-radius:50%;animation:loadDot 1.2s ease-in-out infinite}
+.chat-loading-dot:nth-child(2){animation-delay:.2s}
+.chat-loading-dot:nth-child(3){animation-delay:.4s}
+@keyframes loadDot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* Plus Menu */
+.plus-menu{display:none;padding:8px 12px 4px;border-top:.5px solid var(--sep);background:var(--bg)}
+.plus-menu.show{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.plus-menu-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:6px;border-radius:10px;transition:background .15s}
+.plus-menu-item:active{background:var(--card2)}
+.plus-menu-item .pm-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--card2)}
+.plus-menu-item .pm-icon svg{width:22px;height:22px;fill:var(--fg3)}
+.plus-menu-item span{font-size:10px;color:var(--fg3);font-weight:500}
+
+/* Sticker Panel */
+.sticker-panel{display:none;height:200px;border-top:.5px solid var(--sep);background:var(--bg2);flex-direction:column}
+.sticker-panel.show{display:flex}
+.sticker-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:.5px solid var(--sep)}
+.sticker-header span{font-size:12px;font-weight:600;color:var(--fg3)}
+.sticker-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 12px}
+.sticker-item{aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;background:var(--card);display:flex;align-items:center;justify-content:center;transition:transform .1s}
+.sticker-item:active{transform:scale(.9)}
+.sticker-item img{width:100%;height:100%;object-fit:cover}
+.sticker-add{border:2px dashed var(--sep);display:flex;align-items:center;justify-content:center}
+.sticker-add svg{width:24px;height:24px;fill:var(--fg4)}
+
+/* ===== MOMENTS ===== */
+.moments-header{padding:50px 18px 12px;display:flex;align-items:center;justify-content:space-between}
+.moments-title{font-size:28px;font-weight:700;color:var(--fg);letter-spacing:-.3px}
+.moments-feed{padding:0 0 80px}
+.moment-card{padding:14px 16px;border-bottom:.5px solid var(--sep)}
+.moment-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.moment-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.moment-avatar img{width:100%;height:100%;object-fit:cover}
+.moment-avatar.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--acc),#5856d6);color:#fff;font-size:16px;font-weight:600}
+.moment-author{flex:1}
+.moment-author-name{font-size:14px;font-weight:600;color:var(--acc)}
+.moment-author-time{font-size:11px;color:var(--fg3);margin-top:1px}
+.moment-actions-btn{display:flex;gap:2px}
+.moment-content{font-size:14px;color:var(--fg2);line-height:1.8;white-space:pre-wrap;word-break:break-word;margin-bottom:8px;cursor:pointer;transition:opacity .15s}
+.moment-content:active{opacity:.6}
+.moment-images{display:grid;gap:4px;margin-bottom:8px;border-radius:10px;overflow:hidden}
+.moment-images.cols-1{grid-template-columns:1fr;max-width:200px}
+.moment-images.cols-2{grid-template-columns:1fr 1fr}
+.moment-images.cols-3{grid-template-columns:1fr 1fr 1fr}
+.moment-images img{width:100%;aspect-ratio:1;object-fit:cover}
+.moment-stats{display:flex;align-items:center;gap:16px;padding:6px 0}
+.moment-stat{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--fg3);cursor:pointer}
+.moment-stat svg{width:16px;height:16px;fill:var(--fg3)}
+.moment-stat:active svg{fill:var(--acc)}
+.moment-comments{background:var(--card);border-radius:10px;padding:8px 12px;margin-top:6px}
+.moment-comment{font-size:13px;color:var(--fg2);line-height:1.7;padding:3px 0;cursor:pointer;transition:opacity .15s}
+.moment-comment:active{opacity:.6}
+.moment-comment-author{color:var(--acc);font-weight:600}
+.moment-empty{text-align:center;padding:60px 20px;color:var(--fg3);font-size:14px}
+
+/* ===== FORUM ===== */
+.forum-header{padding:50px 18px 12px;display:flex;align-items:center;justify-content:space-between}
+.forum-title{font-size:28px;font-weight:700;color:var(--fg);letter-spacing:-.3px}
+.forum-feed{padding:0 0 80px}
+.forum-post{padding:14px 16px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:background .15s}
+.forum-post:active{background:var(--card)}
+.forum-post-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.forum-post-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.forum-post-avatar img{width:100%;height:100%;object-fit:cover}
+.forum-post-avatar.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#5e5ce6,#6c63ff);color:#fff;font-size:14px;font-weight:600}
+.forum-post-author{font-size:13px;font-weight:600;color:var(--fg)}
+.forum-post-time{font-size:11px;color:var(--fg3);margin-left:auto}
+.forum-post-tag{font-size:10px;font-weight:600;color:#ff6b00;background:rgba(255,107,0,.1);padding:2px 6px;border-radius:4px;margin-left:6px}
+.forum-post-content{font-size:14px;color:var(--fg2);line-height:1.75;white-space:pre-wrap;word-break:break-word;margin-bottom:8px}
+.forum-post-stats{display:flex;gap:16px}
+.forum-post-stat{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--fg3)}
+.forum-post-stat svg{width:15px;height:15px;fill:var(--fg3)}
+
+/* Forum Detail */
+.forum-detail-header{padding:44px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:.5px solid var(--sep)}
+.forum-detail-title{font-size:15px;font-weight:600;color:var(--fg);flex:1}
+.forum-detail-body{padding:14px 16px}
+.forum-detail-op{padding-bottom:14px;border-bottom:.5px solid var(--sep);margin-bottom:14px}
+.forum-detail-op .forum-post-content{cursor:pointer}
+.forum-detail-op .forum-post-content:active{opacity:.6}
+.forum-reply{padding:10px 0;border-bottom:.5px solid var(--sep)}
+.forum-reply:last-child{border-bottom:none}
+.forum-reply-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.forum-reply-avatar{width:28px;height:28px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.forum-reply-avatar img{width:100%;height:100%;object-fit:cover}
+.forum-reply-avatar.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#5e5ce6,#6c63ff);color:#fff;font-size:11px;font-weight:600}
+.forum-reply-author{font-size:12px;font-weight:600;color:var(--acc)}
+.forum-reply-time{font-size:10px;color:var(--fg3);margin-left:auto}
+.forum-reply-floor{font-size:10px;color:var(--fg4);margin-left:4px}
+.forum-reply-content{font-size:13px;color:var(--fg2);line-height:1.7;white-space:pre-wrap;word-break:break-word;padding-left:36px;cursor:pointer}
+.forum-reply-content:active{opacity:.6}
+.forum-input-bar{flex-shrink:0;padding:6px 10px 28px;display:flex;align-items:center;gap:8px;border-top:.5px solid var(--sep);background:var(--bg)}
+.forum-input-wrap{flex:1;display:flex;align-items:center;height:34px;border-radius:18px;border:1px solid var(--sep);padding:0 12px;background:var(--card)}
+.forum-input{flex:1;background:none;border:none;outline:none;font-size:13px;color:var(--fg);font-family:inherit}
+.forum-input::placeholder{color:var(--fg4)}
+
+/* ===== WALLET ===== */
+.wallet-header{padding:44px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:.5px solid var(--sep)}
+.wallet-header-title{font-size:15px;font-weight:600;color:var(--fg);flex:1;text-align:center}
+.wallet-card{margin:16px;border-radius:18px;padding:24px 22px;background:linear-gradient(135deg,#2a2a2e,#1c1c1e,#0a0a0c);box-shadow:0 6px 26px rgba(0,0,0,.4)}
+.screen.light .wallet-card{background:linear-gradient(135deg,#f5f5f7,#e8e8ea);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.wallet-label{font-size:11px;color:var(--fg4);font-weight:500;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.wallet-amount{font-size:34px;font-weight:500;color:var(--fg);letter-spacing:1px;margin-top:6px}
+.wallet-amount::before{content:'\xA5';font-size:22px;font-weight:400;margin-right:3px;opacity:.7}
+.wallet-txn-list{padding:0 16px 80px}
+.wallet-txn-item{padding:12px 0;border-bottom:.5px solid var(--sep);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.wallet-txn-item:active{opacity:.6}
+.wallet-txn-desc{font-size:14px;color:var(--fg2)}
+.wallet-txn-amount{font-size:14px;font-weight:600}
+.wallet-txn-amount.income{color:var(--success)}
+.wallet-txn-amount.expense{color:var(--fg2)}
+.wallet-txn-time{font-size:11px;color:var(--fg3);margin-top:2px}
+.wallet-bar{flex-shrink:0;display:flex;align-items:center;justify-content:space-around;padding:8px 18px 28px;border-top:.5px solid var(--sep)}
+.wallet-bar-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer}
+.wallet-bar-ico{width:40px;height:40px;border-radius:50%;background:var(--fg);display:flex;align-items:center;justify-content:center}
+.wallet-bar-ico svg{width:18px;height:18px;fill:var(--bg)}
+.wallet-bar-btn span{font-size:10px;color:var(--fg3);font-weight:500}
+
+/* ===== DIARY ===== */
+.diary-header{padding:44px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:.5px solid var(--sep)}
+.diary-header-title{font-size:15px;font-weight:600;color:var(--fg);flex:1;text-align:center}
+.diary-list{padding:12px 16px 80px}
+.diary-entry{padding:14px 0;border-bottom:.5px solid var(--sep);cursor:pointer;transition:opacity .15s}
+.diary-entry:active{opacity:.6}
+.diary-entry-date{font-size:12px;font-weight:600;color:var(--acc);margin-bottom:4px}
+.diary-entry-content{font-size:14px;color:var(--fg2);line-height:1.8;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.diary-empty{text-align:center;padding:60px 20px;color:var(--fg3);font-size:14px}
+
+/* ===== BROWSER ===== */
+.browser-header{padding:44px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:.5px solid var(--sep)}
+.browser-header-title{font-size:15px;font-weight:600;color:var(--fg);flex:1;text-align:center}
+.browser-search{margin:14px 14px 0;height:38px;border-radius:10px;background:var(--card);display:flex;align-items:center;padding:0 12px;gap:6px;border:.5px solid var(--sep)}
+.browser-search svg{width:14px;height:14px;fill:var(--fg3);flex-shrink:0}
+.browser-search span{font-size:14px;color:var(--fg4)}
+.browser-list{padding:12px 16px 80px}
+.browser-item{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:opacity .15s}
+.browser-item:active{opacity:.6}
+.browser-item svg{width:16px;height:16px;fill:var(--fg3);flex-shrink:0}
+.browser-item-text{flex:1;font-size:14px;color:var(--fg2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.browser-empty{text-align:center;padding:60px 20px;color:var(--fg3);font-size:14px}
+
+/* ===== SETTINGS ===== */
+.settings-header{padding:50px 18px 12px}
+.settings-title{font-size:28px;font-weight:700;color:var(--fg);letter-spacing:-.3px}
+.settings-scroll{padding:0 0 80px}
+.settings-group{margin:12px 16px 0;background:var(--bg2);border-radius:14px;overflow:hidden;border:.5px solid var(--sep)}
+.screen.light .settings-group{background:var(--bg2)}
+.settings-group-title{padding:14px 16px 6px;font-size:11px;font-weight:600;color:var(--fg4);letter-spacing:.5px;text-transform:uppercase;background:none}
+.settings-row{display:flex;align-items:center;padding:12px 16px;border-bottom:.5px solid var(--sep);gap:10px}
+.settings-row:last-child{border-bottom:none}
+.settings-row label{font-size:14px;color:var(--fg);flex-shrink:0;min-width:65px}
+.settings-row input[type="text"],.settings-row input[type="password"],.settings-row input[type="number"],.settings-row select{flex:1;background:var(--card);border:1px solid var(--sep);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--fg);font-family:inherit;outline:none;transition:border-color .2s}
+.settings-row input:focus,.settings-row select:focus{border-color:var(--acc)}
+.settings-row select{-webkit-appearance:none;appearance:none}
+.settings-row textarea{flex:1;background:var(--card);border:1px solid var(--sep);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--fg);font-family:inherit;outline:none;resize:vertical;min-height:60px;line-height:1.6;transition:border-color .2s}
+.settings-row textarea:focus{border-color:var(--acc)}
+.settings-toggle{position:relative;width:48px;height:28px;border-radius:14px;background:var(--bg3);cursor:pointer;transition:background .25s;flex-shrink:0}
+.settings-toggle.on{background:var(--success)}
+.settings-toggle::after{content:'';position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .25s}
+.settings-toggle.on::after{transform:translateX(20px)}
+.settings-btn{display:block;width:calc(100% - 32px);margin:12px 16px;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.settings-btn:active{opacity:.7}
+.settings-btn.primary{background:var(--acc);color:#fff}
+.settings-btn.danger{background:var(--danger);color:#fff}
+.settings-btn.secondary{background:var(--card2);color:var(--fg)}
+
+/* Character List in Settings */
+.char-list{padding:0 16px}
+.char-item{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:background .15s}
+.char-item:active{background:var(--card2)}
+.char-item-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.char-item-avatar img{width:100%;height:100%;object-fit:cover}
+.char-item-avatar.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--acc),#5856d6);color:#fff;font-size:16px;font-weight:600}
+.char-item-name{flex:1;font-size:14px;font-weight:500;color:var(--fg)}
+.char-item-del{color:var(--danger);font-size:12px;font-weight:500;padding:4px 8px;border-radius:6px;background:rgba(255,69,58,.1)}
+
+/* ===== MODALS ===== */
+.modal-overlay{display:none;position:absolute;inset:0;z-index:800;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-sheet{width:100%;max-height:85%;background:var(--bg2);border-radius:20px 20px 0 0;overflow:hidden;display:flex;flex-direction:column;animation:modalSlideUp .3s ease}
+@keyframes modalSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-sheet-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:.5px solid var(--sep);flex-shrink:0}
+.modal-sheet-title{font-size:16px;font-weight:600;color:var(--fg)}
+.modal-sheet-close{font-size:14px;color:var(--acc);font-weight:500;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px 8px}
+.modal-sheet-body{flex:1;overflow-y:auto;padding:8px 0}
+.modal-sheet-body .settings-row{padding:10px 18px}
+.modal-sheet-body .settings-row label{min-width:60px}
+.modal-sheet-body textarea{min-height:80px}
+
+/* Edit Modal */
+.edit-modal-content{padding:14px 18px}
+.edit-textarea{width:100%;background:var(--card);border:1px solid var(--sep);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--fg);font-family:inherit;outline:none;resize:vertical;min-height:100px;line-height:1.7}
+.edit-textarea:focus{border-color:var(--acc)}
+.edit-save-btn{width:100%;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;background:var(--acc);color:#fff;margin-top:12px}
+
+/* FAB */
+.fab{position:absolute;bottom:76px;right:16px;z-index:300;width:44px;height:44px;border-radius:50%;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px var(--acc2);transition:transform .15s}
+.fab:active{transform:scale(.88)}
+.fab svg{width:22px;height:22px;fill:#fff}
+.fab-menu{position:absolute;bottom:76px;right:16px;z-index:310;display:none;flex-direction:column;gap:6px;align-items:flex-end}
+.fab-menu.show{display:flex}
+.fab-menu-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 14px;border-radius:12px;transition:background .15s}
+.fab-menu-item:active{background:var(--card2)}
+.fab-menu-item span{font-size:13px;font-weight:500;color:#fff;white-space:nowrap;background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);padding:4px 12px;border-radius:8px}
+.fab-menu-item .fab-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.fab-menu-item .fab-icon svg{width:18px;height:18px;fill:#fff}
+.fab-menu-item:nth-child(1) .fab-icon{background:var(--acc)}
+.fab-menu-item:nth-child(2) .fab-icon{background:#5856d6}
+.fab-menu-item:nth-child(3) .fab-icon{background:var(--success)}
+.fab-menu-item:nth-child(4) .fab-icon{background:var(--warn)}
+
+/* Loading Overlay */
+.loading-overlay{display:none;position:absolute;inset:0;z-index:900;background:rgba(0,0,0,.3);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+.loading-overlay.show{display:flex}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--sep);border-top-color:var(--acc);border-radius:50%;animation:spinLoader .8s linear infinite}
+@keyframes spinLoader{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{position:absolute;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:999;padding:8px 18px;border-radius:10px;font-size:13px;font-weight:500;color:#fff;opacity:0;transition:all .3s ease;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--success)}
+.toast.error{background:var(--danger)}
+.toast.info{background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+
+/* Select Menu (for character selection) */
+.select-menu{position:absolute;bottom:76px;left:16px;right:16px;z-index:320;display:none;flex-direction:column;background:var(--bg2);border-radius:14px;overflow:hidden;border:.5px solid var(--sep);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.select-menu.show{display:flex}
+.select-menu-header{padding:12px 16px;font-size:13px;font-weight:600;color:var(--fg3);border-bottom:.5px solid var(--sep)}
+.select-menu-item{padding:12px 16px;font-size:14px;color:var(--fg);border-bottom:.5px solid var(--sep);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s}
+.select-menu-item:last-child{border-bottom:none}
+.select-menu-item:active{background:var(--card2)}
+.select-menu-item .sel-ava{width:30px;height:30px;border-radius:50%;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.select-menu-item .sel-ava img{width:100%;height:100%;object-fit:cover}
+.select-menu-item .sel-ava.no-img{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--acc),#5856d6);color:#fff;font-size:12px;font-weight:600}
 </style>
 </head>
-<body class="dark">
-  <div class="site-badge">
-    SillyTavern助手
-    <small>独立站 · iOS26 风格 · 多区块联动</small>
+<body>
+
+<div class="phone-frame">
+<div class="frame-btn-l1"></div><div class="frame-btn-l2"></div><div class="frame-btn-l3"></div><div class="frame-btn-r"></div>
+<div class="screen" id="screen">
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span id="statusTime">9:41</span>
+  <div class="status-bar-r">
+    <svg viewBox="0 0 20 16" width="15" height="11"><rect x="0" y="12" width="3.2" height="4" rx=".7" fill="currentColor"/><rect x="4.8" y="8" width="3.2" height="8" rx=".7" fill="currentColor"/><rect x="9.6" y="4" width="3.2" height="12" rx=".7" fill="currentColor"/><rect x="14.4" y="0" width="3.2" height="16" rx=".7" fill="currentColor"/></svg>
+    <svg viewBox="0 0 24 24" width="13" height="13"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+    <div class="batt"><div class="batt-in"></div></div>
   </div>
+</div>
 
-  <div class="toolbar">
-    <button class="tb-btn" id="themeBtn">🌙 主题</button>
-    <button class="tb-btn" id="openSettingsBtn">⚙️ 设置</button>
-    <button class="tb-btn" id="exportBtn">⬇️ 导出</button>
-    <label class="tb-label">⬆️ 导入<input type="file" id="importFile" accept=".json" hidden></label>
+<!-- Dynamic Island -->
+<div class="di-overlay" id="diOverlay"></div>
+<div class="di" id="di">
+  <div class="di-pill">
+    <div class="di-dot"></div>
+    <div class="mini-eq" id="miniEq"><i></i><i></i><i></i></div>
   </div>
+  <div class="player-panel">
+    <div class="player-top">
+      <div class="vinyl" id="vinyl"></div>
+      <div class="player-info">
+        <div class="player-name" id="playerName">未在播放</div>
+        <div class="player-artist" id="playerArtist">轻触播放</div>
+      </div>
+      <div class="eq-bars" id="eqBars"><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="player-progress"><div class="player-progress-fill" id="playerProgress"></div></div>
+    <div class="player-controls">
+      <button class="p-btn" id="btnPrev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button class="p-btn play-pause" id="btnPlay"><svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="p-btn" id="btnNext"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+    </div>
+  </div>
+</div>
 
-  <div class="page-wrap">
-    <div class="phone-shell">
-      <div class="phone">
-        <div class="camera-island"></div>
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle">
+  <svg viewBox="0 0 24 24" id="themeIcon"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a4.882 4.882 0 01-4.4 2.26 5.4 5.4 0 01-5.4-5.4c0-1.82.89-3.42 2.26-4.4A9.06 9.06 0 0012 3z"/></svg>
+</button>
 
-        <div class="statusbar">
-          <div id="clockText">09:41</div>
-          <div class="status-right">
-            <span id="onlineText">在线</span>
-            <span id="apiText">未连接API</span>
-          </div>
-        </div>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
-        <div class="screens">
-          <!-- 聊天 -->
-          <section class="screen active" data-screen="chat">
-            <div class="section-header">
-              <div class="head-main">
-                <div class="avatar" id="chatRoleAvatar"></div>
-                <div class="title-group">
-                  <div class="title" id="chatRoleRemark">江窈</div>
-                  <div class="sub" id="chatRoleSub">角色名 · 在线</div>
-                </div>
-              </div>
-              <button class="icon-btn" id="chatSettingsBtn">⚙️</button>
-            </div>
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner"></div></div>
 
-            <div class="scroll" id="chatScroll">
-              <div class="system-prompt-card" id="systemPromptCard">
-                <div class="sp-top">
-                  <strong>系统提示词</strong>
-                  <span>点击编辑</span>
-                </div>
-                <div class="sp-preview" id="systemPromptPreview"></div>
-              </div>
-              <div class="context-badge" id="contextBadge">上下文：自动最近30楼</div>
-              <div class="messages" id="messageList"></div>
-            </div>
+<!-- ===== PAGES ===== -->
 
-            <div class="composer">
-              <button class="plus-btn" id="plusBtn">＋</button>
-              <div class="input-wrap">
-                <textarea class="chat-input" id="chatInput" placeholder="发消息给角色…（Enter发送，Shift+Enter换行）"></textarea>
-              </div>
-              <button class="send-btn" id="sendBtn">发送</button>
-            </div>
-          </section>
-
-          <!-- 朋友圈 -->
-          <section class="screen" data-screen="moments">
-            <div class="section-header border">
-              <div class="head-main">
-                <div class="title-group">
-                  <div class="title">朋友圈</div>
-                  <div class="sub">朋友圈与评论区统一刷新</div>
-                </div>
-              </div>
-              <button class="refresh-btn" id="refreshMomentsBtn">刷新</button>
-            </div>
-            <div class="scroll" id="momentsScroll">
-              <div class="hero-card">
-                <div class="hero-top">
-                  <div class="head-main" style="gap:12px">
-                    <div class="avatar" id="momentsRoleAvatar"></div>
-                    <div class="title-group">
-                      <div class="title" id="momentsRoleName">江窈</div>
-                      <div class="sub" id="momentsRoleSignature">循环的圆 不循环的缘</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="hero-sign" id="momentsHeroText">角色的动态会同步显示在这里。</div>
-              </div>
-              <div class="feed-list" id="momentsList"></div>
-            </div>
-          </section>
-
-          <!-- 论坛 -->
-          <section class="screen" data-screen="forum">
-            <div class="section-header border">
-              <div class="head-main">
-                <div class="title-group">
-                  <div class="title">论坛</div>
-                  <div class="sub">帖子与回帖统一刷新</div>
-                </div>
-              </div>
-              <button class="refresh-btn" id="refreshForumBtn">刷新</button>
-            </div>
-            <div class="scroll">
-              <div class="forum-list" id="forumList"></div>
-            </div>
-          </section>
-
-          <!-- 钱包 -->
-          <section class="screen" data-screen="wallet">
-            <div class="section-header border">
-              <div class="head-main">
-                <div class="title-group">
-                  <div class="title">钱包</div>
-                  <div class="sub">余额与交易记录</div>
-                </div>
-              </div>
-              <button class="refresh-btn" id="refreshWalletBtn">刷新</button>
-            </div>
-            <div class="scroll">
-              <div class="wallet-card">
-                <div class="wallet-top">
-                  <div>
-                    <div class="wallet-label">可用余额</div>
-                    <div class="wallet-balance" id="walletBalance">¥520.00</div>
-                  </div>
-                  <button class="wallet-eye icon-btn" id="walletEyeBtn">👁</button>
-                </div>
-                <div class="wallet-sub">最近交易记录</div>
-              </div>
-              <div class="wallet-list" id="walletList" style="margin-top:14px"></div>
-            </div>
-          </section>
-
-          <!-- 日记 -->
-          <section class="screen" data-screen="diary">
-            <div class="section-header border">
-              <div class="head-main">
-                <div class="title-group">
-                  <div class="title">日记</div>
-                  <div class="sub">角色私密记录 / 可由聊天联动</div>
-                </div>
-              </div>
-              <button class="refresh-btn" id="refreshDiaryBtn">刷新</button>
-            </div>
-            <div class="scroll">
-              <div class="note-list" id="diaryList"></div>
-            </div>
-          </section>
-
-          <!-- 浏览器 -->
-          <section class="screen" data-screen="browser">
-            <div class="section-header border">
-              <div class="head-main">
-                <div class="title-group">
-                  <div class="title">浏览器</div>
-                  <div class="sub">最近搜索 / 浏览记录</div>
-                </div>
-              </div>
-              <button class="refresh-btn" id="refreshBrowserBtn">刷新</button>
-            </div>
-            <div class="scroll">
-              <div class="browser-search">🔎 搜索或输入网址</div>
-              <div class="browser-list" id="browserList"></div>
-            </div>
-          </section>
-        </div>
-
-        <nav class="tabbar">
-          <button class="tab-btn active" data-go="chat"><span class="ico">✉️</span><span>聊天</span></button>
-          <button class="tab-btn" data-go="moments"><span class="ico">🌸</span><span>动态</span></button>
-          <button class="tab-btn" data-go="forum"><span class="ico">📋</span><span>论坛</span></button>
-          <button class="tab-btn" data-go="wallet"><span class="ico">💴</span><span>钱包</span></button>
-          <button class="tab-btn" data-go="diary"><span class="ico">📝</span><span>日记</span></button>
-          <button class="tab-btn" data-go="browser"><span class="ico">🌐</span><span>浏览器</span></button>
-        </nav>
+<!-- HOME -->
+<div class="page pg-home active" id="pgHome">
+  <div class="home-bg">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231a1a2e'/%3E%3Cstop offset='50%25' stop-color='%2316213e'/%3E%3Cstop offset='100%25' stop-color='%230f3460'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g)' width='400' height='800'/%3E%3C/svg%3E" alt="">
+  </div>
+  <div class="home-content">
+    <div class="home-clock">
+      <div class="home-clock-time" id="homeClock">9:41</div>
+      <div class="home-clock-date" id="homeDate"></div>
+    </div>
+    <div class="home-apps">
+      <div class="home-app" data-page="contacts">
+        <div class="app-icon ic-msg"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
+        <div class="app-label">消息</div>
+      </div>
+      <div class="home-app" data-page="moments">
+        <div class="app-icon ic-moments"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+        <div class="app-label">动态</div>
+      </div>
+      <div class="home-app" data-page="forum">
+        <div class="app-icon ic-forum"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9v-2h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg></div>
+        <div class="app-label">论坛</div>
+      </div>
+      <div class="home-app" data-page="wallet">
+        <div class="app-icon ic-wallet"><svg viewBox="0 0 24 24"><path d="M21 18v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1h-9a2 2 0 00-2 2v8a2 2 0 002 2h9zm-9-2h10V8H12v8zm4-2.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"/></svg></div>
+        <div class="app-label">钱包</div>
+      </div>
+      <div class="home-app" data-page="diary">
+        <div class="app-icon ic-diary"><svg viewBox="0 0 24 24"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/></svg></div>
+        <div class="app-label">日记</div>
+      </div>
+      <div class="home-app" data-page="browser">
+        <div class="app-icon ic-browser"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+        <div class="app-label">浏览器</div>
+      </div>
+      <div class="home-app" data-page="settings">
+        <div class="app-icon ic-settings"><svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.63-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.63.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.63.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.63-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.611 3.611 0 0112 15.6z"/></svg></div>
+        <div class="app-label">设置</div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- 设置 -->
-  <div class="modal" id="settingsModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <strong>设置</strong>
-        <button class="icon-btn" data-close="settingsModal">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="setting-block">
-          <h3>API 配置</h3>
-          <div class="grid-3">
-            <div class="field">
-              <label>Base URL</label>
-              <input id="sBaseUrl" placeholder="如 https://api.openai.com/v1" />
-            </div>
-            <div class="field">
-              <label>Model</label>
-              <input id="sModel" placeholder="如 gpt-4o-mini" />
-            </div>
-            <div class="field">
-              <label>API Key</label>
-              <input id="sApiKey" placeholder="sk-..." type="password" />
-            </div>
-          </div>
-          <div class="grid-2" style="margin-top:12px">
-            <div class="field">
-              <label>Temperature</label>
-              <input id="sTemp" type="number" step="0.1" min="0" max="2" />
-            </div>
-            <div class="field">
-              <label>Max Tokens</label>
-              <input id="sMaxTokens" type="number" min="100" max="4000" />
-            </div>
-          </div>
-          <div class="editor-help">公开网页不要把 key 写死源码。建议运行时在设置里填写，本地保存到浏览器。</div>
-        </div>
+<!-- CONTACTS -->
+<div class="page" id="pgContacts">
+  <div class="contacts-header">
+    <div class="contacts-title">消息</div>
+    <div class="contacts-actions">
+      <button class="icon-btn" onclick="showNewChatSelect()"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+    </div>
+  </div>
+  <div class="scroller">
+    <div class="contact-list" id="contactList"></div>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>角色 / 显示</h3>
-          <div class="grid-2">
-            <div class="field">
-              <label>角色名</label>
-              <input id="sRoleName" />
-            </div>
-            <div class="field">
-              <label>备注</label>
-              <input id="sRemark" />
-            </div>
-            <div class="field">
-              <label>用户名字</label>
-              <input id="sUserName" />
-            </div>
-            <div class="field">
-              <label>手机号</label>
-              <input id="sPhone" />
-            </div>
-            <div class="field">
-              <label>在线状态文案</label>
-              <input id="sStatus" placeholder="在线 / 忙碌 / 输入中..." />
-            </div>
-            <div class="field">
-              <label>个签 / 顶部文案</label>
-              <input id="sSignature" />
-            </div>
-          </div>
-          <div class="inline" style="margin-top:12px">
-            <button class="ghost-btn" id="uploadUserAvatarBtn">上传用户头像</button>
-            <button class="ghost-btn" id="uploadRoleAvatarBtn">上传角色头像</button>
-          </div>
-        </div>
+<!-- CHAT -->
+<div class="page" id="pgChat">
+  <div class="chat-header glass-bar">
+    <button class="icon-btn" onclick="navigateTo('contacts')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+    <div class="chat-header-avatar" id="chatAvatar"></div>
+    <div class="chat-header-info">
+      <div class="chat-header-name" id="chatName"></div>
+      <div class="chat-header-status">在线</div>
+    </div>
+    <button class="icon-btn" onclick="openChatSettings()"><svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
+  </div>
+  <div class="scroller" id="chatScroller">
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-loading" id="chatLoading">
+      <div class="chat-loading-dot"></div>
+      <div class="chat-loading-dot"></div>
+      <div class="chat-loading-dot"></div>
+    </div>
+  </div>
+  <div class="plus-menu" id="plusMenu"></div>
+  <div class="sticker-panel" id="stickerPanel">
+    <div class="sticker-header">
+      <span>表情包</span>
+      <button class="icon-btn" onclick="toggleStickerPanel(false)" style="padding:2px"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="sticker-grid" id="stickerGrid"></div>
+  </div>
+  <div class="chat-input-area">
+    <button class="chat-input-plus" onclick="togglePlusMenu()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+    <div class="chat-input-wrap">
+      <textarea class="chat-input" id="chatInput" placeholder="消息" rows="1" oninput="autoResizeInput(this)"></textarea>
+    </div>
+    <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>聊天 / 上下文 / 记忆</h3>
-          <div class="grid-3">
-            <div class="field">
-              <label>一次输出多少条消息</label>
-              <input id="sChatBatch" type="number" min="1" max="8" />
-            </div>
-            <div class="field">
-              <label>上下文起始楼层</label>
-              <input id="sContextFrom" type="number" min="1" placeholder="留空=自动最近30楼" />
-            </div>
-            <div class="field">
-              <label>上下文结束楼层</label>
-              <input id="sContextTo" type="number" min="1" placeholder="留空=当前最新楼" />
-            </div>
-          </div>
-          <div class="inline" style="margin-top:12px">
-            <label class="checkbox"><input type="checkbox" id="sEnableMemory" />启用记忆自动总结</label>
-            <label class="checkbox"><input type="checkbox" id="sAutoSyncNotice" />区块联动后同步插入聊天系统卡片</label>
-          </div>
-          <div class="grid-2" style="margin-top:12px">
-            <div class="field">
-              <label>多少楼自动总结一次</label>
-              <input id="sMemoryEvery" type="number" min="2" max="100" />
-            </div>
-            <div class="field">
-              <label>当前可见上下文说明</label>
-              <input id="sContextLabel" disabled />
-            </div>
-          </div>
-        </div>
+<!-- MOMENTS -->
+<div class="page" id="pgMoments">
+  <div class="moments-header">
+    <div class="moments-title">动态</div>
+    <button class="icon-btn" onclick="toggleMomentsFab()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+  </div>
+  <div class="scroller">
+    <div class="moments-feed" id="momentsFeed"></div>
+  </div>
+  <div class="fab-menu" id="momentsFabMenu">
+    <div class="fab-menu-item" onclick="momentAction('myPost')"><span>我要发动态</span><div class="fab-icon"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg></div></div>
+    <div class="fab-menu-item" onclick="momentAction('charPost')"><span>角色发动态</span><div class="fab-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div></div>
+    <div class="fab-menu-item" onclick="momentAction('refreshComments')"><span>刷新评论</span><div class="fab-icon"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div></div>
+  </div>
+  <div class="select-menu" id="momentsCharSelect"></div>
+</div>
 
-        <div class="setting-block">
-          <h3>功能开关</h3>
-          <div class="inline">
-            <label class="checkbox"><input type="checkbox" id="sEnableSticker" />表情包</label>
-            <label class="checkbox"><input type="checkbox" id="sEnableImage" />图片</label>
-            <label class="checkbox"><input type="checkbox" id="sEnableVoice" />语音</label>
-            <label class="checkbox"><input type="checkbox" id="sEnableRedPacket" />红包</label>
-          </div>
-        </div>
+<!-- FORUM -->
+<div class="page" id="pgForum">
+  <div class="forum-header">
+    <div class="forum-title">论坛</div>
+    <button class="icon-btn" onclick="toggleForumFab()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+  </div>
+  <div class="scroller">
+    <div class="forum-feed" id="forumFeed"></div>
+  </div>
+  <div class="fab-menu" id="forumFabMenu">
+    <div class="fab-menu-item" onclick="forumAction('myPost')"><span>我要发帖</span><div class="fab-icon"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg></div></div>
+    <div class="fab-menu-item" onclick="forumAction('charPost')"><span>角色发帖</span><div class="fab-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div></div>
+    <div class="fab-menu-item" onclick="forumAction('refreshReplies')"><span>刷新回帖</span><div class="fab-icon"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div></div>
+  </div>
+  <div class="select-menu" id="forumCharSelect"></div>
+</div>
 
-        <div class="setting-block">
-          <h3>系统提示词</h3>
-          <div class="field">
-            <label>系统提示词（深色卡片对应这里）</label>
-            <textarea id="sPromptSystem"></textarea>
-          </div>
-        </div>
+<!-- FORUM DETAIL -->
+<div class="page" id="pgForumDetail">
+  <div class="forum-detail-header glass-bar">
+    <button class="icon-btn" onclick="navigateTo('forum')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+    <div class="forum-detail-title">帖子详情</div>
+    <button class="icon-btn" onclick="forumDetailAction('refresh')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+  </div>
+  <div class="scroller" id="forumDetailScroller">
+    <div class="forum-detail-body" id="forumDetailBody"></div>
+  </div>
+  <div class="forum-input-bar">
+    <div class="forum-input-wrap">
+      <input class="forum-input" id="forumReplyInput" placeholder="写回复...">
+    </div>
+    <button class="chat-send-btn show" onclick="sendForumReply()" style="opacity:1;pointer-events:auto"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>聊天提示词</h3>
-          <div class="field">
-            <label>聊天模式提示词</label>
-            <textarea id="sPromptChat"></textarea>
-          </div>
-          <div class="grid-2" style="margin-top:12px">
-            <div class="field">
-              <label>表情包功能提示词</label>
-              <textarea id="sPromptSticker"></textarea>
-            </div>
-            <div class="field">
-              <label>图片功能提示词</label>
-              <textarea id="sPromptImage"></textarea>
-            </div>
-            <div class="field">
-              <label>语音功能提示词</label>
-              <textarea id="sPromptVoice"></textarea>
-            </div>
-            <div class="field">
-              <label>红包功能提示词</label>
-              <textarea id="sPromptRedPacket"></textarea>
-            </div>
-          </div>
-        </div>
+<!-- WALLET -->
+<div class="page" id="pgWallet">
+  <div class="wallet-header glass-bar">
+    <button class="icon-btn" onclick="navigateTo('home')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+    <div class="wallet-header-title">钱包</div>
+    <button class="icon-btn" onclick="editWalletBalance()"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg></button>
+  </div>
+  <div class="scroller">
+    <div class="wallet-card">
+      <div class="wallet-label">可用余额</div>
+      <div class="wallet-amount" id="walletAmount">0.00</div>
+    </div>
+    <div class="section-title">交易记录</div>
+    <div class="wallet-txn-list" id="walletTxnList"></div>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>区块刷新提示词</h3>
-          <div class="grid-2">
-            <div class="field">
-              <label>朋友圈+评论区 刷新提示词</label>
-              <textarea id="sPromptMoments"></textarea>
-            </div>
-            <div class="field">
-              <label>论坛+回帖 刷新提示词</label>
-              <textarea id="sPromptForum"></textarea>
-            </div>
-            <div class="field">
-              <label>钱包刷新提示词</label>
-              <textarea id="sPromptWallet"></textarea>
-            </div>
-            <div class="field">
-              <label>日记刷新提示词</label>
-              <textarea id="sPromptDiary"></textarea>
-            </div>
-            <div class="field">
-              <label>浏览器刷新提示词</label>
-              <textarea id="sPromptBrowser"></textarea>
-            </div>
-            <div class="field">
-              <label>记忆总结提示词</label>
-              <textarea id="sPromptMemory"></textarea>
-            </div>
-          </div>
-        </div>
+<!-- DIARY -->
+<div class="page" id="pgDiary">
+  <div class="diary-header glass-bar">
+    <button class="icon-btn" onclick="navigateTo('home')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+    <div class="diary-header-title">日记</div>
+    <button class="icon-btn" onclick="addDiaryEntry()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+  </div>
+  <div class="scroller">
+    <div class="diary-list" id="diaryList"></div>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>记忆存放</h3>
-          <div class="memory-list" id="memoryList"></div>
-          <div class="modal-actions" style="margin-top:12px">
-            <button class="ghost-btn" id="summarizeNowBtn">立即总结未归档楼层</button>
-            <button class="danger-btn" id="clearMemoryBtn">清空记忆</button>
-          </div>
-        </div>
+<!-- BROWSER -->
+<div class="page" id="pgBrowser">
+  <div class="browser-header glass-bar">
+    <button class="icon-btn" onclick="navigateTo('home')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+    <div class="browser-header-title">浏览器</div>
+    <button class="icon-btn" onclick="addBrowserHistory()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+  </div>
+  <div class="scroller">
+    <div class="browser-search"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>搜索或输入网址</span></div>
+    <div class="section-title">浏览历史</div>
+    <div class="browser-list" id="browserList"></div>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>表情包库</h3>
-          <div class="sticker-manage" id="stickerManage"></div>
-          <div class="modal-actions" style="margin-top:12px">
-            <button class="ghost-btn" id="uploadStickerBtn">上传表情包</button>
-          </div>
-        </div>
+<!-- SETTINGS -->
+<div class="page" id="pgSettings">
+  <div class="settings-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="icon-btn" onclick="navigateTo('home')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+      <div class="settings-title">设置</div>
+    </div>
+  </div>
+  <div class="scroller">
+    <div class="settings-scroll" id="settingsContent"></div>
+  </div>
+</div>
 
-        <div class="setting-block">
-          <h3>保存 / 重置</h3>
-          <div class="modal-actions">
-            <button class="save-btn" id="saveSettingsBtn">保存设置</button>
-            <button class="ghost-btn" id="closeSettingsBtn">关闭</button>
-            <button class="danger-btn" id="resetAllBtn">恢复默认</button>
-          </div>
-        </div>
+<!-- CHAT SETTINGS (modal) -->
+<div class="modal-overlay" id="chatSettingsModal">
+  <div class="modal-sheet">
+    <div class="modal-sheet-header">
+      <div class="modal-sheet-title">聊天设置</div>
+      <button class="modal-sheet-close" onclick="closeChatSettings()">完成</button>
+    </div>
+    <div class="modal-sheet-body" id="chatSettingsBody"></div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-sheet">
+    <div class="modal-sheet-header">
+      <div class="modal-sheet-title" id="editModalTitle">编辑</div>
+      <button class="modal-sheet-close" onclick="closeEditModal()">关闭</button>
+    </div>
+    <div class="modal-sheet-body">
+      <div class="edit-modal-content">
+        <textarea class="edit-textarea" id="editTextarea"></textarea>
+        <button class="edit-save-btn" onclick="saveEdit()">保存</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- 编辑器 -->
-  <div class="modal" id="editorModal">
-    <div class="modal-card" style="max-width:680px">
-      <div class="modal-head">
-        <strong id="editorTitle">编辑</strong>
-        <button class="icon-btn" data-close="editorModal">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="field">
-          <label id="editorLabel">内容</label>
-          <textarea id="editorTextarea"></textarea>
-        </div>
-        <div id="editorExtras"></div>
-        <div class="editor-help" id="editorHelp"></div>
-        <div class="modal-actions" style="margin-top:14px">
-          <button class="save-btn" id="editorSaveBtn">保存</button>
-          <button class="ghost-btn" data-close="editorModal">取消</button>
-        </div>
-      </div>
+<!-- CHARACTER EDIT MODAL -->
+<div class="modal-overlay" id="charEditModal">
+  <div class="modal-sheet">
+    <div class="modal-sheet-header">
+      <div class="modal-sheet-title" id="charEditTitle">编辑角色</div>
+      <button class="modal-sheet-close" onclick="closeCharEditModal()">关闭</button>
     </div>
+    <div class="modal-sheet-body" id="charEditBody"></div>
   </div>
+</div>
 
-  <!-- 加号工具 -->
-  <div class="sheet" id="plusSheet">
-    <div class="sheet-card">
-      <div class="sheet-head">
-        <strong>发送功能</strong>
-        <button class="icon-btn" data-close="plusSheet">✕</button>
-      </div>
-      <div class="tool-grid" id="toolGrid"></div>
-    </div>
+<!-- Dock -->
+<div class="dock" id="dock">
+  <div class="dock-inner glass-bar">
+    <button class="dock-tab active" data-tab="home" onclick="dockNav('home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>主页</span></button>
+    <button class="dock-tab" data-tab="contacts" onclick="dockNav('contacts')"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>消息</span><div class="dock-badge" id="msgBadge">0</div></button>
+    <button class="dock-tab" data-tab="moments" onclick="dockNav('moments')"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>动态</span></button>
+    <button class="dock-tab" data-tab="forum" onclick="dockNav('forum')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9v-2h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg><span>论坛</span></button>
   </div>
+</div>
+<div class="home-indicator"></div>
 
-  <!-- 表情包选择 -->
-  <div class="sheet" id="stickerSheet">
-    <div class="sheet-card">
-      <div class="sheet-head">
-        <strong>表情包</strong>
-        <div style="display:flex;gap:10px">
-          <button class="mini-btn" id="sheetUploadStickerBtn">上传</button>
-          <button class="icon-btn" data-close="stickerSheet">✕</button>
-        </div>
-      </div>
-      <div class="sticker-grid" id="stickerGrid"></div>
-    </div>
-  </div>
+<!-- Hidden file input for stickers -->
+<input type="file" id="stickerFileInput" accept="image/*" style="display:none" onchange="handleStickerUpload(event)">
 
-  <div class="toast" id="toast"></div>
-
-  <input type="file" id="userAvatarInput" accept="image/*" hidden />
-  <input type="file" id="roleAvatarInput" accept="image/*" hidden />
-  <input type="file" id="sendImageInput" accept="image/*" multiple hidden />
-  <input type="file" id="stickerInput" accept="image/*" multiple hidden />
+</div><!-- .screen -->
+</div><!-- .phone-frame -->
 
 <script>
-(() => {
-  const LS_KEY = 'st_phone_web_jy_v1';
+// ===== STATE MANAGEMENT =====
+const STORAGE_KEY = 'sp_rp_data';
+let state = loadState();
+let currentChatId = null;
+let currentForumPostId = null;
+let editCallback = null;
+let audio = new Audio();
+let playing = false;
+let trackIdx = 0;
+const tracks = [
+  {name:'No Music', artist:'Add tracks in settings'}
+];
 
-  const byId = id => document.getElementById(id);
+function getDefaultState() {
+  return {
+    theme: 'dark',
+    settings: {
+      api: { endpoint: 'https://api.openai.com/v1/chat/completions', key: '', model: 'gpt-4o-mini', maxTokens: 1000 },
+      prompts: {
+        system: '你是一个沉浸式角色扮演AI。请根据角色设定，自然地扮演角色进行互动。保持角色一致性，回复要生动自然。',
+        chat: '请以"{{name}}"的身份回复用户的消息。\n要求：\n1. 每次回复1-3条消息，每条用\\n\\n分隔\n2. 保持口语化，像真实微信聊天\n3. 消息长度适中\n4. 符合角色性格和语气',
+        momentPost: '请以"{{name}}"的身份发一条朋友圈动态。\n要求：\n1. 内容可以是生活感悟、日常分享、心情等\n2. 符合角色性格\n3. 直接输出文案内容，不需要额外格式\n4. 100字以内',
+        momentComment: '以下是一条朋友圈动态：\n"{{post}}"\n\n请以"{{name}}"的身份对这条动态进行评论。\n要求：\n1. 简短自然，像真实评论\n2. 直接输出评论内容\n3. 30字以内',
+        forumPost: '请以"{{name}}"的身份在论坛发一个帖子。\n要求：\n1. 内容可以是提问、分享、讨论等\n2. 符合角色性格\n3. 直接输出帖子内容\n4. 200字以内',
+        forumReply: '以下是一个论坛帖子：\n"{{post}}"\n\n请以"{{name}}"的身份回复这个帖子。\n要求：\n1. 自然真实\n2. 直接输出回复内容\n3. 100字以内',
+        diary: '请以"{{name}}"的视角写一篇简短日记。\n要求：\n1. 第一人称\n2. 记录今天的心情和事件\n3. 符合角色性格\n4. 150字以内',
+        browser: '请为"{{name}}"生成3条浏览器搜索记录。\n要求：\n1. 每条一行\n2. 符合角色性格和兴趣\n3. 直接输出搜索关键词'
+      },
+      features: { stickers: true, voice: false, images: true, redPacket: false },
+      chatConfig: { msgsPerResponse: 1, showCount: 50, autoSummarize: false, summarizeEvery: 20 },
+      wallpaper: ''
+    },
+    characters: [],
+    chats: {},
+    moments: [],
+    forum: [],
+    wallet: { balance: '10000.00', transactions: [] },
+    diary: [],
+    browser: [],
+    stickers: []
+  };
+}
 
-  function uid(){
-    return 'id_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-  }
-
-  function escapeHtml(str=''){
-    return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#39;');
-  }
-
-  function escapeAttr(str=''){
-    return escapeHtml(str);
-  }
-
-  function clip(str='', len=140){
-    const s = String(str || '');
-    return s.length > len ? s.slice(0, len) + '…' : s;
-  }
-
-  function todayText(){
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  }
-
-  function nowText(){
-    const d = new Date();
-    return `今天 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-  }
-
-  function makeAvatarData(letter='窈', c1='#5e72ff', c2='#ff5f8f'){
-    const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
-        <defs>
-          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-            <stop stop-color="${c1}" offset="0"/>
-            <stop stop-color="${c2}" offset="1"/>
-          </linearGradient>
-        </defs>
-        <rect width="320" height="320" rx="160" fill="url(#g)"/>
-        <circle cx="160" cy="160" r="120" fill="rgba(255,255,255,.12)"/>
-        <text x="160" y="182" text-anchor="middle" font-size="122" font-family="PingFang SC, Arial" fill="#fff" font-weight="700">${letter}</text>
-      </svg>`;
-    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
-  }
-
-  function makeStickerData(name='猫猫', emoji='😼', c1='#ffd5e6', c2='#c5d8ff'){
-    const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-        <defs>
-          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-            <stop stop-color="${c1}" offset="0"/>
-            <stop stop-color="${c2}" offset="1"/>
-          </linearGradient>
-        </defs>
-        <rect width="512" height="512" rx="120" fill="url(#g)"/>
-        <circle cx="256" cy="256" r="166" fill="rgba(255,255,255,.36)"/>
-        <text x="256" y="300" text-anchor="middle" font-size="170" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji" fill="#fff">${emoji}</text>
-      </svg>`;
-    return { id: uid(), name, url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg) };
-  }
-
-  function deepMerge(base, extra){
-    if(Array.isArray(base)) return Array.isArray(extra) ? extra : base;
-    if(typeof base === 'object' && base && typeof extra === 'object' && extra){
-      const out = { ...base };
-      Object.keys(extra).forEach(k => {
-        out[k] = k in base ? deepMerge(base[k], extra[k]) : extra[k];
-      });
-      return out;
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const s = JSON.parse(raw);
+      const def = getDefaultState();
+      // Merge defaults for any missing fields
+      s.settings = { ...def.settings, ...s.settings };
+      s.settings.api = { ...def.settings.api, ...s.settings.api };
+      s.settings.prompts = { ...def.settings.prompts, ...s.settings.prompts };
+      s.settings.features = { ...def.settings.features, ...(s.settings.features || {}) };
+      s.settings.chatConfig = { ...def.settings.chatConfig, ...(s.settings.chatConfig || {}) };
+      if (!s.stickers) s.stickers = [];
+      if (!s.wallet) s.wallet = { balance: '10000.00', transactions: [] };
+      if (!s.diary) s.diary = [];
+      if (!s.browser) s.browser = [];
+      return s;
     }
-    return extra === undefined ? base : extra;
+  } catch(e) { console.error('Load state error:', e); }
+  return getDefaultState();
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { console.error('Save error:', e); }
+}
+
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+function now() { return new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit' }); }
+function today() { return new Date().toLocaleDateString('zh-CN', { timeZone: 'Asia/Shanghai', month: 'long', day: 'numeric' }); }
+function getChar(id) { return state.characters.find(c => c.id === id); }
+function charInitial(name) { return name ? name.charAt(0) : '?'; }
+
+// ===== TOAST =====
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ===== LOADING =====
+function showLoading(v) {
+  document.getElementById('loadingOverlay').classList.toggle('show', v);
+}
+
+// ===== NAVIGATION =====
+const dockPages = ['home', 'contacts', 'moments', 'forum'];
+const subPages = ['chat', 'wallet', 'diary', 'browser', 'settings', 'forumDetail'];
+const pageMap = {
+  home: 'pgHome', contacts: 'pgContacts', chat: 'pgChat',
+  moments: 'pgMoments', forum: 'pgForum', forumDetail: 'pgForumDetail',
+  wallet: 'pgWallet', diary: 'pgDiary', browser: 'pgBrowser', settings: 'pgSettings'
+};
+
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(pageMap[page]);
+  if (el) el.classList.add('active');
+
+  const dock = document.getElementById('dock');
+  if (subPages.includes(page)) {
+    dock.style.display = 'none';
+  } else {
+    dock.style.display = 'block';
   }
 
-  function defaultPrompts(){
-    return {
-      system:
-`你现在扮演 {{roleName}}，备注为“{{remark}}”。
-你与用户在一个独立网页手机里互动，手机里有聊天、朋友圈、论坛、钱包、日记、浏览器六个区块，它们共享同一人设、同一时间线、同一情绪连续性。
-硬性要求：
-1. 不要跳出角色，不要说自己是AI，不要解释格式。
-2. 保持关系、记忆、口吻一致。
-3. 若聊天中发生了发朋友圈、发论坛、记账、写日记、搜索网页等行为，可以同步更新对应区块。
-4. 所有输出必须是对应模式要求的指令，不要附加说明。
-5. 回复风格自然、细腻、有生活感。`,
+  document.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`.dock-tab[data-tab="${page}"]`);
+  if (tab) tab.classList.add('active');
 
-      chat:
-`当前为聊天模式。你必须只输出 <CHAT> 指令，不要输出任何解释、markdown、前后缀。
-格式：
-<CHAT>
-[MSG sender="char" type="text"]消息内容[/MSG]
-</CHAT>
+  // Close any open menus
+  closeFabMenus();
 
-规则：
-1. 一次输出 1~{{chatBatch}} 条消息。
-2. sender 固定为 char。
-3. 默认使用 type="text"。
-4. 如确实需要联动其他区块，可在 <CHAT> 内追加 [SYNC module="moments"]...[/SYNC]、[SYNC module="forum"]...[/SYNC]、[SYNC module="wallet"]...[/SYNC]、[SYNC module="diary"]...[/SYNC]、[SYNC module="browser"]...[/SYNC]。
-5. 只能用当前启用的功能类型。
-{{featurePrompt}}`,
+  // Refresh content
+  if (page === 'contacts') renderContacts();
+  if (page === 'moments') renderMoments();
+  if (page === 'forum') renderForum();
+  if (page === 'wallet') renderWallet();
+  if (page === 'diary') renderDiary();
+  if (page === 'browser') renderBrowser();
+  if (page === 'settings') renderSettings();
+}
 
-      moments:
-`当前为朋友圈刷新模式。你必须只输出 <MOMENTS> 指令，不要解释。
-朋友圈和评论区一起刷新。
-格式：
-<MOMENTS>
-[ITEM]
-[TIME]今天 21:17[/TIME]
-[CONTENT]朋友圈正文[/CONTENT]
-[COMMENTS]
-1. 用户A：评论内容
-2. 用户B：评论内容
-[/COMMENTS]
-[/ITEM]
-</MOMENTS>
+function dockNav(page) { navigateTo(page); }
 
-规则：
-1. 生成 1~3 条 ITEM。
-2. 风格符合角色当前状态与近期聊天。
-3. 评论区要和正文有呼应。`,
+// ===== THEME =====
+function initTheme() {
+  const scn = document.getElementById('screen');
+  if (state.theme === 'light') scn.classList.add('light');
+  else scn.classList.remove('light');
+}
 
-      forum:
-`当前为论坛刷新模式。你必须只输出 <FORUM> 指令，不要解释。
-论坛帖子和回帖一起刷新。
-格式：
-<FORUM>
-[THREAD]
-[TIME]今天 20:11[/TIME]
-[TITLE]帖子标题[/TITLE]
-[BODY]帖子正文[/BODY]
-[REPLIES]
-1L｜用户A：回帖内容
-2L｜用户B：回帖内容
-[/REPLIES]
-[/THREAD]
-</FORUM>
-
-规则：
-1. 生成 1~3 个 THREAD。
-2. 回帖与主帖要强关联。
-3. 内容要像真实论坛发言，不要太空。`,
-
-      wallet:
-`当前为钱包刷新模式。你必须只输出 <WALLET> 指令，不要解释。
-格式：
-<WALLET>
-[BALANCE]520.00[/BALANCE]
-[TXNS]
-2025-03-08 20:14｜收到转账 +52.00
-2025-03-08 18:20｜奶茶 -18.00
-[/TXNS]
-</WALLET>
-
-规则：
-1. 金额与近期剧情、聊天联动。
-2. 交易记录 3~8 条。
-3. 余额与记录尽量自洽。`,
-
-      diary:
-`当前为日记刷新模式。你必须只输出 <DIARY> 指令，不要解释。
-格式：
-<DIARY>
-[ENTRY]
-[DATE]2025-03-08[/DATE]
-[CONTENT]日记内容[/CONTENT]
-[/ENTRY]
-</DIARY>
-
-规则：
-1. 生成 1~3 条 ENTRY。
-2. 语气更私密、更内心化。
-3. 与聊天和朋友圈可形成明暗线呼应。`,
-
-      browser:
-`当前为浏览器刷新模式。你必须只输出 <BROWSER> 指令，不要解释。
-格式：
-<BROWSER>
-[ITEM]搜索词或网址[/ITEM]
-[ITEM]搜索词或网址[/ITEM]
-</BROWSER>
-
-规则：
-1. 生成 5~12 条 ITEM。
-2. 内容应像真实搜索习惯，可混合关键词、网址、短句。
-3. 与角色近期状态有关联。`,
-
-      memory:
-`你现在负责整理长期记忆。
-请只输出简洁的中文记忆正文，不要解释，不要前言，不要markdown标题。
-要求：
-1. 保留人物关系、情绪变化、承诺、事件、偏好、重要时间线。
-2. 删除客套废话。
-3. 使用 4~8 条短要点。`,
-
-      featureSticker:
-`如果要发表情包，使用：
-[MSG sender="char" type="sticker"]表情包名称[/MSG]
-优先使用已上传的表情包名称。`,
-
-      featureImage:
-`如果要发图片，使用：
-[MSG sender="char" type="image"]图片描述或图片URL[/MSG]`,
-
-      featureVoice:
-`如果要发语音，使用：
-[MSG sender="char" type="voice" duration="8"]语音转写内容[/MSG]`,
-
-      featureRedPacket:
-`如果要发红包，使用：
-[MSG sender="char" type="redpacket" amount="52.00" note="给你"]红包正文[/MSG]`
-    };
+document.getElementById('themeToggle').addEventListener('click', () => {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  initTheme();
+  const ico = document.getElementById('themeIcon');
+  if (state.theme === 'light') {
+    ico.innerHTML = '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5a6 6 0 100 12 6 6 0 000-12zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/>';
+  } else {
+    ico.innerHTML = '<path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a4.882 4.882 0 01-4.4 2.26 5.4 5.4 0 01-5.4-5.4c0-1.82.89-3.42 2.26-4.4A9.06 9.06 0 0012 3z"/>';
   }
+  saveState();
+});
 
-  function defaultState(){
-    const prompts = defaultPrompts();
-    return {
-      theme: 'dark',
-      api: {
-        baseUrl: 'https://api.openai.com/v1',
-        apiKey: '',
-        model: 'gpt-4o-mini',
-        temperature: 0.9,
-        maxTokens: 1200
-      },
-      profile: {
-        userName: '我',
-        userAvatar: makeAvatarData('我', '#28c76f', '#4cd1a8'),
-        roleName: '江窈',
-        remark: '江窈',
-        roleAvatar: makeAvatarData('窈', '#5e72ff', '#ff5f8f'),
-        phone: '187 6832 9157',
-        status: '在线',
-        signature: '循环的圆 不循环的缘'
-      },
-      config: {
-        chatBatch: 2,
-        enableSticker: true,
-        enableImage: true,
-        enableVoice: false,
-        enableRedPacket: false,
-        enableMemory: true,
-        memoryEvery: 12,
-        contextFrom: '',
-        contextTo: '',
-        autoSyncNotice: true
-      },
-      prompts,
-      data: {
-        messages: [
-          { id: uid(), floor: 1, role: 'system', type: 'system-card', content: '系统已切换为独立站模式。你可以点击上方深色系统卡片，直接编辑系统提示词。', meta: {} },
-          { id: uid(), floor: 2, role: 'char', type: 'text', content: '我已经在这部手机里了。你发消息给我，我会同时把动态、论坛、钱包、日记这些区块一起维护好。', meta: {} },
-          { id: uid(), floor: 3, role: 'user', type: 'text', content: '测试一下。', meta: {} }
-        ],
-        moments: [
-          {
-            id: uid(),
-            time: '今天 21:17',
-            content: '夜里风很轻，适合把没说出口的话折起来，塞进兜里假装路过。',
-            comments: [
-              '林知：你今晚这句有点杀我。',
-              '程雾：又开始写空气情书了？',
-              '阿祈：像你。'
-            ]
-          }
-        ],
-        forum: [
-          {
-            id: uid(),
-            time: '今天 19:43',
-            title: '你会把喜欢藏到什么时候？',
-            body: '有些话并不是不敢说，只是怕说了以后，连现在这样也保不住。你们会选择一直装作若无其事吗？',
-            replies: [
-              '1L｜薄荷：会，尤其对方太重要的时候。',
-              '2L｜青鸟：不说会后悔，说了也可能后悔，看你更怕哪一个。',
-              '3L｜未寄出的信：楼主已经有答案了，只是还没狠下心。'
-            ]
-          }
-        ],
-        wallet: {
-          balance: '520.00',
-          txns: [
-            '2025-03-08 20:14｜收到转账 +52.00',
-            '2025-03-08 18:20｜奶茶 -18.00',
-            '2025-03-08 12:01｜午餐 -26.00'
-          ]
-        },
-        diary: [
-          {
-            id: uid(),
-            date: todayText(),
-            content: '今天其实有点想他，但还是先装作没事。人总得先把表情藏好，才敢继续往前走。'
-          }
-        ],
-        browser: [
-          { id: uid(), text: '失眠怎么办' },
-          { id: uid(), text: '适合深夜发的朋友圈文案' },
-          { id: uid(), text: '喜欢一个人会有哪些表现' },
-          { id: uid(), text: '天气' },
-          { id: uid(), text: 'https://music.163.com/' }
-        ],
-        memory: [],
-        stickers: [
-          makeStickerData('坏笑猫', '😼', '#ffd9e8', '#cdd9ff'),
-          makeStickerData('流汗小狗', '🥺', '#ffe8b8', '#ffd1b8'),
-          makeStickerData('晚安云朵', '☁️', '#c7e7ff', '#e8ddff')
-        ]
-      },
-      meta: {
-        activeScreen: 'chat',
-        floorCounter: 3,
-        lastMemoryFloor: 0,
-        loading: false,
-        loadingMode: '',
-        walletMasked: false
-      }
-    };
+// ===== CLOCK =====
+function updateClock() {
+  const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  const time = h + ':' + m;
+  document.getElementById('statusTime').textContent = time;
+  document.getElementById('homeClock').textContent = time;
+  const wk = ['日','一','二','三','四','五','六'];
+  document.getElementById('homeDate').textContent = (d.getMonth()+1) + '月' + d.getDate() + '日 周' + wk[d.getDay()];
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ===== DYNAMIC ISLAND & MUSIC =====
+const di = document.getElementById('di');
+const diOverlay = document.getElementById('diOverlay');
+di.addEventListener('click', e => {
+  if (e.target.closest('.p-btn')) return;
+  di.classList.toggle('exp');
+  diOverlay.classList.toggle('on', di.classList.contains('exp'));
+});
+diOverlay.addEventListener('click', () => { di.classList.remove('exp'); diOverlay.classList.remove('on'); });
+
+function updatePlayerUI() {
+  const t = tracks[trackIdx];
+  document.getElementById('playerName').textContent = t.name;
+  document.getElementById('playerArtist').textContent = t.artist;
+}
+
+function setPlayingUI(on) {
+  const icon = document.getElementById('playIcon');
+  const vinyl = document.getElementById('vinyl');
+  const eq = document.getElementById('eqBars');
+  const meq = document.getElementById('miniEq');
+  if (on) {
+    icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    vinyl.classList.add('spin'); eq.classList.add('on'); meq.classList.add('on');
+  } else {
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    vinyl.classList.remove('spin'); eq.classList.remove('on'); meq.classList.remove('on');
   }
+}
 
-  function normalizeState(raw){
-    const merged = deepMerge(defaultState(), raw || {});
-    if(!Array.isArray(merged.data.messages)) merged.data.messages = [];
-    merged.data.messages = merged.data.messages.map((m, idx) => ({
-      id: m.id || uid(),
-      floor: Number(m.floor) || (idx + 1),
-      role: m.role || 'char',
-      type: m.type || 'text',
-      content: m.content || '',
-      meta: m.meta || {}
-    }));
-    merged.meta.floorCounter = Math.max(
-      Number(merged.meta.floorCounter) || 0,
-      ...merged.data.messages.map(m => Number(m.floor) || 0),
-      0
-    );
-    if(!Array.isArray(merged.data.moments)) merged.data.moments = [];
-    if(!Array.isArray(merged.data.forum)) merged.data.forum = [];
-    if(!Array.isArray(merged.data.diary)) merged.data.diary = [];
-    if(!Array.isArray(merged.data.browser)) merged.data.browser = [];
-    if(!Array.isArray(merged.data.memory)) merged.data.memory = [];
-    if(!Array.isArray(merged.data.stickers)) merged.data.stickers = [];
-    if(!merged.data.wallet || typeof merged.data.wallet !== 'object'){
-      merged.data.wallet = { balance:'0.00', txns:[] };
-    }
-    if(!Array.isArray(merged.data.wallet.txns)) merged.data.wallet.txns = [];
-    return merged;
+document.getElementById('btnPlay').addEventListener('click', e => {
+  e.stopPropagation();
+  if (playing) { audio.pause(); playing = false; setPlayingUI(false); }
+  else {
+    if (tracks[trackIdx].src) { audio.src = tracks[trackIdx].src; audio.play().catch(()=>{}); }
+    playing = true; updatePlayerUI(); setPlayingUI(true);
   }
+});
+document.getElementById('btnPrev').addEventListener('click', e => {
+  e.stopPropagation(); trackIdx = (trackIdx - 1 + tracks.length) % tracks.length;
+  updatePlayerUI(); if (playing && tracks[trackIdx].src) { audio.src = tracks[trackIdx].src; audio.play().catch(()=>{}); }
+});
+document.getElementById('btnNext').addEventListener('click', e => {
+  e.stopPropagation(); trackIdx = (trackIdx + 1) % tracks.length;
+  updatePlayerUI(); if (playing && tracks[trackIdx].src) { audio.src = tracks[trackIdx].src; audio.play().catch(()=>{}); }
+});
+audio.addEventListener('timeupdate', () => {
+  if (audio.duration) document.getElementById('playerProgress').style.width = (audio.currentTime / audio.duration * 100) + '%';
+});
+audio.addEventListener('ended', () => {
+  trackIdx = (trackIdx + 1) % tracks.length; updatePlayerUI();
+  if (tracks[trackIdx].src) audio.play().catch(()=>{});
+});
 
-  function loadState(){
-    try{
-      const raw = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-      return normalizeState(raw);
-    }catch(e){
-      return defaultState();
-    }
-  }
-
-  let state = loadState();
-  let editorCtx = null;
-  let toastTimer = null;
-
-  function saveState(){
-    localStorage.setItem(LS_KEY, JSON.stringify(state));
-  }
-
-  function hasApi(){
-    return !!(state.api.baseUrl && state.api.model && state.api.apiKey);
-  }
-
-  function showToast(text){
-    const el = byId('toast');
-    el.textContent = text;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
-  }
-
-  function openModal(id){
-    byId(id).classList.add('show');
-  }
-
-  function closeModal(id){
-    byId(id).classList.remove('show');
-  }
-
-  function switchScreen(name){
-    state.meta.activeScreen = name;
-    document.querySelectorAll('.screen').forEach(el => {
-      el.classList.toggle('active', el.dataset.screen === name);
+// ===== API =====
+async function callAPI(messages) {
+  const s = state.settings.api;
+  if (!s.key) { showToast('请先在设置中配置API密钥', 'error'); return null; }
+  try {
+    const res = await fetch(s.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + s.key },
+      body: JSON.stringify({ model: s.model, messages, max_tokens: s.maxTokens || 1000, temperature: 0.8 })
     });
-    document.querySelectorAll('.tab-btn').forEach(el => {
-      el.classList.toggle('active', el.dataset.go === name);
-    });
-    saveState();
-  }
-
-  function applyTheme(){
-    document.body.classList.toggle('light', state.theme === 'light');
-    byId('themeBtn').textContent = state.theme === 'light' ? '🌞 主题' : '🌙 主题';
-  }
-
-  function renderAvatar(container, url, fallbackText){
-    if(!container) return;
-    if(url){
-      container.innerHTML = `<img src="${escapeAttr(url)}" alt="">`;
-    }else{
-      container.textContent = (fallbackText || '？').slice(0,1);
-    }
-  }
-
-  function apiLabel(){
-    return hasApi() ? `已连 ${state.api.model}` : '未连接API';
-  }
-
-  function updateClock(){
-    const d = new Date();
-    byId('clockText').textContent = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-    byId('onlineText').textContent = state.meta.loading ? '生成中…' : (state.profile.status || '在线');
-    byId('apiText').textContent = apiLabel();
-  }
-
-  function currentContextLabel(){
-    const from = String(state.config.contextFrom || '').trim();
-    const to = String(state.config.contextTo || '').trim();
-    if(!from && !to) return '上下文：自动最近30楼';
-    return `上下文：${from || 1}楼 ~ ${to || '最新楼'}`;
-  }
-
-  function buildFeaturePrompt(){
-    const arr = [];
-    if(state.config.enableSticker) arr.push(state.prompts.featureSticker);
-    if(state.config.enableImage) arr.push(state.prompts.featureImage);
-    if(state.config.enableVoice) arr.push(state.prompts.featureVoice);
-    if(state.config.enableRedPacket) arr.push(state.prompts.featureRedPacket);
-    return arr.length ? arr.join('\n\n') : '仅使用 type="text"。';
-  }
-
-  function renderTemplate(str, extra={}){
-    const vars = {
-      roleName: state.profile.roleName,
-      remark: state.profile.remark,
-      chatBatch: String(state.config.chatBatch),
-      featurePrompt: buildFeaturePrompt(),
-      contextRange: currentContextLabel(),
-      ...extra
-    };
-    return String(str || '').replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] ?? '');
-  }
-
-  function summaryMoments(){
-    if(!state.data.moments.length) return '无';
-    return state.data.moments.slice(0,3).map((it, i) => `${i+1}. ${clip(it.content, 80)}`).join('\n');
-  }
-  function summaryForum(){
-    if(!state.data.forum.length) return '无';
-    return state.data.forum.slice(0,3).map((it, i) => `${i+1}. ${it.title}｜${clip(it.body, 80)}`).join('\n');
-  }
-  function summaryDiary(){
-    if(!state.data.diary.length) return '无';
-    return state.data.diary.slice(0,2).map((it, i) => `${i+1}. ${it.date}｜${clip(it.content, 90)}`).join('\n');
-  }
-  function summaryBrowser(){
-    if(!state.data.browser.length) return '无';
-    return state.data.browser.slice(0,8).map((it, i) => `${i+1}. ${it.text}`).join('\n');
-  }
-  function summaryWallet(){
-    return `余额：${state.data.wallet.balance}\n记录：\n${state.data.wallet.txns.slice(0,6).join('\n') || '无'}`;
-  }
-  function summaryMemory(){
-    if(!state.data.memory.length) return '暂无长期记忆';
-    return state.data.memory.map(m => `[${m.range}] ${m.content}`).join('\n');
-  }
-
-  function isImageSrc(str=''){
-    return /^(data:image\/|https?:\/\/|blob:)/i.test(String(str));
-  }
-
-  function resolveSticker(nameOrUrl=''){
-    const q = String(nameOrUrl || '').trim();
-    if(!q) return null;
-    const exact = state.data.stickers.find(s => s.name === q);
-    if(exact) return exact;
-    const include = state.data.stickers.find(s => s.name.toLowerCase().includes(q.toLowerCase()));
-    if(include) return include;
-    if(isImageSrc(q)) return { name: q, url: q };
+    if (!res.ok) { const err = await res.text(); throw new Error(err); }
+    const data = await res.json();
+    return data.choices[0].message.content.trim();
+  } catch(e) {
+    console.error('API Error:', e);
+    showToast('API调用失败: ' + e.message.substring(0, 50), 'error');
     return null;
   }
+}
 
-  function messageTranscript(m){
-    const who = m.role === 'user' ? (state.profile.userName || '用户') : (m.role === 'char' ? state.profile.roleName : '系统');
-    if(m.type === 'image') return `[${m.floor}F][${who}][image] ${m.meta?.caption || m.content || '图片消息'}`;
-    if(m.type === 'sticker') return `[${m.floor}F][${who}][sticker] ${m.meta?.name || m.content || '表情包'}`;
-    if(m.type === 'voice') return `[${m.floor}F][${who}][voice ${m.meta?.duration || ''}s] ${m.content || ''}`;
-    if(m.type === 'redpacket') return `[${m.floor}F][${who}][redpacket ¥${m.meta?.amount || ''}] ${m.meta?.note || m.content || ''}`;
-    if(m.type === 'system-card') return `[${m.floor}F][系统同步] ${m.content}`;
-    return `[${m.floor}F][${who}][text] ${m.content}`;
+function buildPrompt(template, vars) {
+  let result = template;
+  for (const [k, v] of Object.entries(vars)) {
+    result = result.replace(new RegExp('\\{\\{' + k + '\\}\\}', 'g'), v);
   }
+  return result;
+}
 
-  function getContextMessages(){
-    const all = [...state.data.messages].sort((a,b) => a.floor - b.floor);
-    const from = Number(state.config.contextFrom || 0);
-    const to = Number(state.config.contextTo || 0);
-    if(!from && !to){
-      return all.slice(-30);
+// ===== AVATAR HELPER =====
+function avatarHTML(char, size = 40, cls = '') {
+  if (char && char.avatar) {
+    return `<div class="${cls}" style="width:${size}px;height:${size}px"><img src="${char.avatar}" alt=""></div>`;
+  }
+  const initial = char ? charInitial(char.name) : '?';
+  return `<div class="${cls} no-img" style="width:${size}px;height:${size}px">${initial}</div>`;
+}
+
+// ===== CONTACTS =====
+function renderContacts() {
+  const list = document.getElementById('contactList');
+  if (state.characters.length === 0) {
+    list.innerHTML = '<div class="contacts-empty"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><br>暂无联系人<br>请在设置中添加角色</div>';
+    return;
+  }
+  let html = '';
+  for (const char of state.characters) {
+    const msgs = state.chats[char.id] || [];
+    const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null;
+    const preview = lastMsg ? (lastMsg.content || '').substring(0, 30) : '暂无消息';
+    const time = lastMsg ? lastMsg.time || '' : '';
+    html += `<div class="contact-item" onclick="openChat('${char.id}')">
+      ${avatarHTML(char, 48, 'contact-avatar')}
+      <div class="contact-info">
+        <div class="contact-name">${char.nickname || char.name}</div>
+        <div class="contact-preview">${escapeHTML(preview)}</div>
+      </div>
+      <div class="contact-meta">
+        <div class="contact-time">${time}</div>
+      </div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
+
+function showNewChatSelect() {
+  if (state.characters.length === 0) { showToast('请先在设置中添加角色', 'info'); return; }
+  // Just open contacts list
+}
+
+// ===== CHAT =====
+function openChat(charId) {
+  currentChatId = charId;
+  const char = getChar(charId);
+  if (!char) return;
+  if (!state.chats[charId]) state.chats[charId] = [];
+
+  navigateTo('chat');
+  // Update header
+  const avatarEl = document.getElementById('chatAvatar');
+  if (char.avatar) {
+    avatarEl.innerHTML = `<img src="${char.avatar}" alt="">`;
+    avatarEl.className = 'chat-header-avatar';
+  } else {
+    avatarEl.innerHTML = charInitial(char.name);
+    avatarEl.className = 'chat-header-avatar no-img';
+  }
+  document.getElementById('chatName').textContent = char.nickname || char.name;
+  renderChatMessages();
+  // Hide menus
+  document.getElementById('plusMenu').classList.remove('show');
+  document.getElementById('stickerPanel').classList.remove('show');
+}
+
+function renderChatMessages() {
+  const container = document.getElementById('chatMessages');
+  const msgs = state.chats[currentChatId] || [];
+  const showCount = state.settings.chatConfig.showCount || 50;
+  const visible = msgs.slice(-showCount);
+
+  let html = '';
+  let lastDate = '';
+  for (const msg of visible) {
+    const msgDate = msg.date || '';
+    if (msgDate !== lastDate) {
+      html += `<div class="msg-time-divider">${msgDate || today()}</div>`;
+      lastDate = msgDate;
     }
-    return all.filter(m => {
-      if(from && m.floor < from) return false;
-      if(to && m.floor > to) return false;
-      return true;
-    });
-  }
-
-  function buildWorldSummary(){
-    return [
-      `角色资料：角色名=${state.profile.roleName}，备注=${state.profile.remark}，手机在线显示=${state.profile.phone}，状态=${state.profile.status}`,
-      `长期记忆：\n${summaryMemory()}`,
-      `朋友圈：\n${summaryMoments()}`,
-      `论坛：\n${summaryForum()}`,
-      `钱包：\n${summaryWallet()}`,
-      `日记：\n${summaryDiary()}`,
-      `浏览器：\n${summaryBrowser()}`
-    ].join('\n\n');
-  }
-
-  function buildChatMessages(){
-    const transcript = getContextMessages().map(messageTranscript).join('\n') || '暂无聊天记录';
-    return [
-      { role:'system', content: renderTemplate(state.prompts.system) },
-      { role:'system', content: renderTemplate(state.prompts.chat) },
-      { role:'system', content: '硬性规则：你当前处于聊天模式。最终回答只能包含一个 <CHAT> 根区块；不要输出解释，不要输出 markdown 代码块。' },
-      { role:'system', content: buildWorldSummary() },
-      { role:'user', content: `以下是当前可见楼层聊天记录：\n${transcript}\n\n请根据最后一条用户消息继续扮演并回复。` }
-    ];
-  }
-
-  function buildModuleMessages(module){
-    const labels = {
-      moments:'朋友圈',
-      forum:'论坛',
-      wallet:'钱包',
-      diary:'日记',
-      browser:'浏览器'
-    };
-    const promptText = renderTemplate(state.prompts[module]);
-    const transcript = getContextMessages().map(messageTranscript).join('\n') || '暂无聊天记录';
-    const rootMap = {
-      moments:'<MOMENTS>',
-      forum:'<FORUM>',
-      wallet:'<WALLET>',
-      diary:'<DIARY>',
-      browser:'<BROWSER>'
-    };
-    return [
-      { role:'system', content: renderTemplate(state.prompts.system) },
-      { role:'system', content: promptText },
-      { role:'system', content: `硬性规则：你当前处于${labels[module]}刷新模式。最终回答只能输出 ${rootMap[module]} 对应的区块指令，不能附加解释，不能输出 markdown。` },
-      { role:'system', content: buildWorldSummary() },
-      { role:'user', content: `最近聊天记录：\n${transcript}\n\n现在执行“${labels[module]}刷新”。严格只返回对应区块指令。` }
-    ];
-  }
-
-  function normalizeApiUrl(base){
-    const clean = String(base || '').trim().replace(/\/+$/,'');
-    if(/\/chat\/completions$/i.test(clean)) return clean;
-    return clean + '/chat/completions';
-  }
-
-  async function callLLM(messages, opts={}){
-    const url = normalizeApiUrl(state.api.baseUrl);
-    const body = {
-      model: state.api.model,
-      messages,
-      temperature: opts.temperature ?? Number(state.api.temperature || 0.9),
-      max_tokens: opts.maxTokens ?? Number(state.api.maxTokens || 1200),
-      stream: false
-    };
-    const res = await fetch(url, {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer ' + state.api.apiKey
-      },
-      body: JSON.stringify(body)
-    });
-    const data = await res.json().catch(() => ({}));
-    if(!res.ok){
-      const msg = data?.error?.message || data?.message || `请求失败：${res.status}`;
-      throw new Error(msg);
+    if (msg.type === 'notification') {
+      html += `<div class="msg-notification" onclick="editMessage('${msg.id}')">
+        <div class="msg-notification-title"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg>${escapeHTML(msg.title || '动态通知')}</div>
+        <div class="msg-notification-body">${escapeHTML(msg.content)}</div>
+      </div>`;
+    } else if (msg.type === 'image') {
+      html += `<div class="msg-bubble-wrap ${msg.role === 'user' ? 'self' : 'other'}" onclick="editMessage('${msg.id}')">
+        ${msg.role !== 'user' ? `<div class="msg-sender">${escapeHTML(msg.senderName || '')}</div>` : ''}
+        <div class="msg-bubble"><img src="${msg.content}" alt=""></div>
+      </div>`;
+    } else {
+      html += `<div class="msg-bubble-wrap ${msg.role === 'user' ? 'self' : 'other'}" onclick="editMessage('${msg.id}')">
+        ${msg.role !== 'user' ? `<div class="msg-sender">${escapeHTML(msg.senderName || '')}</div>` : ''}
+        <div class="msg-bubble">${escapeHTML(msg.content)}</div>
+      </div>`;
     }
-    let content = data?.choices?.[0]?.message?.content ?? '';
-    if(Array.isArray(content)){
-      content = content.map(part => part?.text || '').join('');
-    }
-    return String(content || '').trim();
+  }
+  container.innerHTML = html;
+  // Scroll to bottom
+  setTimeout(() => {
+    const scroller = document.getElementById('chatScroller');
+    scroller.scrollTop = scroller.scrollHeight;
+  }, 50);
+}
+
+function autoResizeInput(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  const sendBtn = document.getElementById('chatSendBtn');
+  sendBtn.classList.toggle('show', el.value.trim().length > 0);
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !currentChatId) return;
+  const char = getChar(currentChatId);
+  if (!char) return;
+
+  // Add user message
+  const userMsg = { id: genId(), role: 'user', content: text, time: now(), date: today(), type: 'text' };
+  state.chats[currentChatId].push(userMsg);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('chatSendBtn').classList.remove('show');
+  renderChatMessages();
+  saveState();
+
+  // Call API
+  document.getElementById('chatLoading').classList.add('show');
+  const systemPrompt = state.settings.prompts.system + '\n\n角色设定：\n名称：' + char.name +
+    (char.bio ? '\n' + char.bio : '') +
+    (char.memory ? '\n\n记忆摘要：' + char.memory : '');
+  const chatPrompt = buildPrompt(state.settings.prompts.chat, { name: char.name });
+
+  // Build message history
+  const history = state.chats[currentChatId].filter(m => m.type === 'text').slice(-20);
+  const apiMessages = [{ role: 'system', content: systemPrompt + '\n\n' + chatPrompt }];
+  for (const m of history) {
+    apiMessages.push({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content });
   }
 
-  function addMessage(msg){
-    state.meta.floorCounter += 1;
-    const item = {
-      id: uid(),
-      floor: state.meta.floorCounter,
-      role: msg.role || 'char',
-      type: msg.type || 'text',
-      content: msg.content || '',
-      meta: msg.meta || {}
-    };
-    state.data.messages.push(item);
-    return item;
-  }
+  const response = await callAPI(apiMessages);
+  document.getElementById('chatLoading').classList.remove('show');
 
-  function pushSystemCard(text){
-    addMessage({ role:'system', type:'system-card', content:text, meta:{} });
-  }
-
-  function stripCodeFence(str=''){
-    let s = String(str || '').trim();
-    s = s.replace(/^```[a-zA-Z0-9_-]*\n?/,'').replace(/```$/,'').trim();
-    return s;
-  }
-
-  function parseAttrs(raw=''){
-    const attrs = {};
-    String(raw).replace(/(\w+)="([^"]*?)"/g, (_, k, v) => {
-      attrs[k] = v;
-      return _;
-    });
-    return attrs;
-  }
-
-  function extractTag(text, tag){
-    const reg = new RegExp('\\[' + tag + '\\]([\\s\\S]*?)\\[\\/' + tag + '\\]', 'i');
-    const m = reg.exec(text);
-    return m ? m[1].trim() : '';
-  }
-
-  function extractAllBlocks(text, tag){
-    const reg = new RegExp('\\[' + tag + '\\]([\\s\\S]*?)\\[\\/' + tag + '\\]', 'gi');
-    return [...String(text || '').matchAll(reg)].map(m => m[1].trim());
-  }
-
-  function stripBracketTags(text=''){
-    return String(text).replace(/\[[^\]]+\]/g,'').trim();
-  }
-
-  function splitLines(raw=''){
-    return String(raw || '')
-      .split(/\n+/)
-      .map(s => s.trim())
-      .filter(Boolean);
-  }
-
-  function parseMomentsPayload(text){
-    const clean = stripCodeFence(text);
-    const items = extractAllBlocks(clean, 'ITEM');
-    if(items.length){
-      return items.map(block => {
-        const time = extractTag(block, 'TIME') || '刚刚';
-        const content = extractTag(block, 'CONTENT') || extractTag(block, 'POST') || stripBracketTags(block);
-        const comments = splitLines(extractTag(block, 'COMMENTS'));
-        return { id: uid(), time, content: content.replace(/^内容[:：]\s*/,'').trim(), comments };
-      }).filter(v => v.content);
-    }
-    const post = extractTag(clean, 'CONTENT') || extractTag(clean, 'POST') || stripBracketTags(clean);
-    if(post){
-      return [{
-        id: uid(),
-        time: extractTag(clean, 'TIME') || '刚刚',
-        content: post.replace(/^时间[:：].*$/gmi,'').replace(/^内容[:：]\s*/i,'').trim(),
-        comments: splitLines(extractTag(clean, 'COMMENTS'))
-      }];
-    }
-    return [];
-  }
-
-  function parseForumPayload(text){
-    const clean = stripCodeFence(text);
-    const threads = extractAllBlocks(clean, 'THREAD');
-    if(threads.length){
-      return threads.map(block => ({
-        id: uid(),
-        time: extractTag(block, 'TIME') || '刚刚',
-        title: extractTag(block, 'TITLE') || '未命名主题',
-        body: extractTag(block, 'BODY') || stripBracketTags(block),
-        replies: splitLines(extractTag(block, 'REPLIES'))
-      })).filter(v => v.title || v.body);
-    }
-    const title = extractTag(clean, 'TITLE') || '未命名主题';
-    const body = extractTag(clean, 'BODY') || extractTag(clean, 'POST') || stripBracketTags(clean);
-    if(body){
-      return [{
-        id: uid(),
-        time: extractTag(clean, 'TIME') || '刚刚',
-        title,
-        body,
-        replies: splitLines(extractTag(clean, 'REPLIES'))
-      }];
-    }
-    return [];
-  }
-
-  function parseWalletPayload(text){
-    const clean = stripCodeFence(text);
-    const balance = extractTag(clean, 'BALANCE') || state.data.wallet.balance || '0.00';
-    let txns = splitLines(extractTag(clean, 'TXNS'));
-    if(!txns.length) txns = splitLines(extractTag(clean, 'TXN'));
-    if(!txns.length){
-      const plain = stripBracketTags(clean);
-      if(plain) txns = splitLines(plain);
-    }
-    return { balance, txns };
-  }
-
-  function parseDiaryPayload(text){
-    const clean = stripCodeFence(text);
-    const entries = extractAllBlocks(clean, 'ENTRY');
-    if(entries.length){
-      return entries.map(block => ({
-        id: uid(),
-        date: extractTag(block, 'DATE') || todayText(),
-        content: extractTag(block, 'CONTENT') || stripBracketTags(block)
-      })).filter(v => v.content);
-    }
-    const content = extractTag(clean, 'CONTENT') || stripBracketTags(clean);
-    if(content){
-      return [{ id: uid(), date: extractTag(clean, 'DATE') || todayText(), content }];
-    }
-    return [];
-  }
-
-  function parseBrowserPayload(text){
-    const clean = stripCodeFence(text);
-    const items = extractAllBlocks(clean, 'ITEM');
-    if(items.length) return items.map(t => ({ id: uid(), text: t })).filter(v => v.text);
-    const lines = splitLines(stripBracketTags(clean));
-    return lines.map(t => ({ id: uid(), text: t }));
-  }
-
-  function parseChatPayload(text){
-    const clean = stripCodeFence(text);
-    const msgMatches = [...clean.matchAll(/\[MSG([^\]]*)\]([\s\S]*?)\[\/MSG\]/gi)];
-    const syncMatches = [...clean.matchAll(/\[SYNC([^\]]*)\]([\s\S]*?)\[\/SYNC\]/gi)];
-
-    const messages = msgMatches.map(m => ({
-      attrs: parseAttrs(m[1]),
-      content: m[2].trim()
-    }));
-
-    const syncs = syncMatches.map(m => {
-      const attrs = parseAttrs(m[1]);
-      return {
-        module: attrs.module || '',
-        payload: m[2].trim()
+  if (response) {
+    // Split into multiple messages if separated by double newlines
+    const parts = response.split(/\n\n+/).filter(p => p.trim());
+    for (const part of parts) {
+      const aiMsg = {
+        id: genId(), role: 'assistant', content: part.trim(),
+        senderName: char.nickname || char.name, time: now(), date: today(), type: 'text'
       };
+      state.chats[currentChatId].push(aiMsg);
+    }
+    renderChatMessages();
+    saveState();
+  }
+}
+
+// Chat input: Enter to send
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+});
+
+// Edit message
+function editMessage(msgId) {
+  if (!currentChatId) return;
+  const msgs = state.chats[currentChatId];
+  const msg = msgs.find(m => m.id === msgId);
+  if (!msg) return;
+
+  document.getElementById('editModalTitle').textContent = '编辑消息';
+  document.getElementById('editTextarea').value = msg.content;
+  editCallback = (newContent) => {
+    msg.content = newContent;
+    renderChatMessages();
+    saveState();
+  };
+  document.getElementById('editModal').classList.add('show');
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('show');
+  editCallback = null;
+}
+
+function saveEdit() {
+  const val = document.getElementById('editTextarea').value;
+  if (editCallback) editCallback(val);
+  closeEditModal();
+}
+
+// Plus Menu
+function togglePlusMenu() {
+  const menu = document.getElementById('plusMenu');
+  const sticker = document.getElementById('stickerPanel');
+  sticker.classList.remove('show');
+  const isOpen = menu.classList.contains('show');
+  menu.classList.toggle('show', !isOpen);
+  if (!isOpen) renderPlusMenu();
+}
+
+function renderPlusMenu() {
+  const f = state.settings.features;
+  let html = '';
+  if (f.images) {
+    html += `<div class="plus-menu-item" onclick="sendChatImage()"><div class="pm-icon"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div><span>图片</span></div>`;
+  }
+  if (f.stickers) {
+    html += `<div class="plus-menu-item" onclick="toggleStickerPanel(true)"><div class="pm-icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></div><span>表情</span></div>`;
+  }
+  if (f.voice) {
+    html += `<div class="plus-menu-item" onclick="showToast('语音功能（占位）','info')"><div class="pm-icon"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg></div><span>语音</span></div>`;
+  }
+  if (f.redPacket) {
+    html += `<div class="plus-menu-item" onclick="showToast('红包功能（占位）','info')"><div class="pm-icon" style="background:rgba(255,69,58,.15)"><svg viewBox="0 0 24 24" style="fill:var(--danger)"><path d="M21 18v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1h-9a2 2 0 00-2 2v8a2 2 0 002 2h9z"/></svg></div><span>红包</span></div>`;
+  }
+  document.getElementById('plusMenu').innerHTML = html;
+}
+
+function sendChatImage() {
+  const url = prompt('输入图片URL:');
+  if (url && currentChatId) {
+    state.chats[currentChatId].push({
+      id: genId(), role: 'user', content: url, time: now(), date: today(), type: 'image'
     });
-
-    return { messages, syncs, raw: clean };
+    renderChatMessages();
+    saveState();
+    document.getElementById('plusMenu').classList.remove('show');
   }
+}
 
-  function applyMomentsData(list, mode='replace'){
-    if(!Array.isArray(list) || !list.length) return;
-    state.data.moments = mode === 'prepend'
-      ? [...list, ...state.data.moments].slice(0, 20)
-      : list;
+// Sticker Panel
+function toggleStickerPanel(show) {
+  document.getElementById('plusMenu').classList.remove('show');
+  document.getElementById('stickerPanel').classList.toggle('show', show);
+  if (show) renderStickerGrid();
+}
+
+function renderStickerGrid() {
+  const grid = document.getElementById('stickerGrid');
+  let html = '<div class="sticker-item sticker-add" onclick="document.getElementById(\'stickerFileInput\').click()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>';
+  for (const s of state.stickers) {
+    html += `<div class="sticker-item" onclick="sendSticker('${s}')"><img src="${s}" alt=""></div>`;
   }
+  grid.innerHTML = html;
+}
 
-  function applyForumData(list, mode='replace'){
-    if(!Array.isArray(list) || !list.length) return;
-    state.data.forum = mode === 'prepend'
-      ? [...list, ...state.data.forum].slice(0, 20)
-      : list;
+function handleStickerUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.stickers.push(reader.result);
+    saveState();
+    renderStickerGrid();
+    showToast('表情包已添加', 'success');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function sendSticker(src) {
+  if (!currentChatId) return;
+  state.chats[currentChatId].push({
+    id: genId(), role: 'user', content: src, time: now(), date: today(), type: 'image'
+  });
+  renderChatMessages();
+  saveState();
+  toggleStickerPanel(false);
+}
+
+// Chat Settings
+function openChatSettings() {
+  if (!currentChatId) return;
+  const char = getChar(currentChatId);
+  if (!char) return;
+  const body = document.getElementById('chatSettingsBody');
+  body.innerHTML = `
+    <div class="settings-row"><label>名称</label><input type="text" id="cs_name" value="${escapeAttr(char.name)}"></div>
+    <div class="settings-row"><label>备注</label><input type="text" id="cs_nick" value="${escapeAttr(char.nickname || '')}"></div>
+    <div class="settings-row"><label>头像URL</label><input type="text" id="cs_avatar" value="${escapeAttr(char.avatar || '')}"></div>
+    <div class="settings-row"><label>角色设定</label></div>
+    <div class="settings-row"><textarea id="cs_bio" rows="4">${escapeHTML(char.bio || '')}</textarea></div>
+    <div class="settings-row"><label>记忆摘要</label></div>
+    <div class="settings-row"><textarea id="cs_memory" rows="3">${escapeHTML(char.memory || '')}</textarea></div>
+    <div class="settings-row"><label>显示消息数</label><input type="number" id="cs_showCount" value="${state.settings.chatConfig.showCount}" min="5" max="200"></div>
+    <button class="settings-btn primary" onclick="saveChatSettings()" style="margin:16px">保存</button>
+    <button class="settings-btn danger" onclick="clearChatHistory()" style="margin:0 16px">清空聊天记录</button>
+  `;
+  document.getElementById('chatSettingsModal').classList.add('show');
+}
+
+function saveChatSettings() {
+  const char = getChar(currentChatId);
+  if (!char) return;
+  char.name = document.getElementById('cs_name').value.trim() || char.name;
+  char.nickname = document.getElementById('cs_nick').value.trim();
+  char.avatar = document.getElementById('cs_avatar').value.trim();
+  char.bio = document.getElementById('cs_bio').value;
+  char.memory = document.getElementById('cs_memory').value;
+  state.settings.chatConfig.showCount = parseInt(document.getElementById('cs_showCount').value) || 50;
+  saveState();
+  openChat(currentChatId);
+  closeChatSettings();
+  showToast('已保存', 'success');
+}
+
+function clearChatHistory() {
+  if (confirm('确认清空聊天记录？')) {
+    state.chats[currentChatId] = [];
+    saveState();
+    renderChatMessages();
+    closeChatSettings();
   }
+}
 
-  function applyDiaryData(list, mode='replace'){
-    if(!Array.isArray(list) || !list.length) return;
-    state.data.diary = mode === 'prepend'
-      ? [...list, ...state.data.diary].slice(0, 20)
-      : list;
+function closeChatSettings() {
+  document.getElementById('chatSettingsModal').classList.remove('show');
+}
+
+// ===== MOMENTS =====
+function renderMoments() {
+  const feed = document.getElementById('momentsFeed');
+  if (state.moments.length === 0) {
+    feed.innerHTML = '<div class="moment-empty">暂无动态，点击右上角发布</div>';
+    return;
   }
-
-  function applyBrowserData(list, mode='replace'){
-    if(!Array.isArray(list) || !list.length) return;
-    state.data.browser = mode === 'prepend'
-      ? [...list, ...state.data.browser].slice(0, 40)
-      : list;
-  }
-
-  function applyWalletData(obj){
-    if(!obj) return;
-    state.data.wallet.balance = obj.balance || state.data.wallet.balance;
-    state.data.wallet.txns = Array.isArray(obj.txns) ? obj.txns : state.data.wallet.txns;
-  }
-
-  function renderMessageContent(m){
-    const txt = escapeHtml(m.content || '').replace(/\n/g,'<br>');
-    if(m.type === 'system-card'){
-      return `<div class="system-bubble">${txt}</div>`;
-    }
-    if(m.type === 'image'){
-      if(isImageSrc(m.content)){
-        return `<div class="image-card"><img src="${escapeAttr(m.content)}" alt=""><div class="image-caption">${escapeHtml(m.meta?.caption || '图片')}</div></div>`;
+  let html = '';
+  for (const post of [...state.moments].reverse()) {
+    const char = getChar(post.charId);
+    const authorName = post.isUser ? '我' : (char ? (char.nickname || char.name) : '未知');
+    html += `<div class="moment-card">
+      <div class="moment-header">
+        ${post.isUser ? avatarHTML(null, 40, 'moment-avatar') : avatarHTML(char, 40, 'moment-avatar')}
+        <div class="moment-author">
+          <div class="moment-author-name">${escapeHTML(authorName)}</div>
+          <div class="moment-author-time">${post.time || ''}</div>
+        </div>
+        <button class="icon-btn" onclick="editMomentPost('${post.id}')"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg></button>
+      </div>
+      <div class="moment-content" onclick="editMomentPost('${post.id}')">${escapeHTML(post.content)}</div>
+      <div class="moment-stats">
+        <div class="moment-stat"><svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3z"/></svg>${post.likes || 0}</div>
+        <div class="moment-stat"><svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>${(post.comments || []).length}</div>
+      </div>`;
+    if (post.comments && post.comments.length > 0) {
+      html += `<div class="moment-comments">`;
+      for (const cmt of post.comments) {
+        html += `<div class="moment-comment" onclick="editMomentComment('${post.id}','${cmt.id}')"><span class="moment-comment-author">${escapeHTML(cmt.author)}</span>: ${escapeHTML(cmt.content)}</div>`;
       }
-      return `<div class="image-placeholder">🖼 ${txt}</div>`;
+      html += `</div>`;
     }
-    if(m.type === 'sticker'){
-      const st = resolveSticker(m.meta?.name || m.content);
-      if(st){
-        return `<img class="sticker-img" src="${escapeAttr(st.url)}" alt="${escapeAttr(st.name)}">`;
-      }
-      return `<div class="sticker-fallback">[表情包] ${txt}</div>`;
-    }
-    if(m.type === 'voice'){
-      return `
-        <div class="voice-card">
-          <div class="voice-top"><span>🎙 语音消息</span><span>${escapeHtml(String(m.meta?.duration || ''))}s</span></div>
-          <div class="voice-text">${txt || '（无转写）'}</div>
-        </div>`;
-    }
-    if(m.type === 'redpacket'){
-      return `
-        <div class="rp-card">
-          <div class="rp-head">🧧 红包</div>
-          <div class="rp-body">
-            <div class="rp-amt">¥${escapeHtml(String(m.meta?.amount || '0.00'))}</div>
-            <div class="rp-note">${escapeHtml(m.meta?.note || m.content || '恭喜发财')}</div>
-          </div>
-        </div>`;
-    }
-    return txt;
+    html += `</div>`;
   }
+  feed.innerHTML = html;
+}
 
-  function renderMessages(){
-    const list = byId('messageList');
-    const msgs = [...state.data.messages].sort((a,b) => a.floor - b.floor);
-    if(!msgs.length){
-      list.innerHTML = `<div class="empty">还没有聊天记录。</div>`;
-      return;
-    }
+function toggleMomentsFab() {
+  const menu = document.getElementById('momentsFabMenu');
+  menu.classList.toggle('show');
+  document.getElementById('momentsCharSelect').classList.remove('show');
+}
 
-    const roleName = state.profile.roleName || '角色';
-    const userName = state.profile.userName || '我';
+function closeFabMenus() {
+  document.querySelectorAll('.fab-menu,.select-menu').forEach(m => m.classList.remove('show'));
+}
 
-    let html = '';
-    msgs.forEach(m => {
-      if(m.role === 'system'){
-        html += `
-          <div class="msg-row system">
-            <div class="msg-col" style="max-width:92%;align-items:center">
-              <div class="msg-meta"><span>${m.floor}F</span><span>系统</span></div>
-              ${renderMessageContent(m)}
-            </div>
-            <button class="msg-edit" data-edit-message="${escapeAttr(m.id)}">✎</button>
-          </div>`;
-        return;
+function momentAction(action) {
+  closeFabMenus();
+  if (action === 'myPost') {
+    document.getElementById('editModalTitle').textContent = '发朋友圈';
+    document.getElementById('editTextarea').value = '';
+    editCallback = (content) => {
+      state.moments.push({
+        id: genId(), charId: null, isUser: true, content,
+        time: now() + ' ' + today(), likes: 0, comments: []
+      });
+      saveState();
+      renderMoments();
+      // Notify in chats
+      notifyChats('我发了一条动态', content);
+    };
+    document.getElementById('editModal').classList.add('show');
+  } else if (action === 'charPost') {
+    showCharSelect('momentsCharSelect', async (charId) => {
+      const char = getChar(charId);
+      if (!char) return;
+      showLoading(true);
+      const prompt = buildPrompt(state.settings.prompts.momentPost, { name: char.name });
+      const sysPrompt = state.settings.prompts.system + '\n角色设定：' + char.name + '\n' + (char.bio || '');
+      const result = await callAPI([
+        { role: 'system', content: sysPrompt },
+        { role: 'user', content: prompt }
+      ]);
+      showLoading(false);
+      if (result) {
+        state.moments.push({
+          id: genId(), charId, isUser: false, content: result,
+          time: now() + ' ' + today(), likes: Math.floor(Math.random() * 50), comments: []
+        });
+        saveState();
+        renderMoments();
+        notifyChats(char.nickname || char.name + ' 发了一条动态', result, charId);
+        showToast('动态已发布', 'success');
       }
-
-      const self = m.role === 'user';
-      const rowClass = self ? 'self' : 'other';
-      const name = self ? userName : roleName;
-      const bubbleClass = self ? 'self' : 'other';
-      const avatarHtml = self
-        ? ''
-        : `<div class="avatar sm">${state.profile.roleAvatar ? `<img src="${escapeAttr(state.profile.roleAvatar)}" alt="">` : escapeHtml(name.slice(0,1))}</div>`;
-
-      html += `
-        <div class="msg-row ${rowClass}">
-          ${avatarHtml}
-          <div class="msg-col">
-            <div class="msg-meta">
-              <span>${escapeHtml(name)}</span>
-              <span>${m.floor}F</span>
-              <span>${escapeHtml(m.type)}</span>
-            </div>
-            <div class="bubble ${bubbleClass}">${renderMessageContent(m)}</div>
-          </div>
-          <button class="msg-edit" data-edit-message="${escapeAttr(m.id)}">✎</button>
-        </div>`;
     });
-
-    if(state.meta.loading && state.meta.loadingMode === 'chat'){
-      html += `
-        <div class="msg-row other">
-          <div class="avatar sm">${state.profile.roleAvatar ? `<img src="${escapeAttr(state.profile.roleAvatar)}" alt="">` : escapeHtml((state.profile.roleName || '角').slice(0,1))}</div>
-          <div class="msg-col">
-            <div class="msg-meta"><span>${escapeHtml(roleName)}</span><span>输入中</span></div>
-            <div class="typing"><i></i><i></i><i></i></div>
-          </div>
-        </div>`;
-    }
-
-    list.innerHTML = html;
+  } else if (action === 'refreshComments') {
+    if (state.moments.length === 0) { showToast('暂无动态', 'info'); return; }
+    showCharSelect('momentsCharSelect', async (charId) => {
+      const char = getChar(charId);
+      if (!char) return;
+      const latestPost = [...state.moments].reverse().find(p => true);
+      if (!latestPost) return;
+      showLoading(true);
+      const prompt = buildPrompt(state.settings.prompts.momentComment, { name: char.name, post: latestPost.content });
+      const sysPrompt = state.settings.prompts.system + '\n角色设定：' + char.name + '\n' + (char.bio || '');
+      const result = await callAPI([
+        { role: 'system', content: sysPrompt },
+        { role: 'user', content: prompt }
+      ]);
+      showLoading(false);
+      if (result) {
+        if (!latestPost.comments) latestPost.comments = [];
+        latestPost.comments.push({ id: genId(), author: char.nickname || char.name, content: result, charId });
+        saveState();
+        renderMoments();
+        showToast('评论已添加', 'success');
+      }
+    });
   }
+}
 
-  function renderMoments(){
-    renderAvatar(byId('momentsRoleAvatar'), state.profile.roleAvatar, state.profile.roleName);
-    byId('momentsRoleName').textContent = state.profile.roleName || '角色';
-    byId('momentsRoleSignature').textContent = state.profile.signature || '';
-    byId('momentsHeroText').textContent = state.data.moments[0]?.content || '角色的动态会同步显示在这里。';
+function editMomentPost(postId) {
+  const post = state.moments.find(p => p.id === postId);
+  if (!post) return;
+  document.getElementById('editModalTitle').textContent = '编辑动态';
+  document.getElementById('editTextarea').value = post.content;
+  editCallback = (content) => { post.content = content; saveState(); renderMoments(); };
+  document.getElementById('editModal').classList.add('show');
+}
 
-    const wrap = byId('momentsList');
-    if(!state.data.moments.length){
-      wrap.innerHTML = `<div class="empty hero-card">暂无朋友圈内容。</div>`;
-      return;
-    }
-    wrap.innerHTML = state.data.moments.map(it => `
-      <article class="feed-card">
-        <div class="feed-head">
-          <div class="avatar sm">${state.profile.roleAvatar ? `<img src="${escapeAttr(state.profile.roleAvatar)}" alt="">` : escapeHtml((state.profile.roleName || '角').slice(0,1))}</div>
-          <div class="name-time">
-            <strong>${escapeHtml(state.profile.roleName || '角色')}</strong>
-            <span>${escapeHtml(it.time || '刚刚')}</span>
-          </div>
-        </div>
-        <div class="feed-text">${escapeHtml(it.content || '').replace(/\n/g,'<br>')}</div>
-        <div class="feed-comments">
-          <strong>评论区</strong>
-          ${(it.comments || []).length
-            ? it.comments.map(c => `<div class="comment-line">${escapeHtml(c)}</div>`).join('')
-            : `<div class="comment-line muted">暂无评论</div>`}
-        </div>
-      </article>
-    `).join('');
+function editMomentComment(postId, cmtId) {
+  const post = state.moments.find(p => p.id === postId);
+  if (!post) return;
+  const cmt = (post.comments || []).find(c => c.id === cmtId);
+  if (!cmt) return;
+  document.getElementById('editModalTitle').textContent = '编辑评论';
+  document.getElementById('editTextarea').value = cmt.content;
+  editCallback = (content) => { cmt.content = content; saveState(); renderMoments(); };
+  document.getElementById('editModal').classList.add('show');
+}
+
+function notifyChats(title, content, specificCharId) {
+  for (const char of state.characters) {
+    if (!state.chats[char.id]) state.chats[char.id] = [];
+    state.chats[char.id].push({
+      id: genId(), role: 'system', type: 'notification', title, content,
+      time: now(), date: today()
+    });
   }
+  saveState();
+}
 
-  function renderForum(){
-    const wrap = byId('forumList');
-    if(!state.data.forum.length){
-      wrap.innerHTML = `<div class="empty hero-card">暂无论坛内容。</div>`;
-      return;
-    }
-    wrap.innerHTML = state.data.forum.map(it => `
-      <article class="forum-card">
-        <div class="forum-head">
-          <div class="avatar sm">${state.profile.roleAvatar ? `<img src="${escapeAttr(state.profile.roleAvatar)}" alt="">` : escapeHtml((state.profile.roleName || '角').slice(0,1))}</div>
-          <div class="name-time">
-            <strong>${escapeHtml(it.title || '未命名主题')}</strong>
-            <span>${escapeHtml(it.time || '刚刚')}</span>
-          </div>
-        </div>
-        <div class="forum-title">${escapeHtml(it.title || '未命名主题')}</div>
-        <div class="forum-body">${escapeHtml(it.body || '').replace(/\n/g,'<br>')}</div>
-        <div class="forum-replies">
-          <strong>回帖</strong>
-          ${(it.replies || []).length
-            ? it.replies.map(r => `<div class="reply-line">${escapeHtml(r)}</div>`).join('')
-            : `<div class="reply-line muted">暂无回帖</div>`}
-        </div>
-      </article>
-    `).join('');
+// ===== FORUM =====
+function renderForum() {
+  const feed = document.getElementById('forumFeed');
+  if (state.forum.length === 0) {
+    feed.innerHTML = '<div class="moment-empty">暂无帖子，点击右上角发帖</div>';
+    return;
   }
-
-  function renderWallet(){
-    const balanceText = state.meta.walletMasked ? '****' : `¥${state.data.wallet.balance || '0.00'}`;
-    byId('walletBalance').textContent = balanceText;
-    byId('walletEyeBtn').textContent = state.meta.walletMasked ? '🙈' : '👁';
-    const wrap = byId('walletList');
-    if(!state.data.wallet.txns.length){
-      wrap.innerHTML = `<div class="empty txn-item">暂无交易记录。</div>`;
-      return;
-    }
-    wrap.innerHTML = state.data.wallet.txns.map(t => `
-      <div class="txn-item">
-        <div class="txn-line">${escapeHtml(t)}</div>
+  let html = '';
+  for (const post of [...state.forum].reverse()) {
+    const char = getChar(post.charId);
+    const authorName = post.isUser ? '我' : (char ? (char.nickname || char.name) : '匿名');
+    html += `<div class="forum-post" onclick="openForumDetail('${post.id}')">
+      <div class="forum-post-header">
+        ${post.isUser ? avatarHTML(null, 36, 'forum-post-avatar') : avatarHTML(char, 36, 'forum-post-avatar')}
+        <div class="forum-post-author">${escapeHTML(authorName)}</div>
+        <div class="forum-post-time">${post.time || ''}</div>
+        ${post.hot ? '<div class="forum-post-tag">HOT</div>' : ''}
       </div>
-    `).join('');
-  }
-
-  function renderDiary(){
-    const wrap = byId('diaryList');
-    if(!state.data.diary.length){
-      wrap.innerHTML = `<div class="empty note-card">暂无日记。</div>`;
-      return;
-    }
-    wrap.innerHTML = state.data.diary.map(it => `
-      <article class="note-card">
-        <div class="note-head">
-          <div class="avatar sm">${state.profile.roleAvatar ? `<img src="${escapeAttr(state.profile.roleAvatar)}" alt="">` : escapeHtml((state.profile.roleName || '角').slice(0,1))}</div>
-          <div class="name-time">
-            <strong>${escapeHtml(it.date || todayText())}</strong>
-            <span>日记条目</span>
-          </div>
-        </div>
-        <div class="note-content">${escapeHtml(it.content || '').replace(/\n/g,'<br>')}</div>
-      </article>
-    `).join('');
-  }
-
-  function renderBrowser(){
-    const wrap = byId('browserList');
-    if(!state.data.browser.length){
-      wrap.innerHTML = `<div class="empty browser-card">暂无浏览记录。</div>`;
-      return;
-    }
-    wrap.innerHTML = state.data.browser.map(it => `
-      <div class="browser-item">
-        <div class="browser-line">${escapeHtml(it.text || '')}</div>
+      <div class="forum-post-content">${escapeHTML((post.content || '').substring(0, 100))}</div>
+      <div class="forum-post-stats">
+        <div class="forum-post-stat"><svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>${(post.replies || []).length}</div>
+        <div class="forum-post-stat"><svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3z"/></svg>${post.likes || 0}</div>
       </div>
-    `).join('');
+    </div>`;
   }
+  feed.innerHTML = html;
+}
 
-  function renderMemoryList(){
-    const wrap = byId('memoryList');
-    if(!state.data.memory.length){
-      wrap.innerHTML = `<div class="empty">还没有自动总结出的长期记忆。</div>`;
-      return;
-    }
-    wrap.innerHTML = state.data.memory.map(m => `
-      <div class="memory-item">
-        <strong>${escapeHtml(m.range || '')}</strong>
-        <p>${escapeHtml(m.content || '')}</p>
-        <div class="memory-actions">
-          <button class="mini-btn" data-edit-memory="${escapeAttr(m.id)}">编辑</button>
-          <button class="mini-btn" data-delete-memory="${escapeAttr(m.id)}">删除</button>
+function toggleForumFab() {
+  const menu = document.getElementById('forumFabMenu');
+  menu.classList.toggle('show');
+  document.getElementById('forumCharSelect').classList.remove('show');
+}
+
+function forumAction(action) {
+  closeFabMenus();
+  if (action === 'myPost') {
+    document.getElementById('editModalTitle').textContent = '发帖';
+    document.getElementById('editTextarea').value = '';
+    editCallback = (content) => {
+      state.forum.push({
+        id: genId(), charId: null, isUser: true, content,
+        time: now() + ' ' + today(), likes: 0, replies: [], hot: false
+      });
+      saveState();
+      renderForum();
+    };
+    document.getElementById('editModal').classList.add('show');
+  } else if (action === 'charPost') {
+    showCharSelect('forumCharSelect', async (charId) => {
+      const char = getChar(charId);
+      if (!char) return;
+      showLoading(true);
+      const prompt = buildPrompt(state.settings.prompts.forumPost, { name: char.name });
+      const sysPrompt = state.settings.prompts.system + '\n角色设定：' + char.name + '\n' + (char.bio || '');
+      const result = await callAPI([
+        { role: 'system', content: sysPrompt },
+        { role: 'user', content: prompt }
+      ]);
+      showLoading(false);
+      if (result) {
+        state.forum.push({
+          id: genId(), charId, isUser: false, content: result,
+          time: now() + ' ' + today(), likes: Math.floor(Math.random() * 100), replies: [], hot: Math.random() > 0.5
+        });
+        saveState();
+        renderForum();
+        showToast('帖子已发布', 'success');
+      }
+    });
+  } else if (action === 'refreshReplies') {
+    if (state.forum.length === 0) { showToast('暂无帖子', 'info'); return; }
+    showCharSelect('forumCharSelect', async (charId) => {
+      const char = getChar(charId);
+      if (!char) return;
+      const latestPost = [...state.forum].reverse().find(p => true);
+      if (!latestPost) return;
+      showLoading(true);
+      const prompt = buildPrompt(state.settings.prompts.forumReply, { name: char.name, post: latestPost.content });
+      const sysPrompt = state.settings.prompts.system + '\n角色设定：' + char.name + '\n' + (char.bio || '');
+      const result = await callAPI([
+        { role: 'system', content: sysPrompt },
+        { role: 'user', content: prompt }
+      ]);
+      showLoading(false);
+      if (result) {
+        if (!latestPost.replies) latestPost.replies = [];
+        latestPost.replies.push({
+          id: genId(), charId, isUser: false,
+          author: char.nickname || char.name, content: result, time: now()
+        });
+        saveState();
+        renderForum();
+        showToast('回帖已添加', 'success');
+      }
+    });
+  }
+}
+
+function openForumDetail(postId) {
+  currentForumPostId = postId;
+  navigateTo('forumDetail');
+  renderForumDetail();
+}
+
+function renderForumDetail() {
+  const post = state.forum.find(p => p.id === currentForumPostId);
+  if (!post) return;
+  const char = getChar(post.charId);
+  const authorName = post.isUser ? '我' : (char ? (char.nickname || char.name) : '匿名');
+
+  let html = `<div class="forum-detail-op">
+    <div class="forum-post-header">
+      ${post.isUser ? avatarHTML(null, 36, 'forum-post-avatar') : avatarHTML(char, 36, 'forum-post-avatar')}
+      <div class="forum-post-author">${escapeHTML(authorName)}</div>
+      <div class="forum-post-time">${post.time || ''}</div>
+    </div>
+    <div class="forum-post-content" onclick="editForumPost('${post.id}')">${escapeHTML(post.content)}</div>
+  </div>`;
+
+  html += `<div class="section-title" style="padding:0 0 8px">回复 (${(post.replies || []).length})</div>`;
+
+  if (post.replies) {
+    for (let i = 0; i < post.replies.length; i++) {
+      const r = post.replies[i];
+      const rc = getChar(r.charId);
+      html += `<div class="forum-reply">
+        <div class="forum-reply-header">
+          ${r.isUser ? avatarHTML(null, 28, 'forum-reply-avatar') : avatarHTML(rc, 28, 'forum-reply-avatar')}
+          <div class="forum-reply-author">${escapeHTML(r.author || '匿名')}</div>
+          <div class="forum-reply-floor">#${i + 1}</div>
+          <div class="forum-reply-time">${r.time || ''}</div>
         </div>
-      </div>
-    `).join('');
-  }
-
-  function renderStickerManage(){
-    const wrap = byId('stickerManage');
-    if(!state.data.stickers.length){
-      wrap.innerHTML = `<div class="empty">暂无表情包，点“上传表情包”添加。</div>`;
-      return;
+        <div class="forum-reply-content" onclick="editForumReply('${post.id}',${i})">${escapeHTML(r.content)}</div>
+      </div>`;
     }
-    wrap.innerHTML = state.data.stickers.map(st => `
-      <div class="sticker-item">
-        <img src="${escapeAttr(st.url)}" alt="${escapeAttr(st.name)}">
-        <strong>${escapeHtml(st.name)}</strong>
-        <div class="sticker-actions">
-          <button class="mini-btn" data-rename-sticker="${escapeAttr(st.id)}">改名</button>
-          <button class="mini-btn" data-delete-sticker="${escapeAttr(st.id)}">删除</button>
-        </div>
-      </div>
-    `).join('');
   }
+  document.getElementById('forumDetailBody').innerHTML = html;
+}
 
-  function renderStickerSheet(){
-    const wrap = byId('stickerGrid');
-    if(!state.data.stickers.length){
-      wrap.innerHTML = `<div class="empty" style="grid-column:1/-1">暂无表情包，先上传几张吧。</div>`;
-      return;
+function editForumPost(postId) {
+  const post = state.forum.find(p => p.id === postId);
+  if (!post) return;
+  document.getElementById('editModalTitle').textContent = '编辑帖子';
+  document.getElementById('editTextarea').value = post.content;
+  editCallback = (content) => { post.content = content; saveState(); renderForumDetail(); renderForum(); };
+  document.getElementById('editModal').classList.add('show');
+}
+
+function editForumReply(postId, replyIdx) {
+  const post = state.forum.find(p => p.id === postId);
+  if (!post || !post.replies[replyIdx]) return;
+  const r = post.replies[replyIdx];
+  document.getElementById('editModalTitle').textContent = '编辑回复';
+  document.getElementById('editTextarea').value = r.content;
+  editCallback = (content) => { r.content = content; saveState(); renderForumDetail(); };
+  document.getElementById('editModal').classList.add('show');
+}
+
+function sendForumReply() {
+  const input = document.getElementById('forumReplyInput');
+  const text = input.value.trim();
+  if (!text || !currentForumPostId) return;
+  const post = state.forum.find(p => p.id === currentForumPostId);
+  if (!post) return;
+  if (!post.replies) post.replies = [];
+  post.replies.push({
+    id: genId(), charId: null, isUser: true, author: '我', content: text, time: now()
+  });
+  input.value = '';
+  saveState();
+  renderForumDetail();
+}
+
+async function forumDetailAction(action) {
+  if (action === 'refresh' && currentForumPostId) {
+    if (state.characters.length === 0) { showToast('请先添加角色', 'info'); return; }
+    // Pick random character to reply
+    const char = state.characters[Math.floor(Math.random() * state.characters.length)];
+    const post = state.forum.find(p => p.id === currentForumPostId);
+    if (!post) return;
+    showLoading(true);
+    const prompt = buildPrompt(state.settings.prompts.forumReply, { name: char.name, post: post.content });
+    const sysPrompt = state.settings.prompts.system + '\n角色设定：' + char.name + '\n' + (char.bio || '');
+    const result = await callAPI([
+      { role: 'system', content: sysPrompt },
+      { role: 'user', content: prompt }
+    ]);
+    showLoading(false);
+    if (result) {
+      if (!post.replies) post.replies = [];
+      post.replies.push({
+        id: genId(), charId: char.id, isUser: false,
+        author: char.nickname || char.name, content: result, time: now()
+      });
+      saveState();
+      renderForumDetail();
+      showToast('新回复已生成', 'success');
     }
-    wrap.innerHTML = state.data.stickers.map(st => `
-      <button class="sticker-pick" data-pick-sticker="${escapeAttr(st.id)}">
-        <img src="${escapeAttr(st.url)}" alt="${escapeAttr(st.name)}">
-        <span>${escapeHtml(st.name)}</span>
-      </button>
-    `).join('');
   }
+}
 
-  function renderToolGrid(){
-    const items = [];
-    if(state.config.enableSticker) items.push(`<button class="tool-btn" data-tool="sticker"><span class="ico">😼</span><span>表情包</span></button>`);
-    if(state.config.enableImage) items.push(`<button class="tool-btn" data-tool="image"><span class="ico">🖼</span><span>图片</span></button>`);
-    if(state.config.enableVoice) items.push(`<button class="tool-btn" data-tool="voice"><span class="ico">🎙</span><span>语音</span></button>`);
-    if(state.config.enableRedPacket) items.push(`<button class="tool-btn" data-tool="redpacket"><span class="ico">🧧</span><span>红包</span></button>`);
-    byId('toolGrid').innerHTML = items.length ? items.join('') : `<div class="empty" style="grid-column:1/-1">你把可选发送功能都关掉了。</div>`;
+// ===== CHAR SELECT =====
+function showCharSelect(menuId, callback) {
+  const menu = document.getElementById(menuId);
+  if (state.characters.length === 0) { showToast('请先在设置中添加角色', 'info'); return; }
+  let html = '<div class="select-menu-header">选择角色</div>';
+  for (const char of state.characters) {
+    html += `<div class="select-menu-item" data-char-id="${char.id}">
+      ${avatarHTML(char, 30, 'sel-ava')}
+      ${escapeHTML(char.nickname || char.name)}
+    </div>`;
   }
+  menu.innerHTML = html;
+  menu.classList.add('show');
+  menu.querySelectorAll('.select-menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      menu.classList.remove('show');
+      callback(item.dataset.charId);
+    });
+  });
+}
 
-  function renderSettingsForm(){
-    byId('sBaseUrl').value = state.api.baseUrl || '';
-    byId('sModel').value = state.api.model || '';
-    byId('sApiKey').value = state.api.apiKey || '';
-    byId('sTemp').value = state.api.temperature ?? 0.9;
-    byId('sMaxTokens').value = state.api.maxTokens ?? 1200;
+// ===== WALLET =====
+function renderWallet() {
+  document.getElementById('walletAmount').textContent = state.wallet.balance;
+  const list = document.getElementById('walletTxnList');
+  if (state.wallet.transactions.length === 0) {
+    list.innerHTML = '<div class="moment-empty" style="padding:30px">暂无交易记录</div>';
+    return;
+  }
+  let html = '';
+  for (const txn of [...state.wallet.transactions].reverse()) {
+    const isIncome = parseFloat(txn.amount) > 0;
+    html += `<div class="wallet-txn-item" onclick="editWalletTxn('${txn.id}')">
+      <div><div class="wallet-txn-desc">${escapeHTML(txn.desc)}</div><div class="wallet-txn-time">${txn.time || ''}</div></div>
+      <div class="wallet-txn-amount ${isIncome ? 'income' : 'expense'}">${isIncome ? '+' : ''}${txn.amount}</div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
 
-    byId('sRoleName').value = state.profile.roleName || '';
-    byId('sRemark').value = state.profile.remark || '';
-    byId('sUserName').value = state.profile.userName || '';
-    byId('sPhone').value = state.profile.phone || '';
-    byId('sStatus').value = state.profile.status || '';
-    byId('sSignature').value = state.profile.signature || '';
+function editWalletBalance() {
+  const val = prompt('输入余额:', state.wallet.balance);
+  if (val !== null) { state.wallet.balance = val; saveState(); renderWallet(); }
+}
 
-    byId('sChatBatch').value = state.config.chatBatch ?? 2;
-    byId('sContextFrom').value = state.config.contextFrom || '';
-    byId('sContextTo').value = state.config.contextTo || '';
-    byId('sEnableMemory').checked = !!state.config.enableMemory;
-    byId('sAutoSyncNotice').checked = !!state.config.autoSyncNotice;
-    byId('sMemoryEvery').value = state.config.memoryEvery ?? 12;
-    byId('sContextLabel').value = currentContextLabel();
+function editWalletTxn(txnId) {
+  const txn = state.wallet.transactions.find(t => t.id === txnId);
+  if (!txn) return;
+  document.getElementById('editModalTitle').textContent = '编辑交易';
+  document.getElementById('editTextarea').value = txn.desc + '\n金额: ' + txn.amount;
+  editCallback = (content) => {
+    const lines = content.split('\n');
+    txn.desc = lines[0] || txn.desc;
+    if (lines[1]) { const m = lines[1].match(/-?[\d.]+/); if (m) txn.amount = m[0]; }
+    saveState(); renderWallet();
+  };
+  document.getElementById('editModal').classList.add('show');
+}
 
-    byId('sEnableSticker').checked = !!state.config.enableSticker;
-    byId('sEnableImage').checked = !!state.config.enableImage;
-    byId('sEnableVoice').checked = !!state.config.enableVoice;
-    byId('sEnableRedPacket').checked = !!state.config.enableRedPacket;
+// ===== DIARY =====
+function renderDiary() {
+  const list = document.getElementById('diaryList');
+  if (state.diary.length === 0) {
+    list.innerHTML = '<div class="diary-empty">暂无日记，点击右上角添加</div>';
+    return;
+  }
+  let html = '';
+  for (const entry of [...state.diary].reverse()) {
+    html += `<div class="diary-entry" onclick="editDiaryEntry('${entry.id}')">
+      <div class="diary-entry-date">${entry.date || ''}</div>
+      <div class="diary-entry-content">${escapeHTML(entry.content)}</div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
 
-    byId('sPromptSystem').value = state.prompts.system || '';
-    byId('sPromptChat').value = state.prompts.chat || '';
-    byId('sPromptSticker').value = state.prompts.featureSticker || '';
-    byId('sPromptImage').value = state.prompts.featureImage || '';
-    byId('sPromptVoice').value = state.prompts.featureVoice || '';
+function addDiaryEntry() {
+  document.getElementById('editModalTitle').textContent = '写日记';
+  document.getElementById('editTextarea').value = '';
+  editCallback = (content) => {
+    state.diary.push({ id: genId(), date: today() + ' ' + now(), content });
+    saveState(); renderDiary();
+  };
+  document.getElementById('editModal').classList.add('show');
+}
+
+function editDiaryEntry(entryId) {
+  const entry = state.diary.find(e => e.id === entryId);
+  if (!entry) return;
+  document.getElementById('editModalTitle').textContent = '编辑日记';
+  document.getElementById('editTextarea').value = entry.content;
+  editCallback = (content) => { entry.content = content; saveState(); renderDiary(); };
+  document.getElementById('editModal').classList.add('show');
+}
+
+// ===== BROWSER =====
+function renderBrowser() {
+  const list = document.getElementById('browserList');
+  if (state.browser.length === 0) {
+    list.innerHTML = '<div class="browser-empty">暂无浏览记录</div>';
+    return;
+  }
+  let html = '';
+  for (const item of [...state.browser].reverse()) {
+    html += `<div class="browser-item" onclick="editBrowserItem('${item.id}')">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <div class="browser-item-text">${escapeHTML(item.text)}</div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
+
+function addBrowserHistory() {
+  const text = prompt('输入搜索记录:');
+  if (text) {
+    state.browser.push({ id: genId(), text, time: now() });
+    saveState(); renderBrowser();
+  }
+}
+
+function editBrowserItem(itemId) {
+  const item = state.browser.find(b => b.id === itemId);
+  if (!item) return;
+  document.getElementById('editModalTitle').textContent = '编辑记录';
+  document.getElementById('editTextarea').value = item.text;
+  editCallback = (content) => { item.text = content; saveState(); renderBrowser(); };
+  document.getElementById('editModal').classList.add('show');
+}
+
+// ===== SETTINGS =====
+function renderSettings() {
+  const s = state.settings;
+  const content = document.getElementById('settingsContent');
+  content.innerHTML = `
+    <!-- API -->
+    <div class="settings-group-title" style="padding:6px 16px 4px">API 配置</div>
+    <div class="settings-group">
+      <div class="settings-row"><label>端点</label><input type="text" id="s_endpoint" value="${escapeAttr(s.api.endpoint)}"></div>
+      <div class="settings-row"><label>密钥</label><input type="password" id="s_key" value="${escapeAttr(s.api.key)}"></div>
+      <div class="settings-row"><label>模型</label><input type="text" id="s_model" value="${escapeAttr(s.api.model)}"></div>
+      <div class="settings-row"><label>MaxTok</label><input type="number" id="s_maxtok" value="${s.api.maxTokens || 1000}"></div>
+    </div>
+
+    <!-- System Prompt -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">全局系统提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_system" rows="3">${escapeHTML(s.prompts.system)}</textarea></div>
+    </div>
+
+    <!-- Chat Prompt -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">聊天提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_chat" rows="4">${escapeHTML(s.prompts.chat)}</textarea></div>
+    </div>
+
+    <!-- Moments Prompts -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">朋友圈 - 发动态提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_momentPost" rows="3">${escapeHTML(s.prompts.momentPost)}</textarea></div>
+    </div>
+    <div class="settings-group-title" style="padding:14px 16px 4px">朋友圈 - 评论提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_momentComment" rows="3">${escapeHTML(s.prompts.momentComment)}</textarea></div>
+    </div>
+
+    <!-- Forum Prompts -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">论坛 - 发帖提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_forumPost" rows="3">${escapeHTML(s.prompts.forumPost)}</textarea></div>
+    </div>
+    <div class="settings-group-title" style="padding:14px 16px 4px">论坛 - 回帖提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_forumReply" rows="3">${escapeHTML(s.prompts.forumReply)}</textarea></div>
+    </div>
+
+    <!-- Diary & Browser Prompts -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">日记提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_diary" rows="3">${escapeHTML(s.prompts.diary)}</textarea></div>
+    </div>
+    <div class="settings-group-title" style="padding:14px 16px 4px">浏览器提示词</div>
+    <div class="settings-group">
+      <div class="settings-row"><textarea id="s_browser" rows="3">${escapeHTML(s.prompts.browser)}</textarea></div>
+    </div>
+
+    <!-- Chat Config -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">聊天配置</div>
+    <div class="settings-group">
+      <div class="settings-row"><label>显示数量</label><input type="number" id="s_showCount" value="${s.chatConfig.showCount}" min="5" max="500"></div>
+    </div>
+
+    <!-- Features -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">功能开关（省Token可关闭）</div>
+    <div class="settings-group">
+      <div class="settings-row"><label style="flex:1">表情包</label><div class="settings-toggle ${s.features.stickers ? 'on' : ''}" onclick="toggleFeature(this,'stickers')"></div></div>
+      <div class="settings-row"><label style="flex:1">图片</label><div class="settings-toggle ${s.features.images ? 'on' : ''}" onclick="toggleFeature(this,'images')"></div></div>
+      <div class="settings-row"><label style="flex:1">语音</label><div class="settings-toggle ${s.features.voice ? 'on' : ''}" onclick="toggleFeature(this,'voice')"></div></div>
+      <div class="settings-row"><label style="flex:1">红包</label><div class="settings-toggle ${s.features.redPacket ? 'on' : ''}" onclick="toggleFeature(this,'redPacket')"></div></div>
+    </div>
+
+    <!-- Wallpaper -->
+    <div class="settings-group-title" style="padding:14px 16px 4px">壁纸URL</div>
+    <div class="settings-group">
+      <div class="settings-row"><input type="text" id="s_wallpaper" value="${escapeAttr(s.wallpaper || '')}" placeholder="留空使用默认"></div>
+    </div>
+
+    <button class="settings-btn primary" onclick="saveSettings()">保存设置</button>
+
+    <!-- Characters -->
+    <div class="settings-group-title" style="padding:20px 16px 4px">角色管理</div>
+    <div class="char-list" id="charList"></div>
+    <button class="settings-btn secondary" onclick="addCharacter()">添加角色</button>
+
+    <!-- Data -->
+    <div class="settings-group-title" style="padding:20px 16px 4px">数据管理</div>
+    <button class="settings-btn secondary" onclick="exportData()">导出数据</button>
+    <button class="settings-btn secondary" onclick="importData()">导入数据</button>
+    <button class="settings-btn danger" onclick="resetAllData()">重置所有数据</button>
+    <div style="height:40px"></div>
+  `;
+  renderCharList();
+}
+
+function saveSettings() {
+  const s = state.settings;
+  s.api.endpoint = document.getElementById('s_endpoint').value.trim();
+  s.api.key = document.getElementById('s_key').value.trim();
+  s.api.model = document.getElementById('s_model').value.trim();
+  s.api.maxTokens = parseInt(document.getElementById('s_maxtok').value) || 1000;
+  s.prompts.system = document.getElementById('s_system').value;
+  s.prompts.chat = document.getElementById('s_chat').value;
+  s.prompts.momentPost = document.getElementById('s_momentPost').value;
+  s.prompts.momentComment = document.getElementById('s_momentComment').value;
+  s.prompts.forumPost = document.getElementById('s_forumPost').value;
+  s.prompts.forumReply = document.getElementById('s_forumReply').value;
+  s.prompts.diary = document.getElementById('s_diary').value;
+  s.prompts.browser = document.getElementById('s_browser').value;
+  s.chatConfig.showCount = parseInt(document.getElementById('s_showCount').value) || 50;
+  s.wallpaper = document.getElementById('s_wallpaper').value.trim();
+  applyWallpaper();
+  saveState();
+  showToast('设置已保存', 'success');
+}
+
+function toggleFeature(el, key) {
+  el.classList.toggle('on');
+  state.settings.features[key] = el.classList.contains('on');
+  saveState();
+}
+
+function applyWallpaper() {
+  const img = document.querySelector('.home-bg img');
+  if (state.settings.wallpaper) img.src = state.settings.wallpaper;
+}
+
+// ===== CHARACTER MANAGEMENT =====
+function renderCharList() {
+  const list = document.getElementById('charList');
+  if (!list) return;
+  if (state.characters.length === 0) {
+    list.innerHTML = '<div class="moment-empty" style="padding:20px;font-size:13px">暂无角色，点击下方添加</div>';
+    return;
+  }
+  let html = '';
+  for (const char of state.characters) {
+    html += `<div class="char-item" onclick="editCharacter('${char.id}')">
+      ${avatarHTML(char, 40, 'char-item-avatar')}
+      <div class="char-item-name">${escapeHTML(char.nickname || char.name)}</div>
+      <div class="char-item-del" onclick="event.stopPropagation();deleteCharacter('${char.id}')">删除</div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
+
+function addCharacter() {
+  openCharEditModal({
+    id: genId(), name: '', nickname: '', avatar: '', bio: '', memory: ''
+  }, true);
+}
+
+function editCharacter(charId) {
+  const char = getChar(charId);
+  if (!char) return;
+  openCharEditModal(char, false);
+}
+
+function openCharEditModal(char, isNew) {
+  document.getElementById('charEditTitle').textContent = isNew ? '添加角色' : '编辑角色';
+  const body = document.getElementById('charEditBody');
+  body.innerHTML = `
+    <div class="settings-row"><label>名称</label><input type="text" id="ce_name" value="${escapeAttr(char.name)}"></div>
+    <div class="settings-row"><label>备注</label><input type="text" id="ce_nick" value="${escapeAttr(char.nickname || '')}"></div>
+    <div class="settings-row"><label>头像URL</label><input type="text" id="ce_avatar" value="${escapeAttr(char.avatar || '')}"></div>
+    <div class="settings-row" style="flex-direction:column;align-items:stretch"><label>角色设定 / 人物简介</label><textarea id="ce_bio" rows="5" style="margin-top:6px">${escapeHTML(char.bio || '')}</textarea></div>
+    <div class="settings-row" style="flex-direction:column;align-items:stretch"><label>记忆摘要</label><textarea id="ce_memory" rows="3" style="margin-top:6px">${escapeHTML(char.memory || '')}</textarea></div>
+    <button class="settings-btn primary" onclick="saveCharEdit('${char.id}', ${isNew})" style="margin:16px 18px">保存</button>
+  `;
+  document.getElementById('charEditModal').classList.add('show');
+}
+
+function saveCharEdit(charId, isNew) {
+  const name = document.getElementById('ce_name').value.trim();
+  if (!name) { showToast('名称不能为空', 'error'); return; }
+  const charData = {
+    id: charId,
+    name,
+    nickname: document.getElementById('ce_nick').value.trim(),
+    avatar: document.getElementById('ce_avatar').value.trim(),
+    bio: document.getElementById('ce_bio').value,
+    memory: document.getElementById('ce_memory').value
+  };
+  if (isNew) {
+    state.characters.push(charData);
+  } else {
+    const idx = state.characters.findIndex(c => c.id === charId);
+    if (idx >= 0) state.characters[idx] = charData;
+  }
+  saveState();
+  closeCharEditModal();
+  renderCharList();
+  showToast('角色已保存', 'success');
+}
+
+function deleteCharacter(charId) {
+  if (!confirm('确认删除该角色？')) return;
+  state.characters = state.characters.filter(c => c.id !== charId);
+  delete state.chats[charId];
+  saveState();
+  renderCharList();
+  showToast('已删除', 'success');
+}
+
+function closeCharEditModal() {
+  document.getElementById('charEditModal').classList.remove('show');
+}
+
+// ===== DATA MANAGEMENT =====
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'sp_rp_data.json'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出', 'success');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        state = data;
+        saveState();
+        location.reload();
+      } catch(err) { showToast('导入失败: 无效的JSON', 'error'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function resetAllData() {
+  if (!confirm('确认重置所有数据？此操作不可撤销。')) return;
+  if (!confirm('真的确认吗？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ===== UTILITY =====
+function escapeHTML(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escapeAttr(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ===== HOME APP NAVIGATION =====
+document.querySelectorAll('.home-app[data-page]').forEach(app => {
+  app.addEventListener('click', () => navigateTo(app.dataset.page));
+});
+
+// ===== INIT =====
+function init() {
+  initTheme();
+  applyWallpaper();
+  updatePlayerUI();
+}
+init();
+</script>
+
+</body>
+</html>
+```
