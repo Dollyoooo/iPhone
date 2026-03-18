@@ -475,7 +475,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 </div>
 <input type="file" id="f-inp" accept="image/*" style="display:none">
 <input type="file" id="j-inp" accept=".json" style="display:none">
-<audio id="aud" preload="none"></audio>
+<audio id="aud" preload="none" playsinline webkit-playsinline></audio>
 <script>
 var D={theme:'dark',pw:360,ph:640,pr:46,py:0,fullscreen:false,showSB:true,wallpaper:null,diArt:null,
 iconMode:'color',customIcons:{},beautyProfiles:[],
@@ -884,6 +884,34 @@ function showBS(h){$('bss').innerHTML=h;$('bso').classList.add('on')}
 function closeBS(){$('bso').classList.remove('on');_tav=null;_tuav=null;_timg=null}
 function closeOV(id){$(id).classList.remove('on')}
 init();
+
+// --- 苹果 iOS 声音安全解锁补丁 开始 ---
+(function(){
+    var unlocked = false;
+    // 创建一个完全独立的隐形音频，绝不干扰你原本的音乐播放器
+    var dummyAudio = document.createElement('audio');
+    dummyAudio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
+    dummyAudio.setAttribute('playsinline', '');
+    dummyAudio.setAttribute('webkit-playsinline', '');
+
+    function unlockiOSAudio() {
+        if(unlocked) return;
+        var p = dummyAudio.play();
+        if(p !== undefined) {
+            p.then(function(){
+                unlocked = true;
+            }).catch(function(){});
+        }
+        // 触发一次后就销毁监听，深藏功与名
+        document.removeEventListener('touchstart', unlockiOSAudio);
+        document.removeEventListener('click', unlockiOSAudio);
+    }
+    // 监听屏幕点击来激活
+    document.addEventListener('touchstart', unlockiOSAudio, {once:true});
+    document.addEventListener('click', unlockiOSAudio, {once:true});
+})();
+// --- 苹果 iOS 声音安全解锁补丁 结束 ---
+
 </script>
 </body>
 </html>
