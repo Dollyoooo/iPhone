@@ -885,32 +885,44 @@ function closeBS(){$('bso').classList.remove('on');_tav=null;_tuav=null;_timg=nu
 function closeOV(id){$(id).classList.remove('on')}
 init();
 
-// --- 苹果 iOS 声音安全解锁补丁 开始 ---
+// --- 苹果 iOS PWA 声音解锁补丁 开始 ---
 (function(){
     var unlocked = false;
-    // 创建一个完全独立的隐形音频，绝不干扰你原本的音乐播放器
-    var dummyAudio = document.createElement('audio');
-    dummyAudio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
-    dummyAudio.setAttribute('playsinline', '');
-    dummyAudio.setAttribute('webkit-playsinline', '');
-
     function unlockiOSAudio() {
         if(unlocked) return;
-        var p = dummyAudio.play();
-        if(p !== undefined) {
-            p.then(function(){
-                unlocked = true;
-            }).catch(function(){});
+        unlocked = true;
+
+        // 1. 唤醒苹果底层的 Web Audio API 引擎 (PWA 必须)
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        if(AudioContext) {
+            var ctx = new AudioContext();
+            var buffer = ctx.createBuffer(1, 1, 22050);
+            var source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            if(source.start) source.start(0);
+            else if(source.noteOn) source.noteOn(0);
         }
-        // 触发一次后就销毁监听，深藏功与名
-        document.removeEventListener('touchstart', unlockiOSAudio);
-        document.removeEventListener('click', unlockiOSAudio);
+
+        // 2. 强行激活原本的 audio 标签获取焦点
+        var a = document.getElementById('aud');
+        if(a) {
+            a.load();
+        }
+
+        // 解锁成功后深藏功与名
+        document.removeEventListener('touchstart', unlockiOSAudio, true);
+        document.removeEventListener('touchend', unlockiOSAudio, true);
+        document.removeEventListener('click', unlockiOSAudio, true);
     }
-    // 监听屏幕点击来激活
-    document.addEventListener('touchstart', unlockiOSAudio, {once:true});
-    document.addEventListener('click', unlockiOSAudio, {once:true});
+
+    // 注意这里的 true！这叫“事件捕获”，能强制在按钮拦截前优先执行解锁！
+    document.addEventListener('touchstart', unlockiOSAudio, true);
+    document.addEventListener('touchend', unlockiOSAudio, true);
+    document.addEventListener('click', unlockiOSAudio, true);
 })();
-// --- 苹果 iOS 声音安全解锁补丁 结束 ---
+// --- 苹果 iOS PWA 声音解锁补丁 结束 ---
+
 
 </script>
 </body>
