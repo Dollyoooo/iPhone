@@ -442,9 +442,8 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div style="position:absolute;top:52px;left:14px;z-index:30;cursor:pointer" onclick="go('scrHome')"><svg width="22" height="22" viewBox="0 0 24 24" fill="var(--text2)"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></div>
 <div class="scr-s" style="position:relative">
 <div class="mb" id="mb" onclick="upMomBg()"><img class="mb-bg" id="mb-bg" style="display:none"><div class="mb-gr"></div><div class="mb-bot"><div class="mb-un" id="mb-un" onclick="e(event);editUN()">用户名</div><div class="mb-av" onclick="e(event);upUAv()"><img id="mb-av-i" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#fff"/></svg></div></div></div>
-<div class="m-date-hdr" id="m-date-hdr"></div>
-<div class="m-sig" id="m-sig" onclick="editSig()">点击编辑签名</div>
-<div class="mfeed" id="mfeed"></div>
+<div style="display:flex; justify-content:flex-end; padding: 28px 14px 8px 14px;"><div class="m-sig" id="m-sig" onclick="editSig()" style="padding:0; text-align:right; font-size:13px; color:var(--text2); max-width:75%; word-break:break-word;">点击编辑签名</div></div>
+<div class="m-date-hdr" id="m-date-hdr"></div><div class="mfeed" id="mfeed"></div>
 </div>
 <button class="m-fab" onclick="openNewMom()"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm20.71-11.63a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div>
 
@@ -477,6 +476,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <script>
 var D={theme:'dark',pw:360,ph:640,pr:46,py:0,fullscreen:false,showSB:true,wallpaper:null,diArt:null,
 iconMode:'color',customIcons:{},beautyProfiles:[],
+cssProfs:{chat:[{id:uid(),name:'默认',css:''}],bub:[{id:uid(),name:'默认',css:''}]},aChatCss:0,aBubCss:0,
 user:{name:'',avatar:null,sig:'',momBg:null},chars:[],moments:[],
 apis:[{id:uid(),name:'默认',url:'',key:'',model:'',temp:.7}],aApi:0,
 wbOrder:['chatSys','chatFmt','charFmt','coupleP','rpFmt','rpRecvP','voFmt','imgFmt','stkP'],
@@ -524,7 +524,7 @@ function applySB(){$('sb').classList.toggle('hidden',!D.showSB)}
 function applyWP(){$('phone').style.backgroundImage=D.wallpaper?'url('+D.wallpaper+')':'none'}
 function applyScreenBgs(){var ms=$('msg-sbg');if(D.cust.msgWp){ms.style.backgroundImage='url('+D.cust.msgWp+')';ms.style.opacity=D.cust.msgWpA||.35}else{ms.style.backgroundImage='none';ms.style.opacity=0}var ss=$('set-sbg');if(D.cust.setWp){ss.style.backgroundImage='url('+D.cust.setWp+')';ss.style.opacity=D.cust.setWpA||.35}else{ss.style.backgroundImage='none';ss.style.opacity=0}}
 function applyCol(){$('phone').style.setProperty('--bu',hexA(D.cust.uColor||'#007aff',D.cust.uAlpha!=null?D.cust.uAlpha:1));$('phone').style.setProperty('--bc',hexA(D.cust.cColor||'#e5e5ea',D.cust.cAlpha!=null?D.cust.cAlpha:.85));$('phone').style.setProperty('--font-color',hexA(D.cust.fontColor||'#fff',D.cust.fontAlpha!=null?D.cust.fontAlpha:1));$('phone').style.setProperty('--char-font',hexA(D.cust.charFontColor||'#000',D.cust.charFontAlpha!=null?D.cust.charFontAlpha:1));$('phone').style.setProperty('--chat-ui-a',D.cust.chatUiAlpha!=null?D.cust.chatUiAlpha:0.9);$('phone').style.setProperty('--app-bg-1',hexA(D.cust.appColor||'#ffffff',D.cust.appAlpha!=null?D.cust.appAlpha:0.06));$('phone').style.setProperty('--app-bg-2',D.cust.appSvgColor||'#888888')}
-function applyCustCss(){var s=$('dyn-css');if(s)s.innerHTML=(D.cust.chatCss||'')+'\n'+(D.cust.bubCss||'')}
+function applyCustCss(){var s=$('dyn-css');if(!s)return;var cc=D.cssProfs&&D.cssProfs.chat[D.aChatCss]?D.cssProfs.chat[D.aChatCss].css:'';var bc=D.cssProfs&&D.cssProfs.bub[D.aBubCss]?D.cssProfs.bub[D.aBubCss].css:'';s.innerHTML=(cc||'')+'\n'+(bc||'')}
 function applyBubStyle(){var cb=$('cbody');if(!cb)return;cb.className=cb.className.replace(/\bbs\d\b/g,'').trim()+(D.cust.bubCss?'':' bs'+(D.cust.bubStyle||1))}
 function updateClock(){var t=bjt();$('sbt').textContent=ft(t);$('h-time').textContent=ft(t);$('h-date').textContent=fd(t);if($('m-date-hdr'))$('m-date-hdr').textContent=fdFull(t)}
 function buildDIVis(){var h='';for(var i=0;i<8;i++)h+='<i></i>';$('dif-vis').innerHTML=h}
@@ -662,7 +662,7 @@ function trigAI(){var ch=gch(D.curChat);if(!ch)return;var p=D.apis[D.aApi];if(!p
 function buildPr(ch){var sys='';ensureArcs(ch);var ordered=D.wbOrder.slice();var allKeys=['chatSys','chatFmt','charFmt','coupleP','rpFmt','rpRecvP','voFmt','imgFmt','stkP'];allKeys.forEach(function(k){if(ordered.indexOf(k)<0)ordered.push(k)});var msgs=getMsgs(ch);var hasUnrecvRP=msgs.some(function(m){return m.role==='user'&&m.type==='redpacket'&&!m.charRecv});
 ordered.forEach(function(k){if(k==='sumP')return;if(k==='coupleP'&&!ch.coupleAv)return;if(k==='rpRecvP'&&!hasUnrecvRP)return;var v=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');if(v)sys+=v+'\n\n'});
 if(D.stickers.length>0)sys+=D.stickers.map(function(s){return s.name}).join(', ')+'\n\n';
-if(ch.msgMin&&ch.msgMax)sys+='[回复要求]\n每次回复请发送 '+ch.msgMin+' ~ '+ch.msgMax+' 条自然消息。\n\n';
+if(ch.msgMin&&ch.msgMax)sys+='[回复要求]\n每次回复发送 '+ch.msgMin+' ~ '+ch.msgMax+' 条消息。\n\n';
 sys+='[角色设定]\n角色名：'+ch.name+'\n';if(ch.nick&&ch.nick!==ch.name)sys+='备注：'+ch.nick+'\n';sys+='人设：'+ch.persona+'\n\n';
 var chatUN=getChatUN(ch);sys+='[用户信息]\n用户名：'+chatUN+'\n';if(D.user.name&&D.user.name!==chatUN)sys+='朋友圈昵称：'+D.user.name+'\n';if(D.user.sig)sys+='个性签名：'+D.user.sig+'\n';if(ch.chatUserPersona)sys+='用户设定：'+ch.chatUserPersona+'\n';sys+='\n';
 var mem=getMemory(ch);if(mem)sys+='[记忆摘要]\n'+mem+'\n\n';if(D.cust.syncT)sys+='当前时间：'+ft()+' '+fd()+'\n';
@@ -802,10 +802,43 @@ function loadBProf(i){var p=D.beautyProfiles[i];if(!p)return;D.cust=JSON.parse(J
 function updateBProf(i){if(!confirm('确定用当前的设置覆盖这个存档吗？'))return;D.beautyProfiles[i].data=JSON.parse(JSON.stringify(D.cust));save();toast('已更新配置：'+D.beautyProfiles[i].name)}
 function editBProf(i){var p=D.beautyProfiles[i];var n=prompt("修改配置名称：",p.name);if(n&&n.trim()){p.name=n.trim();save();openBProfs()}}
 function delBProf(i){D.beautyProfiles.splice(i,1);save();openBProfs()}
+
 var _cssT='';
-function openCssEd(type){_cssT=type;var t=type==='chat'?'聊天界面 CSS':'自定义气泡 CSS';var v=type==='chat'?(D.cust.chatCss||''):(D.cust.bubCss||'');var h='<div class="bs-hd"></div><div class="mt">'+t+'</div>';if(type==='chat'){h+='<div style="display:flex;gap:5px;margin-bottom:8px"><button class="fbtn n" style="height:28px;font-size:10px;margin:0" onclick="insCssT(1)">示例：透明无边框</button><button class="fbtn n" style="height:28px;font-size:10px;margin:0" onclick="insCssT(2)">示例：毛玻璃质感</button></div>'}else{h+='<div style="display:flex;gap:5px;margin-bottom:8px"><button class="fbtn n" style="height:28px;font-size:10px;margin:0" onclick="insCssT(3)">示例：极简气泡</button></div>'}h+='<textarea class="fta" id="css-ed-ta" rows="8" style="font-family:monospace;font-size:11px;white-space:pre">'+v+'</textarea><button class="fbtn" onclick="saveCssEd()">保存并应用</button><button class="fbtn n" onclick="openBeauty()">返回</button>';showBS(h)}
-function insCssT(n){var ta=$('css-ed-ta');if(n===1)ta.value='.chat-hb { background: transparent; border-bottom: none; backdrop-filter: none; -webkit-backdrop-filter: none; }\n.cib { background: transparent; border-top: none; backdrop-filter: none; -webkit-backdrop-filter: none; }\n.ft-tray { background: transparent; border-top: none; backdrop-filter: none; -webkit-backdrop-filter: none; }\n.ci-inp { background: rgba(0,0,0,0.2); border: none; color: #fff; }\n.cibtn { background: rgba(0,0,0,0.2); border: none; }\n.cibtn svg { fill: #fff; }';else if(n===2)ta.value='.chat-hb { background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }\n.cib { background: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }\n.ft-tray { background: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }';else if(n===3)ta.value='.bub { border-radius: 4px !important; background: transparent !important; border: 1px solid var(--sep) !important; color: var(--text) !important; box-shadow: none !important; }\n.mr.u .bub { border-color: var(--accent) !important; }';}
-function saveCssEd(){var v=$('css-ed-ta').value;if(_cssT==='chat')D.cust.chatCss=v;else D.cust.bubCss=v;applyCustCss();applyBubStyle();save();toast('已应用 CSS')}
+function openCssEd(type){
+    _cssT=type;
+    if(!D.cssProfs) D.cssProfs={chat:[{id:uid(),name:'默认',css:D.cust.chatCss||''}],bub:[{id:uid(),name:'默认',css:D.cust.bubCss||''}]};
+    var isC = type==='chat';
+    var profs = isC ? D.cssProfs.chat : D.cssProfs.bub;
+    var aIdx = isC ? (D.aChatCss||0) : (D.aBubCss||0);
+    if(aIdx >= profs.length) aIdx = 0;
+    var p = profs[aIdx];
+    var t=isC?'聊天界面 CSS':'自定义气泡 CSS';
+    var chips='';
+    profs.forEach(function(a,i){chips+='<span class="chip'+(i===aIdx?' on':'')+'" onclick="switchCssProf('+i+')">'+a.name+'</span>'});
+    var h='<div class="bs-hd"></div><div class="mt">'+t+'</div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:12px">'+chips+'<span class="chip" onclick="addCssProf()" style="color:var(--accent)">+ 新建</span></div>';
+    h+='<div class="fg"><div class="fl">配置名称</div><input class="fi" id="css-ed-n" value="'+p.name+'"></div>';
+    if(isC){h+='<div style="display:flex;gap:5px;margin-bottom:8px;overflow-x:auto;padding-bottom:4px"><button class="fbtn n" style="flex-shrink:0;width:auto;padding:0 8px;height:28px;font-size:10px;margin:0" onclick="insCssT(1)">透明无边框</button><button class="fbtn n" style="flex-shrink:0;width:auto;padding:0 8px;height:28px;font-size:10px;margin:0" onclick="insCssT(2)">毛玻璃</button><button class="fbtn n" style="flex-shrink:0;width:auto;padding:0 8px;height:28px;font-size:10px;margin:0" onclick="insCssT(4)">全屏背景覆盖(解决顶部问题)</button></div>'}
+    else{h+='<div style="display:flex;gap:5px;margin-bottom:8px"><button class="fbtn n" style="height:28px;font-size:10px;margin:0" onclick="insCssT(3)">示例：极简气泡</button></div>'}
+    h+='<textarea class="fta" id="css-ed-ta" rows="8" style="font-family:monospace;font-size:11px;white-space:pre">'+(p.css||'')+'</textarea>';
+    h+='<button class="fbtn" onclick="saveCssEd()">保存并应用</button>';
+    if(profs.length>1) h+='<button class="fbtn r" style="margin-top:5px" onclick="delCssProf()">删除当前配置</button>';
+    h+='<button class="fbtn n" style="margin-top:5px" onclick="openBeauty()">返回</button>';
+    showBS(h);
+}
+function switchCssProf(i){if(_cssT==='chat')D.aChatCss=i;else D.aBubCss=i;save();applyCustCss();applyBubStyle();openCssEd(_cssT);}
+function addCssProf(){var profs=_cssT==='chat'?D.cssProfs.chat:D.cssProfs.bub;profs.push({id:uid(),name:'配置'+(profs.length+1),css:''});if(_cssT==='chat')D.aChatCss=profs.length-1;else D.aBubCss=profs.length-1;save();openCssEd(_cssT);}
+function delCssProf(){var profs=_cssT==='chat'?D.cssProfs.chat:D.cssProfs.bub;var aIdx=_cssT==='chat'?D.aChatCss:D.aBubCss;if(profs.length<=1)return;profs.splice(aIdx,1);if(_cssT==='chat')D.aChatCss=0;else D.aBubCss=0;save();applyCustCss();applyBubStyle();openCssEd(_cssT);}
+function insCssT(n){var ta=$('css-ed-ta');if(n===1)ta.value='.chat-hb { background: transparent !important; border-bottom: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }\n.cib { background: transparent !important; border-top: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }\n.ft-tray { background: transparent !important; border-top: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }\n.ci-inp { background: rgba(0,0,0,0.2) !important; border: none !important; color: #fff !important; }\n.cibtn { background: rgba(0,0,0,0.2) !important; border: none !important; }\n.cibtn svg { fill: #fff !important; }';else if(n===2)ta.value='.chat-hb { background: rgba(255,255,255,0.1) !important; border-bottom: 1px solid rgba(255,255,255,0.2) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }\n.cib { background: rgba(255,255,255,0.1) !important; border-top: 1px solid rgba(255,255,255,0.2) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }\n.ft-tray { background: rgba(255,255,255,0.1) !important; border-top: 1px solid rgba(255,255,255,0.2) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }';else if(n===3)ta.value='.bub { border-radius: 4px !important; background: transparent !important; border: 1px solid var(--sep) !important; color: var(--text) !important; box-shadow: none !important; }\n.mr.u .bub { border-color: var(--accent) !important; }';else if(n===4)ta.value='#scrChat { background-image: url(替换成你的图片链接) !important; background-size: cover !important; background-position: center !important; }\n.cbody { background: transparent !important; }\n.chat-hb, .cib, .ft-tray { background: rgba(0,0,0,0.3) !important; border: none !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; } /* 这样写背景图就能贯穿全屏覆盖顶部了 */';}
+function saveCssEd(){
+    if(!D.cssProfs) D.cssProfs={chat:[{id:uid(),name:'默认',css:D.cust.chatCss||''}],bub:[{id:uid(),name:'默认',css:D.cust.bubCss||''}]};
+    var isC = _cssT==='chat';
+    var profs = isC ? D.cssProfs.chat : D.cssProfs.bub;
+    var aIdx = isC ? D.aChatCss : D.aBubCss;
+    profs[aIdx].name = $('css-ed-n').value.trim() || '未命名';
+    profs[aIdx].css = $('css-ed-ta').value;
+    applyCustCss();applyBubStyle();save();toast('已保存并应用');
+}
 function renderStkApp(){var el=$('stk-grid');if(!D.stickers.length){if(el)el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text3);font-size:13px">暂无</div>';return}var h='';D.stickers.forEach(function(s,i){h+='<div style="position:relative;cursor:pointer" onclick="editSticker('+i+')"><div onclick="e(event);delSticker('+i+')" style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:rgba(255,59,48,.8);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,.2)"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#fff"/></svg></div><img src="'+s.url+'" style="width:100%;aspect-ratio:1;object-fit:contain;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1))"><div style="font-size:10px;color:var(--text2);text-align:center;margin-top:4px">'+s.name+'</div></div>'});if(el)el.innerHTML=h}
 function editSticker(i){var s=D.stickers[i];showBS('<div class="bs-hd"></div><div class="mt">编辑表情包</div><div class="fg"><div class="fl">名称</div><input class="fi" id="sk-n" value="'+s.name+'"></div><div class="fg"><div class="fl">图片URL或上传</div><input class="fi" id="sk-u" value="'+s.url+'"><div style="display:flex;gap:8px;margin-top:6px"><button class="fbtn n" style="flex:1;height:34px;font-size:11px" onclick="upStkFile()">重新上传</button></div></div><button class="fbtn" onclick="saveSticker('+i+')">保存</button>')}
 function saveSticker(i){var n=$('sk-n').value.trim(),u=$('sk-u').value.trim();if(!n||!u)return;D.stickers[i]={name:n,url:u};save();closeBS();renderStkApp();toast('已保存')}
