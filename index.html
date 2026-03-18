@@ -475,7 +475,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 </div>
 <input type="file" id="f-inp" accept="image/*" style="display:none">
 <input type="file" id="j-inp" accept=".json" style="display:none">
-<audio id="aud" preload="auto" playsinline webkit-playsinline></audio>
+<audio id="aud" preload="none"></audio>
 <script>
 var D={theme:'dark',pw:360,ph:640,pr:46,py:0,fullscreen:false,showSB:true,wallpaper:null,diArt:null,
 iconMode:'color',customIcons:{},beautyProfiles:[],
@@ -569,10 +569,10 @@ $('di').addEventListener('click',function(){if(!$('di').classList.contains('exp'
 function initMu(){var s=D.wb.music&&D.wb.music[D.songI];$('dif-nm').textContent=s?s.name:'未播放';$('dif-ar').textContent=s?s.artist||'':'在世界书添加';$('di').classList.toggle('pl',D.playing);updPlBtn();updLyrics(s)}
 function updLyrics(s){var el=$('dif-ly-t');if(!el)return;if(s&&s.lyrics){el.textContent=s.lyrics;el.style.setProperty('--lscroll-dur',Math.max(5,s.lyrics.length/3)+'s')}else el.textContent=''}
 function updPlBtn(){$('dif-pl').innerHTML=D.playing?'<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="#fff"/></svg>':'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>'}
-function muTg(){if(!D.wb.music||!D.wb.music.length){toast('请在世界书添加音乐');return}var a=$('aud');if(D.playing){a.pause();D.playing=false}else{var s=D.wb.music[D.songI];if(s&&s.url){if(a.src!==s.url){a.src=s.url;a.load()}a.playbackRate=D.playSpd||1;var p=a.play();if(p!==undefined){p.catch(function(e){console.log(e)})}}D.playing=true;sendMuSys(s)}$('di').classList.toggle('pl',D.playing);updPlBtn();updLyrics(D.wb.music[D.songI]);save()}
+function muTg(){if(!D.wb.music||!D.wb.music.length){toast('请在世界书添加音乐');return}var a=$('aud');if(D.playing){a.pause();D.playing=false}else{var s=D.wb.music[D.songI];if(s&&s.url){a.src=s.url;a.playbackRate=D.playSpd||1;a.play().catch(function(){})}D.playing=true;sendMuSys(s)}$('di').classList.toggle('pl',D.playing);updPlBtn();updLyrics(D.wb.music[D.songI]);save()}
 function muNx(){if(!D.wb.music||!D.wb.music.length)return;D.songI=(D.songI+1)%D.wb.music.length;playCur()}
 function muPv(){if(!D.wb.music||!D.wb.music.length)return;D.songI=(D.songI-1+D.wb.music.length)%D.wb.music.length;playCur()}
-function playCur(){var s=D.wb.music[D.songI];if(!s)return;$('dif-nm').textContent=s.name;$('dif-ar').textContent=s.artist||'';updLyrics(s);if(D.playing&&s.url){var a=$('aud');if(a.src!==s.url){a.src=s.url;a.load()}a.playbackRate=D.playSpd||1;var p=a.play();if(p!==undefined){p.catch(function(e){console.log(e)})}sendMuSys(s)}save()}
+function playCur(){var s=D.wb.music[D.songI];if(!s)return;$('dif-nm').textContent=s.name;$('dif-ar').textContent=s.artist||'';updLyrics(s);if(D.playing&&s.url){$('aud').src=s.url;$('aud').playbackRate=D.playSpd||1;$('aud').play().catch(function(){});sendMuSys(s)}save()}
 function seekM(ev){var a=$('aud');if(!a.duration)return;var r=ev.currentTarget.getBoundingClientRect();a.currentTime=((ev.clientX-r.left)/r.width)*a.duration}
 function cycleSpd(){var spds=[.5,1,1.5,2];var i=spds.indexOf(D.playSpd||1);D.playSpd=spds[(i+1)%spds.length];$('aud').playbackRate=D.playSpd;$('dif-spd').textContent=(D.playSpd||1).toFixed(1)+'x';save()}
 function togFav(){var s=D.wb.music&&D.wb.music[D.songI];if(!s)return;s.fav=!s.fav;$('dif-fav').classList.toggle('on',!!s.fav);save();toast(s.fav?'已收藏':'已取消')}
