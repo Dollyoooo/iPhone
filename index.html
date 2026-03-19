@@ -191,12 +191,12 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 .exp-ico{width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;flex-shrink:0;opacity:.4}
 .exp-ico:active{opacity:.7}
 .exp-ico svg{width:14px;height:14px;fill:var(--text3)}
-.cib{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;z-index:40;transition:bottom 0.25s cubic-bezier(0.2,0.8,0.3,1)}
-.cib-quote{display:none;align-items:center;gap:6px;padding:6px 12px;background:var(--nav-bg);border-top:1px solid var(--sep);font-size:11px;color:var(--text2)}
+.cib{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;z-index:40;transition:bottom 0.25s cubic-bezier(0.2,0.8,0.3,1);background:var(--nav-bg);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--sep)}
+.cib-quote{display:none;align-items:center;gap:6px;padding:6px 12px;border-bottom:1px solid var(--sep);font-size:11px;color:var(--text2)}
 .cib-quote.on{display:flex}
 .cib-quote-x{cursor:pointer;padding:2px 6px;font-size:16px;color:var(--text3);flex-shrink:0}
 .cib-quote-c{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.cib-row{display:flex;align-items:center;gap:7px;padding:12px 12px 20px;background:var(--nav-bg);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--sep)}
+.cib-row{display:flex;align-items:center;gap:7px;padding:12px 12px 20px}
 .cibtn{width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--sep);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform .12s}
 .cibtn:active{transform:scale(.83)}
 .cibtn svg{width:17px;height:17px;fill:var(--text2);display:block}
@@ -551,7 +551,8 @@ function applySB(){$('sb').classList.toggle('hidden',!D.showSB)}
 function applyWP(){$('phone').style.backgroundImage=D.wallpaper?'url('+D.wallpaper+')':'none'}
 function applyScreenBgs(){var ms=$('msg-sbg');if(D.cust.msgWp){ms.style.backgroundImage='url('+D.cust.msgWp+')';ms.style.opacity=D.cust.msgWpA||.35}else{ms.style.backgroundImage='none';ms.style.opacity=0}var ss=$('set-sbg');if(D.cust.setWp){ss.style.backgroundImage='url('+D.cust.setWp+')';ss.style.opacity=D.cust.setWpA||.35}else{ss.style.backgroundImage='none';ss.style.opacity=0}}
 function applyCol(){$('phone').style.setProperty('--bu',hexA(D.cust.uColor||'#007aff',D.cust.uAlpha!=null?D.cust.uAlpha:1));$('phone').style.setProperty('--bc',hexA(D.cust.cColor||'#e5e5ea',D.cust.cAlpha!=null?D.cust.cAlpha:.85));$('phone').style.setProperty('--font-color',hexA(D.cust.fontColor||'#fff',D.cust.fontAlpha!=null?D.cust.fontAlpha:1));$('phone').style.setProperty('--char-font',hexA(D.cust.charFontColor||'#000',D.cust.charFontAlpha!=null?D.cust.charFontAlpha:1));$('phone').style.setProperty('--chat-ui-a',D.cust.chatUiAlpha!=null?D.cust.chatUiAlpha:0.9);$('phone').style.setProperty('--app-bg-1',hexA(D.cust.appColor||'#ffffff',D.cust.appAlpha!=null?D.cust.appAlpha:0.06));$('phone').style.setProperty('--app-bg-2',D.cust.appSvgColor||'#888888');$('phone').style.setProperty('--q-color',D.cust.qColor||'var(--text2)');$('phone').style.setProperty('--q-line',D.cust.qLine||'var(--accent)')}
-function applyCustCss(){var s=$('dyn-css');if(s)s.innerHTML=(D.cust.chatCss||'')+'\n'+(D.cust.bubCss||'')}
+function prefixCss(css,pfx){if(!css)return'';var out='',r=css.split('}');for(var i=0;i<r.length;i++){var b=r[i],j=b.indexOf('{');if(j<0){out+=b;continue}var sel=b.substring(0,j),body=b.substring(j+1);if(sel.trim().charAt(0)==='@'){out+=b+'}';continue}var ps=sel.split(',').map(function(s){s=s.trim();return(!s||s.indexOf(pfx)>=0)?s:pfx+' '+s});out+=ps.join(', ')+'{'+body+'}'}return out}
+function applyCustCss(){var s=$('dyn-css');if(s)s.innerHTML=prefixCss(D.cust.chatCss||'','#phone')+'\n'+prefixCss(D.cust.bubCss||'','#phone')}
 function applyBubStyle(){var cb=$('cbody');if(!cb)return;cb.className=cb.className.replace(/\bbs\d\b/g,'').trim()+(D.cust.bubCss?'':' bs'+(D.cust.bubStyle||1))}
 function updateClock(){var t=bjt();$('sbt').textContent=ft(t);$('h-time').textContent=ft(t);$('h-date').textContent=fd(t);if($('m-date-hdr'))$('m-date-hdr').textContent=fdFull(t)}
 function buildDIVis(){var h='';for(var i=0;i<8;i++)h+='<i></i>';$('dif-vis').innerHTML=h}
