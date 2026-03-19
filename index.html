@@ -121,10 +121,10 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 .hbtn:active{transform:scale(.83)}
 .hbtn svg{width:16px;height:16px;fill:var(--text2);display:block}
 .hbtn-bare{background:none!important;border:none!important;box-shadow:none!important}
-.chat-hb{display:flex;align-items:center;padding:52px 10px 10px;flex-shrink:0;background:var(--nav-bg);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-bottom:1px solid var(--sep);position:relative;z-index:50}
+.chat-hb{display:flex;align-items:center;justify-content:space-between;padding:52px 10px 10px;flex-shrink:0;background:var(--nav-bg);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-bottom:1px solid var(--sep);position:relative;z-index:50}
 .chat-bk{display:flex;align-items:center;cursor:pointer;padding:5px;background:none;border:none;flex-shrink:0}
 .chat-bk svg{width:22px;height:22px;fill:var(--text2)}
-.chat-nm{flex:1;font-size:16px;font-weight:600;color:var(--text);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px}
+.chat-nm{position:absolute;left:50%;transform:translateX(-50%);top:46px;font-size:16px;font-weight:600;color:var(--text);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:50%;padding:4px 8px}
 .chat-r{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .role-tog{display:flex;align-items:center;padding:4px 10px;border-radius:14px;background:var(--card);border:1px solid var(--sep);cursor:pointer;gap:4px;font-size:11px;font-weight:600;color:var(--text2);flex-shrink:0;transition:all .2s}
 .role-tog.char-mode{background:rgba(255,45,85,.12);border-color:rgba(255,45,85,.2);color:var(--pink)}
@@ -521,7 +521,7 @@ function fmtS(s){s=s||0;return Math.floor(s/60)+':'+String(Math.floor(s%60)).pad
 function hexA(hex,a){try{var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return'rgba('+r+','+g+','+b+','+(a!=null?a:1)+')'}catch(x){return hex}}
 function normalizeURL(u){u=(u||'').trim().replace(/\/+$/,'');if(!u)return'';if(!/^https?:\/\//i.test(u))u='https://'+u;if(!/\/v1/i.test(u)&&!/\/chat/i.test(u))if(!u.endsWith('/v1'))u+='/v1';return u}
 function estTok(s){return Math.ceil(((typeof s==='string'?s:JSON.stringify(s))||'').length/2)}
-function save(){try{localStorage.setItem('mp8',JSON.stringify(D))}catch(x){}}
+function save(){try{localStorage.setItem('mp8',JSON.stringify(D))}catch(x){if(!save._w){save._w=1;setTimeout(function(){toast('存储空间不足，请导出备份')},200)}}}
 function load(){try{var s=localStorage.getItem('mp8');if(!s)return;var p=JSON.parse(s);function dm(t,s){Object.keys(s).forEach(function(k){if(s[k]!==null&&typeof s[k]==='object'&&!Array.isArray(s[k])&&typeof t[k]==='object'&&t[k]!==null&&!Array.isArray(t[k]))dm(t[k],s[k]);else if(s[k]!==undefined)t[k]=s[k]})}dm(D,p)}catch(x){}}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},2400)}
 load();
@@ -568,7 +568,7 @@ function getChatUAv(ch){return ch.chatUserAvatar||D.user.avatar}
 function countRealMsgs(arc){return arc.msgs.filter(function(m){return m.role==='user'||m.role==='char'}).length}
 
 /* ===== 7: Item menu for messages and world book ===== */
-function openItemMenu(ev,type,idx){ev.stopPropagation();var mp=$('map');var h='';h+='<div class="ma-i" onclick="moveItem(\''+type+'\','+idx+',-999)">置顶</div>';h+='<div class="ma-i" onclick="moveItem(\''+type+'\','+idx+',-1)">上移</div>';h+='<div class="ma-i" onclick="moveItem(\''+type+'\','+idx+',1)">下移</div>';mp.innerHTML=h;var pr=$('phone').getBoundingClientRect();var btn=ev.currentTarget;var card=btn.closest('.mi')||btn;var r=card.getBoundingClientRect();var mw=100;var x=r.left-pr.left+(r.width/2)-(mw/2);var y=r.top-pr.top+(r.height/2)-40;x=Math.max(8,Math.min(x,pr.width-mw-8));mp.style.left=x+'px';mp.style.top=Math.max(56,y)+'px';mp.classList.add('on')}
+function openItemMenu(ev,type,idx){ev.stopPropagation();var mp=$('map');var h='';h+='<div class="ma-i" onclick="moveItem(\''+type+'\','+idx+',-999)">置顶</div>';h+='<div class="ma-i" onclick="moveItem(\''+type+'\','+idx+',-1)">上移</div>';h+='<div class="ma-i" onclick="moveItem(\''+type+'\','+idx+',1)">下移</div>';mp.innerHTML=h;mp.style.left='-9999px';mp.style.top='0';mp.classList.add('on');var mw=mp.offsetWidth,mh=mp.offsetHeight;var pr=$('phone').getBoundingClientRect();var card=ev.currentTarget.closest('.mi')||ev.currentTarget.closest('.wbs')||ev.currentTarget;var r=card.getBoundingClientRect();var x=r.left-pr.left+(r.width/2)-(mw/2);var y=r.top-pr.top+(r.height/2)-(mh/2);x=Math.max(8,Math.min(x,pr.width-mw-8));y=Math.max(50,Math.min(y,pr.height-mh-8));mp.style.left=x+'px';mp.style.top=y+'px'}
 function moveItem(type,i,dir){$('map').classList.remove('on');if(type==='char'){if(dir===-999){var c=D.chars.splice(i,1)[0];D.chars.unshift(c)}else{var ni=i+dir;if(ni<0||ni>=D.chars.length)return;var tmp=D.chars[i];D.chars[i]=D.chars[ni];D.chars[ni]=tmp}save();renderML()}else if(type==='wb'){var k=D.wbOrder[i];if(!k)return;if(dir===-999){D.wbOrder.splice(i,1);D.wbOrder.unshift(k)}else{var ni2=i+dir;if(ni2<0||ni2>=D.wbOrder.length)return;D.wbOrder.splice(i,1);D.wbOrder.splice(ni2,0,k)}save();var vals={};wbKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el)vals[s[0]]=el.value});var mel=$('wb_music');if(mel)vals._music=mel.value;openWB();wbKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el&&vals[s[0]]!=null)el.value=vals[s[0]]});var mel2=$('wb_music');if(mel2&&vals._music!=null)mel2.value=vals._music}}
 
 function renderML(){var el=$('msgList');if(!D.chars.length){el.innerHTML='<div style="text-align:center;padding:56px 16px;color:var(--text3);font-size:13px">暂无角色<br>点右上角创建</div>';return}var h='';D.chars.forEach(function(c,i){ensureArcs(c);var av=c.avatar?'<img src="'+c.avatar+'">':'<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';h+='<div class="mi" onclick="openChat(\''+c.id+'\')"><div class="mi-dots" onclick="e(event);openItemMenu(event,\'char\','+i+')"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></div><div class="mia">'+av+'</div><div class="min"><div class="mi-nm">'+(c.nick||c.name)+'</div><div class="mi-pr">'+(c.lastM?esc(c.lastM.substring(0,28)):'暂无消息')+'</div></div><div class="mi-t">'+(c.lastT||'')+'</div></div>'});el.innerHTML=h}
@@ -578,7 +578,7 @@ if(!D.fullscreen){h+='<div class="sg-t">手机尺寸与位置</div><div class="s
 h+='<div class="sg-t">显示</div><div class="sg">';
 [['hideSys','隐藏系统消息'],['syncT','同步时间给AI'],['musicSys','一起听歌通知'],['crossR','修罗场模式']].forEach(function(it){h+='<div class="sgi"><div class="sgi-l">'+it[1]+'</div><div class="tog'+(D.cust[it[0]]?' on':'')+'" onclick="togG(\''+it[0]+'\',this)"><div class="tok"></div></div></div>'});h+='</div>';
 h+='<div class="sg-t">朋友圈网名</div><div class="sg"><div class="sgi" onclick="editUN()"><div class="sgi-l">朋友圈昵称</div><div class="sgi-r"><span>'+(D.user.name||'未设置')+'</span></div></div></div>';
-h+='<div class="sg-t">数据</div><div class="sg"><div class="sgi" onclick="expAll()"><div class="sgi-l">导出全部数据</div></div><div class="sgi" onclick="impAll()"><div class="sgi-l">导入数据</div></div></div>';
+h+='<div class="sg-t">数据</div><div class="sg"><div class="sgi" onclick="expAll()"><div class="sgi-l">导出全部数据</div></div><div class="sgi" onclick="impAll()"><div class="sgi-l">导入数据</div></div><div class="sgi" onclick="clearAllData()"><div class="sgi-l" style="color:var(--red)">清空所有数据</div></div></div>';
 $('set-body').innerHTML=h}
 function sgi(fn,label,on){return'<div class="sgi" onclick="'+fn+'()"><div class="sgi-l">'+label+'</div><div class="tog'+(on?' on':'')+'"><div class="tok"></div></div></div>'}
 function updPh(){D.pw=+$('pw-r').value;D.ph=+$('ph-r').value;D.pr=+$('pr-r').value;D.py=+$('py-r').value;$('pw-b').textContent=D.pw;$('ph-b').textContent=D.ph;$('pr-b').textContent=D.pr;$('py-b').textContent=D.py;applyPh();save()}
@@ -992,8 +992,9 @@ function sendMC(){var m=D.moments.find(function(x){return x.id===D.curMom});if(!
 function trigMomAI(){var m=D.moments.find(function(x){return x.id===D.curMom});if(!m)return;refreshC(m.id)}
 function showNotif(ch,prev){$('notif-nm').textContent=ch.nick||ch.name;$('notif-ms').textContent=prev.substring(0,50);$('notif-t').textContent=ft();$('notif-av').innerHTML=ch.avatar?'<img src="'+ch.avatar+'">':'';var n=$('notif');n._cid=ch.id;n.classList.add('on');clearTimeout(n._t);n._t=setTimeout(function(){n.classList.remove('on')},5000)}
 function clickNotif(){var n=$('notif');n.classList.remove('on');if(n._cid)openChat(n._cid)}
-function expAll(){save();var b=new Blob([localStorage.getItem('mp8')],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='phone.json';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
+function expAll(){var j=JSON.stringify(D);try{localStorage.setItem('mp8',j)}catch(x){}var b=new Blob([j],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='phone.json';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
 function impAll(){upJSON(function(txt){try{JSON.parse(txt);localStorage.setItem('mp8',txt);toast('导入成功');setTimeout(function(){location.reload()},800)}catch(x){toast('失败')}})}
+function clearAllData(){if(confirm('确定要清空所有数据并恢复初始设置吗？此操作不可逆！建议先导出备份。')){localStorage.removeItem('mp8');location.reload()}}
 function showBS(h){$('bss').innerHTML=h;$('bso').classList.add('on')}
 function closeBS(){$('bso').classList.remove('on');_tav=null;_tuav=null;_timg=null}
 function closeOV(id){$(id).classList.remove('on')}
