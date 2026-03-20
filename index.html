@@ -416,7 +416,11 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 .usage-sel{display:flex;gap:4px;margin-top:4px}
 .usage-sel-i{flex:1;padding:6px 0;text-align:center;border-radius:8px;border:1px solid var(--sep);background:var(--card);cursor:pointer;font-size:11px;color:var(--text2);font-weight:600}
 .usage-sel-i.on{border-color:var(--accent);background:rgba(87,107,149,.1);color:var(--accent)}
+.stk-bnav{position:absolute;bottom:24px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:12px;z-index:40;padding:0 14px}
+.stk-bn{font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;padding:8px 18px;border-radius:24px;background:rgba(128,128,128,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--sep);box-shadow:0 4px 16px rgba(0,0,0,0.12);transition:all .2s;white-space:nowrap}
+.stk-bn.on{color:var(--text);text-shadow:0 2px 8px var(--text3)}
 </style>
+
 <style id="dyn-css"></style>
 </head>
 <body>
@@ -489,7 +493,17 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div class="hbar" style="position:relative;z-index:10"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">设置</div><div style="width:34px"></div></div>
 <div class="scr-s" style="position:relative;z-index:1"><div class="sl" id="set-body"></div></div></div>
 
-<div class="screen" id="scrStk"><div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">表情包</div><button class="hbtn" onclick="openStkAdd()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div><div class="scr-s"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px" id="stk-grid"></div></div></div>
+<div class="screen" id="scrStk">
+<div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">表情包</div><button class="hbtn" onclick="openStkAdd()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
+<div class="scr-s" style="padding-bottom:90px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px" id="stk-grid"></div></div>
+
+<div class="stk-bnav">
+<div class="stk-bn on" onclick="setStkFilter('all_view', this)">全部</div>
+<div class="stk-bn" onclick="setStkFilter('all', this)">通用</div>
+<div class="stk-bn" onclick="setStkFilter('user', this)">User</div>
+<div class="stk-bn" onclick="setStkFilter('char', this)">Char</div>
+</div>
+</div>
 
 <div class="ov" id="ovWB"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovWB')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn" onclick="saveWB()" style="background:rgba(87,107,149,.1)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--accent)"/></svg></button></div><div class="ov-bd" id="wb-bd"></div></div>
 <div class="ov" id="ovCFS"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovCFS')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">角色设置</div><button class="hbtn" onclick="saveCFS()" style="background:rgba(87,107,149,.1)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--accent)"/></svg></button></div><div class="ov-bd" id="cfs-bd"></div></div>
@@ -610,7 +624,7 @@ function togFS(){D.fullscreen=!D.fullscreen;applyFS();save();renderSet()}
 function togSB(){D.showSB=!D.showSB;applySB();save();renderSet()}
 function togG(k,el){el.classList.toggle('on');D.cust[k]=el.classList.contains('on');save();if(k==='hideSys'&&D.curChat)renderBub()}
 var curScr='scrHome';
-function go(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});$(id).classList.add('active');curScr=id;document.querySelectorAll('.bn').forEach(function(n){n.classList.toggle('on',n.dataset.s===id)});$('bnav').style.display=['scrChat','scrMD'].indexOf(id)>=0?'none':'flex';if(id==='scrMsg'){renderML();applyScreenBgs()}if(id==='scrMom')renderMom();if(id==='scrStk')renderStkApp();if(id==='scrSet'){renderSet();applyScreenBgs()}}
+function go(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});$(id).classList.add('active');curScr=id;document.querySelectorAll('.bn').forEach(function(n){n.classList.toggle('on',n.dataset.s===id)});$('bnav').style.display=['scrChat','scrMD','scrStk'].indexOf(id)>=0?'none':'flex';if(id==='scrMsg'){renderML();applyScreenBgs()}if(id==='scrMom')renderMom();if(id==='scrStk')renderStkApp();if(id==='scrSet'){renderSet();applyScreenBgs()}}
 function exitChat(){go('scrMsg')}
 function upFile(cb){var i=$('f-inp');i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(v){cb(v.target.result)};r.readAsDataURL(f);i.value=''};i.click()}
 function upJSON(cb){var i=$('j-inp');i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(v){cb(v.target.result)};r.readAsText(f);i.value=''};i.click()}
@@ -947,7 +961,10 @@ function delBProf(i){D.beautyProfiles.splice(i,1);save();openBProfs()}
 var _cssT='';
 function openCssEd(type){_cssT=type;var t=type==='chat'?'聊天界面 CSS':'自定义气泡 CSS';var v=type==='chat'?(D.cust.chatCss||''):(D.cust.bubCss||'');_wbEditKey=type==='chat'?'_chatcss':'_bubcss';$('wbef-t').textContent=t;$('wbef-ta').value=v;closeBS();$('wbEditOV').classList.add('on')}
 
-function renderStkApp(){var el=$('stk-grid');if(!el)return;var stkPrompt=D.wb.stkP!=null?D.wb.stkP:(WB_DEFAULTS.stkP||'');var h='<div style="grid-column:1/-1;margin-bottom:4px"><div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:600">表情包系统提示词</div><textarea class="fta" id="stk-p-ta" rows="2" onchange="D.wb.stkP=this.value;save();toast(\'提示词已保存\')">'+esc(stkPrompt)+'</textarea></div>';if(!D.stickers.length){el.innerHTML=h+'<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text3);font-size:13px">暂无表情包</div>';return}D.stickers.forEach(function(s,i){var uLabel={all:'通用',user:'User',char:'Char'}[s.usage||'all']||'通用';h+='<div style="position:relative;cursor:pointer" onclick="editSticker('+i+')"><div onclick="e(event);delSticker('+i+')" style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:rgba(255,59,48,.8);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,.2)"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#fff"/></svg></div><img src="'+s.url+'" style="width:100%;aspect-ratio:1;object-fit:contain;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1))"><div style="font-size:10px;color:var(--text2);text-align:center;margin-top:4px">'+s.name+'</div><div style="font-size:8px;color:var(--text3);text-align:center">'+uLabel+'</div></div>'});el.innerHTML=h}
+var _stkFilter='all_view';
+function setStkFilter(f,el){_stkFilter=f;document.querySelectorAll('.stk-bn').forEach(function(n){n.classList.remove('on')});el.classList.add('on');renderStkApp()}
+function renderStkApp(){var el=$('stk-grid');if(!el)return;var stkPrompt=D.wb.stkP!=null?D.wb.stkP:(WB_DEFAULTS.stkP||'');var h='<div style="grid-column:1/-1;margin-bottom:4px"><div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:600">表情包系统提示词</div><textarea class="fta" id="stk-p-ta" rows="2" onchange="D.wb.stkP=this.value;save();toast(\'提示词已保存\')">'+esc(stkPrompt)+'</textarea></div>';var filtered=D.stickers.map(function(s,i){return{s:s,i:i}});if(_stkFilter!=='all_view'){filtered=filtered.filter(function(item){return (item.s.usage||'all')===_stkFilter})}if(!filtered.length){el.innerHTML=h+'<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text3);font-size:13px">暂无表情包</div>';return}filtered.forEach(function(item){var s=item.s,i=item.i;var uLabel={all:'通用',user:'User',char:'Char'}[s.usage||'all']||'通用';h+='<div style="position:relative;cursor:pointer" onclick="editSticker('+i+')"><div onclick="e(event);delSticker('+i+')" style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:rgba(255,59,48,.8);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,.2)"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#fff"/></svg></div><img src="'+s.url+'" style="width:100%;aspect-ratio:1;object-fit:contain;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1))"><div style="font-size:10px;color:var(--text2);text-align:center;margin-top:4px">'+s.name+'</div><div style="font-size:8px;color:var(--text3);text-align:center">'+uLabel+'</div></div>'});el.innerHTML=h}
+
 function editSticker(i){var s=D.stickers[i];var h='<div class="bs-hd"></div><div class="mt">编辑表情包</div>';
 h+='<div class="fg"><div class="fl">名称</div><input class="fi" id="sk-n" value="'+s.name+'"></div>';
 h+='<div class="fg"><div class="fl">图片URL或上传</div><input class="fi" id="sk-u" value="'+s.url+'"><div style="display:flex;gap:8px;margin-top:6px"><button class="fbtn n" style="flex:1;height:34px;font-size:11px" onclick="upStkFile()">重新上传</button></div></div>';
