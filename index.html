@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#000000" id="theme-color-meta">
+<!-- 开启沉浸式全屏(PWA)支持，隐藏系统自带的状态栏白边/黑边 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#111111">
 <!-- 下面是网页标签页显示的名字 -->
 <title>多莉机</title>
 <!-- 下面是添加到手机主屏幕时显示的名字 -->
@@ -49,9 +50,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:-ap
 body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#000}
 textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 #phone{width:var(--pw);height:var(--ph);border-radius:var(--pr);transform:translateY(var(--py));position:relative;overflow:hidden;background:var(--bg);background-size:cover;background-position:center;box-shadow:0 0 0 3px #222,0 0 0 5px #444,0 40px 100px rgba(0,0,0,.7);transition:background .3s, transform .3s}
-#phone.phone-fs{width:100dvw!important;height:100dvh!important;border-radius:0!important;box-shadow:none!important;position:fixed!important;top:0!important;left:0!important;transform:none!important;z-index:9999!important}
+#phone.phone-fs{width:100vw!important;height:100vh!important;border-radius:0!important;box-shadow:none!important;position:fixed!important;top:0!important;left:0!important;transform:none!important;z-index:9999!important;padding-top:env(safe-area-inset-top)!important;padding-bottom:env(safe-area-inset-bottom)!important;box-sizing:border-box!important}
 #phone *::-webkit-scrollbar{display:none}
-.sb{position:absolute;top:0;left:0;right:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:14px 20px 0;z-index:500;pointer-events:none}
+.sb{position:absolute;top:env(safe-area-inset-top);left:0;right:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:14px 20px 0;z-index:500;pointer-events:none}
 .sb.hidden{display:none}
 .sb span{font-size:14px;font-weight:600;color:var(--sb-c);letter-spacing:-.3px}
 .sb-r{display:flex;align-items:center;gap:5px}
@@ -608,7 +609,7 @@ applyTheme();applyPh();applyCol();buildDIVis();updateClock();setInterval(updateC
 if(D.user.avatar)si('mb-av-i',D.user.avatar);if(D.user.momBg)si('mb-bg',D.user.momBg);if(D.user.sig)$('m-sig').textContent=D.user.sig;if(D.diArt)$('dif-art').innerHTML='<div class="dif-spin"></div><img src="'+D.diArt+'">';$('mb-un').textContent=D.user.name||'用户名';applyBubStyle();applyFS();applySB();
 $('phone').addEventListener('click',function(ev){var di=$('di');if(di.classList.contains('exp')&&!di.contains(ev.target))di.classList.remove('exp');var mp=$('map');if(mp.classList.contains('on')&&!mp.contains(ev.target))mp.classList.remove('on')});renderStkApp();updateRoleTog();startOfflineLoop()}
 function si(id,src){var i=$(id);if(i){i.src=src;i.style.display='block'}}
-function applyTheme(){$('phone').classList.toggle('dark',D.theme==='dark');var m=$('theme-color-meta');if(m)m.content=D.theme==='dark'?'#000000':'#f2f2f7';}
+function applyTheme(){$('phone').classList.toggle('dark',D.theme==='dark')}
 function applyPh(){var p=$('phone');p.style.setProperty('--pw',D.pw+'px');p.style.setProperty('--ph',D.ph+'px');p.style.setProperty('--pr',D.pr+'px');p.style.setProperty('--py',(D.py||0)+'px')}
 function applyFS(){$('phone').classList.toggle('phone-fs',!!D.fullscreen)}
 function applySB(){$('sb').classList.toggle('hidden',!D.showSB)}
