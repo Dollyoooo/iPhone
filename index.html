@@ -516,7 +516,7 @@ user:{name:'',avatar:null,sig:'',momBg:null},chars:[],moments:[],
 apis:[{id:uid(),name:'默认',url:'',key:'',model:'',temp:.7}],aApi:0,
 wbOrder:['chatSys','chatFmt','charFmt','coupleP','stkP','rpSysP'],
 momOrder:['momReplyUser','momReplyChar','momReplyOneP','momSocialP','momPost','crossRP'],
-wb:{chatSys:'你是一位沉浸式角色扮演助手。根据角色设定，以角色第一人称用中文回复。',chatFmt:'【回复格式说明】\n返回JSON数组。\n- 普通：{"msg":"内容"}\n- 发红包：{"type":"redpacket","amount":"金额","note":"备注"}\n- 收取用户红包：{"type":"rp_receive"}\n- 退回用户红包：{"type":"rp_refund"}\n- 语音：{"type":"voice","content":"内容","dur":"5s"}\n- 图片：{"type":"image","desc":"描述"}\n- 表情包：{"type":"sticker","name":"名称"}',charFmt:'【角色行为准则】\n角色应自然、真实地表达情感。',coupleP:'[头像：当前正在和用户使用情侣头像] ',stkP:'【可用表情包列表】角色发送表情时name必须完全匹配：',rpSysP:'【系统提示】用户刚给你发了红包。请在回复中包含 {"type":"rp_receive"} 来收取，或包含 {"type":"rp_refund"} 来退回。',sumP:'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：',momReplyUser:'【用户朋友圈评论】\n所有角色各自独立评论一条，不要互相回复或提及其他角色。\n返回JSON数组：[{"name":"角色备注名","content":"纯评论内容"}]\n注意：content里不要包含角色自己的名字前缀。',momReplyChar:'【角色朋友圈社交圈评论】\n根据角色人设生成3~5个和角色有关的人物评论。返回JSON数组：[{"name":"人物名","content":"评论内容"}]\n注意：content里不要包含自己的名字前缀。',momReplyOneP:'【单角色评论回复】\n自然地回复朋友圈评论区的最新对话。只返回纯文本回复内容，不要JSON，不要加自己的名字前缀。\n若回复特定人，开头写"回复 对方名：内容"。',
+wb:{chatSys:'你是一位沉浸式角色扮演助手。根据角色设定，以角色第一人称用中文回复。',chatFmt:'【回复格式说明】\n返回JSON数组。\n- 普通：{"msg":"内容"}\n- 发红包：{"type":"redpacket","amount":"金额","note":"备注"}\n- 收取用户红包：{"type":"rp_receive"}\n- 退回用户红包：{"type":"rp_refund"}\n- 语音：{"type":"voice","content":"内容","dur":"5s"}\n- 图片：{"type":"image","desc":"描述"}\n- 表情包：{"type":"sticker","name":"名称"}',charFmt:'【角色行为准则】\n角色应自然、真实地表达情感。',coupleP:'[当前使用情侣头像] 角色与用户是亲密的恋人关系。',stkP:'【可用表情包列表】角色发送表情时name必须完全匹配：',rpSysP:'【系统提示】用户刚给你发了红包。请在回复中包含 {"type":"rp_receive"} 来收取，或包含 {"type":"rp_refund"} 来退回。',sumP:'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：',momReplyUser:'【用户朋友圈评论】\n所有角色各自独立评论一条，不要互相回复或提及其他角色。\n返回JSON数组：[{"name":"角色备注名","content":"纯评论内容"}]\n注意：content里不要包含角色自己的名字前缀。',momReplyChar:'【角色朋友圈社交圈评论】\n根据角色人设生成2~4个虚构人物评论。返回JSON数组：[{"name":"人物名","content":"评论内容"}]\n注意：content里不要包含自己的名字前缀。',momReplyOneP:'【单角色评论回复】\n自然地回复朋友圈评论区的最新对话。只返回纯文本回复内容，不要JSON，不要加自己的名字前缀。\n若回复特定人，开头写"回复 对方名：内容"。',
 momSocialP:'【社交圈角色回复】\n用户刚刚回复了社交圈角色。请生成两条评论：\n1. 该社交圈角色回复用户。\n2. 主角色发表评论（可以回复用户，也可以回复该社交圈角色）。\n返回JSON数组：[{"name":"角色名","content":"回复内容"}]\n不要在content里加名字前缀。若回复特定人，格式为"回复 对方名：内容"。',
 momPost:'根据角色设定，生成一条贴合性格的朋友圈动态。你可以选择发送纯文本，或者附带一张图片（图片描述在100字以内）。\n只返回JSON：{"content":"朋友圈内容 [图片:图片描述]"} (如果没有图片则不加[图片:描述])',crossRP:'【修罗场模式】多名角色在场，角色之间可以互相回复互动，可能产生吃醋、争抢等情节。\n回复某人时content格式为"回复 对方名：内容"。',momPostSys:'[朋友圈] {momName}(聊天名:{chatName}) 发了一条动态：{content}',momCharPostSys:'[动态通知] {char} 刚发了朋友圈：{content}',momCmtSys:'[新评论] 朋友圈"{title}" 新增：{comments}',musicSysP:'[一起听歌曲]<br>{song}<br>|<br>歌词：<br>{lyrics}',music:[]},
 
@@ -958,19 +958,23 @@ function upStkFile(){upFile(function(d){var el=$('sk-u');if(el)el.value=d})}
 function addStk(){var n=$('sk-n')&&$('sk-n').value.trim(),u=$('sk-u')&&$('sk-u').value.trim();if(!n||!u)return;var usage='all';var sel=document.querySelector('#sk-usage .usage-sel-i.on');if(sel)usage=sel.dataset.v||'all';D.stickers.push({name:n,url:u,usage:usage});save();closeBS();renderStkApp();toast('已添加')}
 var _walVis=false;
 function openWallet(){renderWallet();$('ovWal').classList.add('on')}
-function togWalDep(){var el=$('wal-dep');if(el)el.classList.toggle('on')}
+function togWalDep(){
+    var h='<div class="bs-hd"></div><div class="mt">充值</div>';
+    h+='<div class="fg"><div class="fl">充值金额</div><input class="fi" id="dp-a" type="number" placeholder="输入金额"></div>';
+    h+='<button class="fbtn" onclick="doDeposit()">确认充值</button>';
+    showBS(h);
+}
 function renderWallet(){var el=$('wal-bd');if(!el)return;
 var eyeO='<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/></svg>';
 var eyeC='<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.8 11.8 0 001 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27z"/></svg>';
 var txCount=D.wallet.txns.length;
-var h='<div class="wal-dep" id="wal-dep"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">充值金额</div><div class="wal-dep-row"><input class="fi" id="dp-a" type="number" placeholder="输入金额"><button class="wal-dep-btn" onclick="doDeposit()">确认</button></div></div>';
-h+='<div class="wal-card"><div class="wal-lbl">可用余额 <button class="wal-eye" onclick="togWalBal()">'+(_walVis?eyeO:eyeC)+'</button></div><div class="wal-bal">'+(_walVis?'<small>\u00A5</small> '+D.wallet.balance.toFixed(2):'****')+'</div></div>';
+var h='<div class="wal-card"><div class="wal-lbl">可用余额 <button class="wal-eye" onclick="togWalBal()">'+(_walVis?eyeO:eyeC)+'</button></div><div class="wal-bal">'+(_walVis?'<small>\u00A5</small> '+D.wallet.balance.toFixed(2):'****')+'</div></div>';
 h+='<div style="font-size:11px;color:var(--text3);margin-bottom:8px">交易记录 ('+txCount+')</div>';
 var recent=D.wallet.txns.slice().reverse().slice(0,20);
 recent.forEach(function(t,i){var ri=D.wallet.txns.length-1-i;var isIn=t.type==='recv';
 h+='<div class="wal-tx"><div class="wal-tx-x" onclick="D.wallet.txns.splice('+ri+',1);save();renderWallet()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div><div class="wal-tx-in"><div class="wal-tx-nm">'+(isIn?t.from:t.to)+'</div><div class="wal-tx-sb">'+t.time+'</div></div><div class="wal-tx-am '+(isIn?'in':'out')+'">'+(isIn?'+':'-')+'\u00A5'+parseFloat(t.amount).toFixed(2)+'</div></div>'});el.innerHTML=h}
 function togWalBal(){_walVis=!_walVis;renderWallet()}
-function doDeposit(){var el=$('dp-a');if(!el)return;var a=parseFloat(el.value)||0;if(a<=0){toast('请输入金额');return}D.wallet.balance+=a;D.wallet.balance=Math.round(D.wallet.balance*100)/100;D.wallet.txns.push({id:uid(),type:'recv',from:'充值',amount:a,note:'',time:ft()+' '+fd()});el.value='';save();renderWallet();toast('充值 \u00A5'+a.toFixed(2))}
+function doDeposit(){var el=$('dp-a');if(!el)return;var a=parseFloat(el.value)||0;if(a<=0){toast('请输入金额');return}D.wallet.balance+=a;D.wallet.balance=Math.round(D.wallet.balance*100)/100;D.wallet.txns.push({id:uid(),type:'recv',from:'充值',amount:a,note:'',time:ft()+' '+fd()});save();renderWallet();closeBS();toast('充值 \u00A5'+a.toFixed(2))}
 function fmtCmt(content){if(!content)return'';var m=content.match(/^(回复\s*[^：:]+[：:])\s*/);if(m)return'<span class="cm-blue">'+escH(m[1])+'</span> '+escH(content.slice(m[1].length));return escH(content)}
 function formatMomContent(text, mid){
     var escaped = escH(text);
