@@ -772,6 +772,7 @@ function trigAI(){var ch=gch(D.curChat);if(!ch)return;var p=D.apis[D.aApi];if(!p
 
 /* ===== 6: Expand input to fullscreen ===== */
 function expandInput(){var inp=$('ci-inp');_wbEditKey='_chatinput';$('wbef-t').textContent='编辑消息';$('wbef-ta').value=inp.value||'';$('wbEditOV').classList.add('on')}
+
 function buildPr(ch){var sys='';ensureArcs(ch);var ordered=D.wbOrder.slice();var allKeys=['chatSys','chatFmt','charFmt','coupleP','stkP'];allKeys.forEach(function(k){if(ordered.indexOf(k)<0)ordered.push(k)});var msgs=getMsgs(ch);
 var ignoreKeys=['momReplyUser','momReplyChar','momPost','crossRP','momPostSys','momCharPostSys','momCmtSys','musicSysP','stkP'];
 ordered.forEach(function(k){if(ignoreKeys.indexOf(k)>=0)return;if(k==='coupleP'&&!ch.coupleAv)return;var v=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');if(v)sys+=v+'\n\n'});
@@ -780,12 +781,14 @@ var charStk=D.stickers.filter(function(s){return!s.usage||s.usage==='all'||s.usa
 if(charStk.length>0){var stkPrompt=D.wb.stkP!=null?D.wb.stkP:(WB_DEFAULTS.stkP||'');sys+=stkPrompt+'\n可用表情包：'+charStk.map(function(s){return s.name}).join(', ')+'\n\n'}
 var countP=ch.msgCountPrompt||'';
 if(countP)sys+=countP+'\n\n';
-else if(ch.msgMin&&ch.msgMax)sys+='[回复要求]\n每次回复根据情境不固定发送 '+ch.msgMin+' ~ '+ch.msgMax+' 条消息。\n\n';
+else if(ch.msgMin&&ch.msgMax)sys+='[回复要求]\n每次回复发送 '+ch.msgMin+' ~ '+ch.msgMax+' 条消息。必须输出多个JSON对象，如[{"msg":"第一条"},{"msg":"第二条"}]，**严禁合并成一条。**\n\n';
 sys+='[角色设定]\n角色名：'+ch.name+'\n';if(ch.nick&&ch.nick!==ch.name)sys+='备注：'+ch.nick+'\n';sys+='人设：'+ch.persona+'\n\n';
 var chatUN=getChatUN(ch);sys+='[用户信息]\n用户名：'+chatUN+'\n';if(D.user.name&&D.user.name!==chatUN)sys+='朋友圈昵称：'+D.user.name+'\n';if(D.user.sig)sys+='个性签名：'+D.user.sig+'\n';if(ch.chatUserPersona)sys+='用户设定：'+ch.chatUserPersona+'\n';sys+='\n';
 var mem=getMemory(ch);if(mem)sys+='[记忆摘要]\n'+mem+'\n\n';if(D.cust.syncT)sys+='当前时间：'+ft()+' '+fd()+'\n';
-
-var out=[{role:'system',content:sys}];var recent=msgs.slice(-(ch.ctxL||20));recent.forEach(function(m){var r=m.role==='char'?'assistant':'user';var c=m.content||'';if(m.role==='system')c='[系统通知] '+c;else if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];var qn=m.role==='user'?getChatUN(ch):(ch.nick||ch.name);c=qn+' 引用了"'+(qm.content||'').substring(0,60)+'"的消息：\n'+c}var cnt=(m.role==='user'&&m.type==='image'&&m.src)?[{type:'text',text:c},{type:'image_url',image_url:{url:m.src}}]:c;var lst=out[out.length-1];if(lst&&lst.role===r&&typeof cnt==='string'&&typeof lst.content==='string'){lst.content+='\n\n'+cnt}else{out.push({role:r,content:cnt})}});return out}
+var out=[{role:'system',content:sys}];var recent=msgs.slice(-(ch.ctxL||20));
+recent.forEach(function(m){var r=m.role==='char'?'assistant':'user';var c=m.content||'';if(m.role==='system')c='[系统通知] '+c;else if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];var qn=m.role==='user'?getChatUN(ch):(ch.nick||ch.name);c=qn+' 引用了"'+(qm.content||'').substring(0,60)+'"的消息：\n'+c}var cnt=(m.role==='user'&&m.type==='image'&&m.src)?[{type:'text',text:c},{type:'image_url',image_url:{url:m.src}}]:c;var lst=out[out.length-1];if(lst&&lst.role===r&&typeof cnt==='string'&&typeof lst.content==='string'){lst.content+='\n'+cnt}else{out.push({role:r,content:cnt})}});
+if(out.length>1&&out[1].role==='assistant'){out.splice(1,0,{role:'user',content:'[系统：对话开始]'})}
+return out}
 
 function callAPI(msgs,p){var base=normalizeURL(p.url);if(!base)return Promise.reject(new Error('请输入API地址'));var url=base;if(!/\/chat\/completions/i.test(url))url+='/chat/completions';var h={'Content-Type':'application/json'};if(p.key)h['Authorization']='Bearer '+p.key;return fetch(url,{method:'POST',headers:h,body:JSON.stringify({model:p.model||'gpt-4o-mini',messages:msgs,temperature:p.temp!=null?p.temp:.7,max_tokens:1400})}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error('HTTP '+r.status+' '+t.substring(0,100))});return r.json()}).then(function(d){return d.choices&&d.choices[0]?d.choices[0].message.content||'':''})}
 
