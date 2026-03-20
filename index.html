@@ -497,7 +497,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div class="scr-s" style="position:relative;z-index:1"><div class="sl" id="set-body"></div></div></div>
 
 <div class="screen" id="scrStk">
-<div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">表情包</div><button class="hbtn-text" onclick="openStkAdd()">保存</button></div>
+<div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">表情包</div><button class="hbtn-text" onclick="openStkAdd()">添加</button></div>
 <div class="scr-s" style="padding-bottom:90px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px" id="stk-grid"></div></div>
 
 <div class="stk-bnav">
@@ -639,7 +639,7 @@ if(!D.fullscreen){h+='<div class="sg-t">手机尺寸与位置</div><div class="s
 h+='<div class="sg-t">显示</div><div class="sg">';
 [['hideSys','隐藏系统消息'],['syncT','同步时间给AI'],['musicSys','一起听歌通知'],['crossR','修罗场模式']].forEach(function(it){h+='<div class="sgi"><div class="sgi-l">'+it[1]+'</div><div class="tog'+(D.cust[it[0]]?' on':'')+'" onclick="togG(\''+it[0]+'\',this)"><div class="tok"></div></div></div>'});h+='</div>';
 h+='<div class="sg-t">朋友圈网名</div><div class="sg"><div class="sgi" onclick="editUN()"><div class="sgi-l">朋友圈昵称</div><div class="sgi-r"><span>'+(D.user.name||'未设置')+'</span></div></div></div>';
-h+='<div class="sg-t">数据</div><div class="sg"><div class="sgi" onclick="expAll()"><div class="sgi-l">导出全部数据</div></div><div class="sgi" onclick="impAll()"><div class="sgi-l">导入数据</div></div><div class="sgi" onclick="clearAllData()"><div class="sgi-l" style="color:var(--red)">清空所有数据</div></div></div>';
+h+='<div class="sg-t">数据</div><div class="sg"><div class="sgi" onclick="compressAllImages()"><div class="sgi-l">压缩已有图片 (释放内存)</div></div><div class="sgi" onclick="expAll()"><div class="sgi-l">导出全部数据</div></div><div class="sgi" onclick="impAll()"><div class="sgi-l">导入数据</div></div><div class="sgi" onclick="clearAllData()"><div class="sgi-l" style="color:var(--red)">清空所有数据</div></div></div>';
 $('set-body').innerHTML=h}
 function sgi(fn,label,on){return'<div class="sgi" onclick="'+fn+'()"><div class="sgi-l">'+label+'</div><div class="tog'+(on?' on':'')+'"><div class="tok"></div></div></div>'}
 function updPh(){D.pw=+$('pw-r').value;D.ph=+$('ph-r').value;D.pr=+$('pr-r').value;D.py=+$('py-r').value;$('pw-b').textContent=D.pw;$('ph-b').textContent=D.ph;$('pr-b').textContent=D.pr;$('py-b').textContent=D.py;applyPh();save()}
@@ -1127,6 +1127,103 @@ function clickNotif(){var n=$('notif');n.classList.remove('on');if(n._cid)openCh
 function expAll(){var j=JSON.stringify(D);try{localStorage.setItem('mp8',j)}catch(x){}var b=new Blob([j],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='phone.json';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
 function impAll(){upJSON(function(txt){try{JSON.parse(txt);localStorage.setItem('mp8',txt);toast('导入成功');setTimeout(function(){location.reload()},800)}catch(x){toast('失败')}})}
 function clearAllData(){if(confirm('确定要清空所有数据并恢复初始设置吗？此操作不可逆！建议先导出备份。')){localStorage.removeItem('mp8');location.reload()}}
+
+function compressImage(base64Str, callback) {
+    if (!base64Str || !base64Str.startsWith('data:image')) {
+        callback(base64Str);
+        return;
+    }
+    var img = new Image();
+    img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var maxW = 800; // 限制最大宽度800像素
+        var maxH = 800; // 限制最大高度800像素
+        var w = img.width;
+        var h = img.height;
+        if (w > maxW || h > maxH) {
+            var ratio = Math.min(maxW / w, maxH / h);
+            w = Math.round(w * ratio);
+            h = Math.round(h * ratio);
+        }
+        canvas.width = w;
+        canvas.height = h;
+        ctx.drawImage(img, 0, 0, w, h);
+        // 压缩为高质量JPEG
+        var newData = canvas.toDataURL('image/jpeg', 0.8);
+        // 如果压缩后反而变大（比如原图是很小的图标），则保留原图
+        if (newData.length < base64Str.length) {
+            callback(newData);
+        } else {
+            callback(base64Str);
+        }
+    };
+    img.onerror = function() { callback(base64Str); };
+    img.src = base64Str;
+}
+
+function compressAllImages() {
+    if(!confirm('确定要压缩所有本地保存的图片吗？\n这会稍微降低画质，但能大幅释放内存，方便导出！\n(图片越多耗时越长，请耐心等待)')) return;
+    toast('正在拼命压缩中，请稍候...');
+
+    var tasks = [];
+    function addTask(obj, key) {
+        if (obj[key] && typeof obj[key] === 'string' && obj[key].startsWith('data:image')) {
+            tasks.push(function(cb) {
+                compressImage(obj[key], function(newStr) {
+                    obj[key] = newStr;
+                    cb();
+                });
+            });
+        }
+    }
+
+    // 收集所有需要压缩的图片
+    addTask(D, 'wallpaper');
+    addTask(D, 'diArt');
+    addTask(D.user, 'avatar');
+    addTask(D.user, 'momBg');
+
+    if (D.customIcons) {
+        Object.keys(D.customIcons).forEach(function(k) { addTask(D.customIcons, k); });
+    }
+    if (D.stickers) {
+        D.stickers.forEach(function(s) { addTask(s, 'url'); });
+    }
+    if (D.chars) {
+        D.chars.forEach(function(ch) {
+            addTask(ch, 'avatar');
+            addTask(ch, 'chatBg');
+            addTask(ch, 'chatUserAvatar');
+            if (ch.archives) {
+                ch.archives.forEach(function(arc) {
+                    if (arc.msgs) {
+                        arc.msgs.forEach(function(m) {
+                            if (m.type === 'image') addTask(m, 'src');
+                            if (m.type === 'sticker') addTask(m, 'url');
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // 开始排队压缩
+    var i = 0;
+    function next() {
+        if (i >= tasks.length) {
+            save();
+            toast('压缩完成！共处理了 ' + tasks.length + ' 张图片。');
+            return;
+        }
+        tasks[i](function() {
+            i++;
+            next();
+        });
+    }
+    next();
+}
+
 function showBS(h){$('bss').innerHTML=h;$('bso').classList.add('on')}
 function closeBS(){$('bso').classList.remove('on');_tav=null;_tuav=null;_timg=null}
 function closeOV(id){$(id).classList.remove('on')}
