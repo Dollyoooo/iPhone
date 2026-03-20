@@ -272,9 +272,12 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 .m-social{background:var(--cmt-bg);border-radius:4px;overflow:hidden;margin-top:4px;padding:4px 8px}
 .m-cmt{font-size:12px;color:var(--text);line-height:1.55;padding:3px 0;cursor:pointer}
 .m-cmt b,.m-cmt .cm-blue{color:var(--wb-blue);font-weight:600}
-.m-fab{position:absolute;bottom:76px;right:14px;width:48px;height:48px;border-radius:50%;background:var(--btn-p);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50;border:1px solid var(--sep)}
+.m-fab{position:absolute;bottom:96px;right:14px;width:38px;height:38px;border-radius:50%;background:var(--btn-p);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50;border:1px solid var(--sep)}
 .m-fab:active{transform:scale(.84)}
-.m-fab svg{width:22px;height:22px;fill:var(--btn-pf)}
+.m-fab svg{width:18px;height:18px;fill:var(--btn-pf)}
+/* 新增：纯文字按钮样式，无包裹 */
+.hbtn-text { background: none!important; border: none!important; box-shadow: none!important; font-size: 15px; font-weight: 400; color: var(--text); cursor: pointer; padding: 0 4px; flex-shrink: 0; transition: opacity 0.2s; }
+.hbtn-text:active { opacity: 0.6; }
 .md-hb{display:flex;align-items:center;justify-content:space-between;padding:52px 14px 10px;flex-shrink:0;background:var(--nav-bg);backdrop-filter:blur(30px);border-bottom:1px solid var(--sep)}
 .md-hb-t{font-size:17px;font-weight:700;color:var(--text)}
 .md-post{padding:14px;background:var(--mom-bg)}
@@ -453,7 +456,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 </div></div>
 
 <div class="screen" id="scrMsg"><div class="screen-bg" id="msg-sbg"></div>
-<div class="hbar" style="position:relative;z-index:10"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">短信</div><button class="hbtn" onclick="openCharNew('')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm20.71-11.63a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div>
+<div class="hbar" style="position:relative;z-index:10"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">短信</div><button class="hbtn hbtn-bare" onclick="openCharNew('')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm20.71-11.63a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button></div>
 <div class="scr-s" style="position:relative;z-index:1"><div class="mlist" id="msgList"></div></div></div>
 
 <div class="screen" id="scrChat">
@@ -494,7 +497,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div class="scr-s" style="position:relative;z-index:1"><div class="sl" id="set-body"></div></div></div>
 
 <div class="screen" id="scrStk">
-<div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">表情包</div><button class="hbtn" onclick="openStkAdd()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
+<div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">表情包</div><button class="hbtn-text" onclick="openStkAdd()">保存</button></div>
 <div class="scr-s" style="padding-bottom:90px"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px" id="stk-grid"></div></div>
 
 <div class="stk-bnav">
@@ -505,8 +508,10 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 </div>
 </div>
 
-<div class="ov" id="ovWB"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovWB')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn" onclick="saveWB()" style="background:rgba(87,107,149,.1)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--accent)"/></svg></button></div><div class="ov-bd" id="wb-bd"></div></div>
-<div class="ov" id="ovCFS"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovCFS')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">角色设置</div><button class="hbtn" onclick="saveCFS()" style="background:rgba(87,107,149,.1)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--accent)"/></svg></button></div><div class="ov-bd" id="cfs-bd"></div></div>
+<div class="ov" id="ovWB"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovWB')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn-text" onclick="saveWB()">保存</button></div><div class="ov-bd" id="wb-bd"></div></div>
+
+<div class="ov" id="ovCFS"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovCFS')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">角色设置</div><button class="hbtn-text" onclick="saveCFS()">保存</button></div><div class="ov-bd" id="cfs-bd"></div></div>
+
 <div class="ov" id="ovPV"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovPV')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">提示词查看</div><div style="width:34px"></div></div><div class="pv-search"><input class="pv-si" id="pv-si" placeholder="搜索..." oninput="filterPV()"><div class="pv-info" id="pv-info"></div></div><div class="pv-list" id="pv-list"></div></div>
 <div class="ov" id="ovWal"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovWal')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">钱包</div><span class="wal-hdr-txt" onclick="togWalDep()">充值</span></div><div class="ov-bd" id="wal-bd"></div></div>
 <div class="wb-edit-ov" id="wbEditOV"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeWBEdit()"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t" id="wbef-t">编辑</div><button class="hbtn" onclick="saveWBEdit()" style="background:rgba(87,107,149,.1)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--accent)"/></svg></button></div><textarea class="fta" id="wbef-ta" style="flex:1;border-radius:0;border:none;font-size:14px;padding:16px;resize:none;min-height:auto;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word"></textarea></div>
