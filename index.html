@@ -1520,11 +1520,12 @@ function buildScriptPr(ch, arc) {
     arc.reqs.filter(function(r){return r.on}).forEach(function(r){ sys += r.content + '\n\n'; });
     if(arc.thinkMode) sys += (arc.thinkPrompt || '[重要指令]请务必在最终回复前，将你的详细思考过程放在 <think> 和 </think> 标签之间。') + '\n\n';
     if (arc.syncOnline !== false) {
+        var chatArc = ch.archives.find(function(a){return a.id===ch.curArc}) || ch.archives[0];
         sys += '[角色人设]\n' + (ch.persona||'') + '\n\n';
         sys += '[用户人设]\n' + (ch.chatUserPersona||D.user.sig||'') + '\n\n';
+        if(chatArc.memory) sys += '[线上记忆摘要]\n' + chatArc.memory + '\n\n';
         if(ch.coupleAv) sys += (D.wb.coupleP!=null?D.wb.coupleP:WB_DEFAULTS.coupleP) + '\n\n';
-        var chatArc = ch.archives.find(function(a){return a.id===ch.curArc}) || ch.archives[0];
-        var recentChat = chatArc.msgs.slice(-20);
+        var recentChat = chatArc.msgs.slice(-(ch.ctxL || 20));
         if(recentChat.length) {
             sys += '[线上聊天上下文]\n';
             recentChat.forEach(function(m){
@@ -1564,7 +1565,7 @@ function openScriptSet() {
     h += '<div class="sec-r" style="padding:10px 13px;border-top:none;border-bottom:1px solid var(--sep)"><div class="sec-rl" style="font-weight:600">思考模式 (允许AI输出思考链)</div><div class="sec-rr"><div class="tog-sm'+(arc.thinkMode?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().thinkMode=this.classList.contains(\'on\'); var p=$(\'ss-tp-box\'); if(p) p.style.display=this.classList.contains(\'on\')?\'block\':\'none\'; save()"><div class="tok"></div></div></div></div>';
     h += '<div id="ss-tp-box" style="display:'+(arc.thinkMode?'block':'none')+';padding:0 13px 10px;border-bottom:1px solid var(--sep)"><div class="fl">思考模式提示词</div><textarea class="fta" rows="3" onchange="getSArc().thinkPrompt=this.value;save()" placeholder="默认提示词...">'+(arc.thinkPrompt||'[重要指令]请务必在最终回复前，将你的详细思考过程放在 <think> 和 </think> 标签之间。')+'</textarea></div>';
     h += '<div class="sec-r" style="padding:10px 13px;border-top:none;border-bottom:1px solid var(--sep)"><div class="sec-rl" style="font-weight:600">同步线上设定与上下文</div><div class="sec-rr"><div class="tog-sm'+(arc.syncOnline?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().syncOnline=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div></div>';
-    h += '<div class="sec-r" style="padding:10px 13px;border-top:none;border-bottom:1px solid var(--sep)"><div class="sec-rl" style="font-weight:600">同步线下上下文至线上 [线上通知]</div><div class="sec-rr"><div class="tog-sm'+(arc.syncOfflineCtx?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().syncOfflineCtx=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div></div>';
+    h += '<div class="sec-r" style="padding:10px 13px;border-top:none;border-bottom:1px solid var(--sep)"><div class="sec-rl" style="font-weight:600">同步线下上下文至线上 </div><div class="sec-rr"><div class="tog-sm'+(arc.syncOfflineCtx?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().syncOfflineCtx=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div></div>';
     h += '<div style="padding:8px 13px">';
     arc.reqs.forEach(function(r, i){
         h += '<div class="sreq-item" onclick="editSReq(\'req\','+i+')"><div class="sreq-title">'+esc(r.name)+'</div><div class="sreq-bot"><div class="tog-sm'+(r.on?' on':'')+'" onclick="e(event); togSReq(\'req\','+i+', this)"><div class="tok"></div></div></div><div class="sreq-dots" onclick="e(event);openSReqMenu(event,\'req\','+i+')"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></div></div>';
@@ -1581,8 +1582,7 @@ function openScriptSet() {
     h += '<div style="padding:8px 13px">';
     h += '<div class="fl">总结提示词</div><textarea class="fta" id="ss-sump" rows="2" onchange="getSArc().sumPrompt=this.value;save()" placeholder="输入总结提示词...">'+arc.sumPrompt+'</textarea>';
     h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px"><div class="fl" style="margin:0">线下记忆摘要</div><div style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:var(--text3)">同步至线上</span><div class="tog-sm'+(arc.syncOfflineMem?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().syncOfflineMem=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div></div><textarea class="fta" id="ss-mem" rows="3" onchange="getSArc().memory=this.value;save()" placeholder="记忆摘要内容..." style="margin-top:4px">'+arc.memory+'</textarea>';
-    h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px"><div class="fl" style="margin:0">自动总结</div><div class="tog-sm'+(arc.autoSum?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().autoSum=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div>';
-    h += '<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span class="fl" style="margin:0">每</span><input class="fi" type="number" id="ss-si" value="'+arc.sumInterval+'" onchange="getSArc().sumInterval=parseInt(this.value)||50;save()" style="width:60px;height:28px;text-align:center"><span class="fl" style="margin:0">条总结一次</span></div>';
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px"><div style="display:flex;align-items:center;gap:8px"><div class="fl" style="margin:0">自动总结</div><div class="tog-sm'+(arc.autoSum?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().autoSum=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div><div style="display:flex;align-items:center;gap:6px"><span class="fl" style="margin:0">每</span><input class="fi" type="number" id="ss-si" value="'+arc.sumInterval+'" onchange="getSArc().sumInterval=parseInt(this.value)||50;save()" style="width:50px;height:28px;text-align:center;padding:0"><span class="fl" style="margin:0">条</span></div></div>';
     h += '<div class="fl" style="margin-top:12px">手动总结</div>';
     h += '<div style="display:flex;gap:5px;align-items:center"><span style="font-size:11px;color:var(--text3)">从第</span><input class="fi" id="ss-sf" type="number" value="1" style="width:50px;height:32px;text-align:center;padding:0"><span style="font-size:11px;color:var(--text3)">到第</span><input class="fi" id="ss-st" type="number" value="'+arc.msgs.length+'" style="width:50px;height:32px;text-align:center;padding:0"><button class="fbtn n" style="flex:1;height:32px;font-size:11px;margin:0" onclick="doScriptSum(true)">开始总结</button></div>';
     h += '</div></div>';
