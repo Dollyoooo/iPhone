@@ -464,6 +464,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 </style>
 
 <style id="dyn-css"></style>
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
 </head>
 <body>
 <div id="phone">
@@ -621,8 +622,8 @@ function fmtS(s){s=s||0;return Math.floor(s/60)+':'+String(Math.floor(s%60)).pad
 function hexA(hex,a){try{var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return'rgba('+r+','+g+','+b+','+(a!=null?a:1)+')'}catch(x){return hex}}
 function normalizeURL(u){u=(u||'').trim().replace(/\/+$/,'');if(!u)return'';if(!/^https?:\/\//i.test(u))u='https://'+u;if(!/\/v1/i.test(u)&&!/\/chat/i.test(u))if(!u.endsWith('/v1'))u+='/v1';return u}
 function estTok(s){return Math.ceil(((typeof s==='string'?s:JSON.stringify(s))||'').length/2)}
-function save(){try{localStorage.setItem('mp8',JSON.stringify(D))}catch(x){if(x.name==='QuotaExceededError'||x.name==='NS_ERROR_DOM_QUOTA_REACHED'){toast('存储已满(5MB限制)！请删除一些无用的聊天记录或角色释放空间');}}}
-function load(){try{var s=localStorage.getItem('mp8');if(!s)return;var p=JSON.parse(s);function dm(t,s){Object.keys(s).forEach(function(k){if(s[k]!==null&&typeof s[k]==='object'&&!Array.isArray(s[k])&&typeof t[k]==='object'&&t[k]!==null&&!Array.isArray(t[k]))dm(t[k],s[k]);else if(s[k]!==undefined)t[k]=s[k]})}dm(D,p)}catch(x){}}
+function save(){try{var compressed=LZString.compressToUTF16(JSON.stringify(D));localStorage.setItem('mp8',compressed)}catch(x){if(x.name==='QuotaExceededError'||x.name==='NS_ERROR_DOM_QUOTA_REACHED'){toast('警告：存储已达物理极限！再不清理将无法保存新进度！');}}}
+function load(){try{var s=localStorage.getItem('mp8');if(!s)return;var decompressed=s;if(s.indexOf('{')!==0&&s.indexOf('[')!==0){var dec=LZString.decompressFromUTF16(s);if(dec)decompressed=dec}var p=JSON.parse(decompressed);function dm(t,s){Object.keys(s).forEach(function(k){if(s[k]!==null&&typeof s[k]==='object'&&!Array.isArray(s[k])&&typeof t[k]==='object'&&t[k]!==null&&!Array.isArray(t[k]))dm(t[k],s[k]);else if(s[k]!==undefined)t[k]=s[k]})}dm(D,p)}catch(x){}}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},2400)}
 load();
 
@@ -989,7 +990,7 @@ function expandCFField(fieldId,title){var el=$(fieldId);if(!el)return;_wbEditKey
 function openMemEdit(){var ch=gch(_cfsId||D.curChat);if(!ch)return;var arc=getCurArc(ch);_wbEditKey='_memory';$('wbef-t').textContent='记忆摘要';$('wbef-ta').value=arc.memory||'';$('wbEditOV').classList.add('on')}
 function upCAvFS(el){upFile(function(d){_tav=d;el.innerHTML='<img src="'+d+'">'})}
 function upChatUAvFS(el){upFile(function(d){_tuav=d;el.innerHTML='<img src="'+d+'">'})}
-function upChatBg(){upFile(function(d){var ch=gch(D.curChat);if(ch){ch.chatBg=d;save();applyCBg();toast('已设置');openCFS()}})}
+function upChatBg(){var opt=prompt("输入图片URL (留空则选择本地文件):","");if(opt){var ch=gch(D.curChat);if(ch){ch.chatBg=opt;save();applyCBg();toast('已设置');openCFS()}return}upFile(function(d){var ch=gch(D.curChat);if(ch){ch.chatBg=d;save();applyCBg();toast('已设置');openCFS()}})}
 function delChatBg(){var ch=gch(D.curChat);if(ch){ch.chatBg=null;save();applyCBg();openCFS();toast('已清空')}}
 function clearMsgs(){if(!confirm('确定清空？'))return;var ch=gch(D.curChat);if(!ch)return;getCurArc(ch).msgs=[];ch.lastM='';ch.lastT='';save();renderBub();renderML();openCFS();toast('已清空')}
 function impChat(){closeOV('ovCFS');upJSON(function(txt){try{var arr=JSON.parse(txt);if(!Array.isArray(arr)){toast('格式错误');return}var ch=gch(D.curChat);if(!ch)return;var arc=getCurArc(ch);arr.forEach(function(m){arc.msgs.push(m)});save();renderBub();renderML();toast('已导入 '+arr.length+' 条')}catch(x){toast('解析失败')}})}
