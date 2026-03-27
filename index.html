@@ -464,8 +464,8 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 .bub { font-size: var(--chat-fs, 14px) !important; }
 .ms-bar { position:absolute; bottom:0; left:0; right:0; height:60px; background:var(--nav-bg); backdrop-filter:blur(30px); border-top:1px solid var(--sep); z-index:99; display:none; align-items:center; justify-content:space-between; padding:0 20px; }
 .msg-chk { width:20px; height:20px; border-radius:50%; border:2px solid var(--text3); margin-right:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.msg-chk.on { background:var(--accent); border-color:var(--accent); }
-.msg-chk.on::after { content:''; width:10px; height:5px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg); margin-top:-2px; }
+.msg-chk.on { background:var(--text); border-color:var(--text); }
+.msg-chk.on::after { content:''; width:10px; height:5px; border-left:2px solid var(--bg); border-bottom:2px solid var(--bg); transform:rotate(-45deg); margin-top:-2px; }
 .swipe-bar { display:flex; align-items:center; gap:4px; background:transparent; padding:0; font-size:11px; color:var(--text3); }
 .swipe-btn { cursor:pointer; padding:2px 4px; border-radius:0; background:transparent; border:none; font-weight:600; color:var(--text2); }
 .msg-acts { display:flex; align-items:center; gap:8px; margin-left:6px; }
@@ -531,7 +531,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div class="screen" id="scrScript">
     <div class="scr-script-bg" id="script-sbg"></div>
     <div class="script-hb">
-        <button class="chat-bk" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+        <button class="chat-bk" onclick="if(_msMode)exitMS('script');go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
 <div class="chat-nm" onclick="editScriptName()" style="cursor:pointer; display:flex; align-items:center; gap:4px; justify-content:center"><span id="script-nm">剧本模式</span><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></div>
 <div class="chat-r"><div class="role-tog" id="script-role-tog" onclick="togScriptRole()"><span id="script-role-lbl">我</span></div><button class="chat-dt" onclick="openScriptSet()"><span style="font-size:14px;font-weight:600;color:var(--text)">设置</span></button></div>
     </div>
@@ -743,7 +743,7 @@ function togG(k,el){el.classList.toggle('on');D.cust[k]=el.classList.contains('o
 var curScr='scrHome';
 function go(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});$(id).classList.add('active');curScr=id;document.querySelectorAll('.bn').forEach(function(n){n.classList.toggle('on',n.dataset.s===id)});
 $('bnav').style.display=['scrChat','scrMD','scrStk','scrScript'].indexOf(id)>=0?'none':'flex';if(id==='scrMsg'){renderML();applyScreenBgs()}if(id==='scrMom')renderMom();if(id==='scrStk')renderStkApp();if(id==='scrSet'){renderSet();applyScreenBgs()}if(id==='scrScript'){openScriptApp();applyScriptBg()}}
-function exitChat(){go('scrMsg')}
+function exitChat(){if(_msMode)exitMS('chat');go('scrMsg')}
 function upFile(cb){var i=$('f-inp');i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(v){if(typeof compressImage==='function'){compressImage(v.target.result, function(res){cb(res);});}else{cb(v.target.result);}};r.readAsDataURL(f);i.value=''};i.click()}
 function upJSON(cb){var i=$('j-inp');i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(v){cb(v.target.result)};r.readAsText(f);i.value=''};i.click()}
 function uploadWP(){var opt=prompt("输入图片URL (留空则选择本地文件):","");if(opt){D.wallpaper=opt;applyWP();save();toast('壁纸已更新');return}upFile(function(d){D.wallpaper=d;applyWP();save();toast('壁纸已更新')})}
@@ -775,7 +775,7 @@ function saveChar(eid){var nk=$('nc-nk').value.trim(),nm=$('nc-nm').value.trim()
 else{var arc={id:uid(),name:'默认',msgs:[],memory:'',_lastSumAt:0};D.chars.push({id:uid(),name:nm,nick:nk,avatar:_tav,persona:ps,archives:[arc],curArc:arc.id,ctxL:20,autoS:false,sumI:20,lastM:'',lastT:'',chatBg:null,coupleAv:false,offlineOn:false,autoMsgMin:5,chatUserName:'',chatUserAvatar:null,chatUserPersona:'',msgMin:1,msgMax:3,msgCountPrompt:'',sumPrompt:'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：'})}_tav=null;save();closeBS();renderML();if(curScr==='scrMom')renderMom();toast('已保存')}
 
 function delChar(id){if(!confirm('确定删除？'))return;D.chars=D.chars.filter(function(c){return c.id!==id});save();closeBS();closeOV('ovCFS');renderML();if(curScr==='scrChat')go('scrMsg')}
-function openChat(id){D.curChat=id;var ch=gch(id);if(!ch)return;ensureArcs(ch);$('chat-nm').textContent=ch.nick||ch.name;go('scrChat');renderBub();applyCBg();buildFTray();if(typeof closeFT==='function')closeFT();clearQuote();D.chatRole='user';updateRoleTog()}
+function openChat(id){D.curChat=id;if(_msMode)exitMS('chat');var ch=gch(id);if(!ch)return;ensureArcs(ch);$('chat-nm').textContent=ch.nick||ch.name;go('scrChat');renderBub();applyCBg();buildFTray();if(typeof closeFT==='function')closeFT();clearQuote();D.chatRole='user';updateRoleTog()}
 function applyCBg(){var ch=gch(D.curChat);if(!ch)return;var scr=$('scrChat');var cb=$('cbody');if(ch.chatBg){scr.style.backgroundImage='url("'+ch.chatBg+'")';scr.style.backgroundSize='cover';scr.style.backgroundPosition='center';cb.style.setProperty('background','transparent','important')}else{scr.style.backgroundImage='none';cb.style.removeProperty('background')}}
 function buildFTray(){var h='';
 h+='<div class="ft-i" onclick="openRP()"><div class="ft-b"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2" fill="none" stroke="var(--text2)" stroke-width="1.5"/><rect x="4" y="2" width="16" height="10" rx="2" fill="var(--red)" opacity=".7"/><circle cx="12" cy="12" r="2" fill="none" stroke="var(--text2)" stroke-width="1"/></svg></div><span>红包</span></div>';
@@ -789,14 +789,14 @@ var _quoteIdx=-1;
 function setQuote(idx){var ch=gch(D.curChat);if(!ch)return;var m=getMsgs(ch)[idx];if(!m)return;_quoteIdx=idx;var qc=$('cib-quote');qc.classList.add('on');$('cib-quote-c').textContent=(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'').substring(0,60);$('ci-inp').focus();$('map').classList.remove('on')}
 function clearQuote(){_quoteIdx=-1;var qc=$('cib-quote');if(qc)qc.classList.remove('on')}
 
-function renderBub(){var ch=gch(D.curChat);if(!ch)return;ensureArcs(ch);var msgs=getMsgs(ch);var el=$('cbody');var hide=D.cust.hideSys;var uav=getChatUAv(ch);var h='';
+function renderBub(){var ch=gch(D.curChat);if(!ch)return;ensureArcs(ch);var msgs=getMsgs(ch);var el=$('cbody');var hide=D.cust.hideSys;var uav=getChatUAv(ch);var h='';var lastRealMsgIdx=-1;for(var k=msgs.length-1;k>=0;k--){if(msgs[k].role!=='system'){lastRealMsgIdx=k;break;}}
 msgs.forEach(function(m,i){
 if(m.role==='system'){if(hide)return;var sc=(_msMode==='chat'?'<div class="msg-chk'+(_msSet.has(i)?' on':'')+'" onclick="togMS('+i+')"></div>':'');h+='<div class="mr s" style="flex-direction:row;justify-content:center">'+sc+'<div class="sm-w"><div class="sm-i" onclick="'+(_msMode==='chat'?'togMS('+i+')':'editSysMsg('+i+')')+'"><span class="sm-tag">系统</span> '+escH(m.content)+'</div></div></div>';return}
 var isU=m.role==='user';var cls=isU?'u':'c';var avSrc=isU?uav:ch.avatar;var avHtml=avSrc?'<img src="'+avSrc+'">':'<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';var av='<div class="mav">'+avHtml+'</div>';
 var oi=_msMode==='chat'?' onclick="togMS('+i+')"':(' onclick="showMA(event,'+i+')"');var ts='<div class="mts">'+(m.time||'')+'</div>';
 var quoteHtml='';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];quoteHtml='<div class="q-block">'+(qm.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+esc((qm.content||'').substring(0,60))+'</div>'}
 var thinkHtml=''; if(m.think) thinkHtml='<details class="think-box"><summary>思考过程</summary><div style="margin-top:6px;white-space:pre-wrap;">'+escH(m.think)+'</div></details>';
-var actUI='';if(!_msMode&&m.role==='char'&&i===msgs.length-1){var swUI='';if(m.swipes&&m.swipes.length>1)swUI='<div class="swipe-bar"><span class="swipe-btn" onclick="e(event);doSwipe(\'chat\','+i+',-1)"><</span><span>'+((m.swipeIdx||0)+1)+'/'+m.swipes.length+'</span><span class="swipe-btn" onclick="e(event);doSwipe(\'chat\','+i+',1)">></span></div>';actUI='<div style="display:flex;justify-content:flex-start;align-items:center;margin-top:4px">'+swUI+'<div class="msg-acts"><span class="re-svg" onclick="e(event);refreshMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}
+var actUI='';if(!_msMode&&i===lastRealMsgIdx){if(m.role==='char'){var swUI='';if(m.swipes&&m.swipes.length>1)swUI='<div class="swipe-bar"><span class="swipe-btn" onclick="e(event);doSwipe(\'chat\','+i+',-1)"><</span><span>'+((m.swipeIdx||0)+1)+'/'+m.swipes.length+'</span><span class="swipe-btn" onclick="e(event);doSwipe(\'chat\','+i+',1)">></span></div>';actUI='<div style="display:flex;justify-content:flex-start;align-items:center;margin-top:4px">'+swUI+'<div class="msg-acts"><span class="re-svg" onclick="e(event);refreshMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}else if(m.role==='user'){actUI='<div style="display:flex;justify-content:flex-end;align-items:center;margin-top:4px"><div class="msg-acts"><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}}
 var flexCol = '<div style="display:flex;flex-direction:column;gap:2px;align-items:'+(isU?'flex-end':'flex-start')+';max-width:100%">';
 quoteHtml = thinkHtml + quoteHtml;
 var chkBox = _msMode==='chat'?'<div class="msg-chk'+(_msSet.has(i)?' on':'')+'" onclick="togMS('+i+')" style="margin-top:10px"></div>':'';
@@ -1383,6 +1383,7 @@ function ensureScriptApp() {
 function getSArc() { ensureScriptApp(); return D.scriptApp.archives.find(function(a){return a.id===D.scriptApp.curArc}); }
 function applyScriptBg(){var ms=$('script-sbg');if(ms){if(D.cust.scriptWp){ms.style.backgroundImage='url('+D.cust.scriptWp+')';ms.style.opacity=D.cust.scriptWpA||0.35;}else{ms.style.backgroundImage='none';ms.style.opacity=0;}}}
 function openScriptApp() {
+    if(_msMode)exitMS('script');
     if(!D.chars.length) { toast('请先创建角色'); go('scrHome'); return; }
     if(!D.curScriptChar || !gch(D.curScriptChar)) D.curScriptChar = D.chars[0].id;
     renderScriptHeaderDOM(); renderScriptBub();
@@ -1428,6 +1429,7 @@ function expandScriptInfo() {
 function renderScriptBub() {
     var msgs = getSArc().msgs; var el = $('script-msg-area'); var h = '';
     var cb = $('script-body'); cb.className = cb.className.replace(/\bbs\d\b/g,'').trim(); if(D.cust.bubStyle!=0) cb.className+=' bs'+(D.cust.bubStyle||1);
+    var lastRealMsgIdx=-1;for(var k=msgs.length-1;k>=0;k--){if(msgs[k].role!=='system'){lastRealMsgIdx=k;break;}}
     msgs.forEach(function(m, i){
         var isU = m.role==='user'; var cls = isU?'u':'c'; var hidCls = m.hidden ? ' is-hidden' : '';
         var speakerCh = m.charId ? gch(m.charId) : gch(D.curScriptChar);
@@ -1437,7 +1439,7 @@ function renderScriptBub() {
         var thinkHtml = m.think ? '<details class="think-box"><summary>思考过程</summary><div style="margin-top:6px;white-space:pre-wrap;">'+escH(m.think)+'</div></details>' : '';
         var chkBox = _msMode==='script'?'<div class="msg-chk'+(_msSet.has(i)?' on':'')+'" onclick="togMS('+i+')" style="margin-top:16px"></div>':'';
         var preU = isU?chkBox:''; var preC = isU?'':chkBox;
-        var actUI='';if(!_msMode&&m.role==='char'&&i===msgs.length-1){var swUI='';if(m.swipes&&m.swipes.length>1)swUI='<div class="swipe-bar"><span class="swipe-btn" onclick="e(event);doSwipe(\'script\','+i+',-1)"><</span><span>'+((m.swipeIdx||0)+1)+'/'+m.swipes.length+'</span><span class="swipe-btn" onclick="e(event);doSwipe(\'script\','+i+',1)">></span></div>';actUI='<div style="display:flex;justify-content:flex-start;align-items:center;margin-top:4px">'+swUI+'<div class="msg-acts"><span class="re-svg" onclick="e(event);refreshScriptMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delScriptMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}
+        var actUI='';if(!_msMode&&i===lastRealMsgIdx){if(m.role==='char'){var swUI='';if(m.swipes&&m.swipes.length>1)swUI='<div class="swipe-bar"><span class="swipe-btn" onclick="e(event);doSwipe(\'script\','+i+',-1)"><</span><span>'+((m.swipeIdx||0)+1)+'/'+m.swipes.length+'</span><span class="swipe-btn" onclick="e(event);doSwipe(\'script\','+i+',1)">></span></div>';actUI='<div style="display:flex;justify-content:flex-start;align-items:center;margin-top:4px">'+swUI+'<div class="msg-acts"><span class="re-svg" onclick="e(event);refreshScriptMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delScriptMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}else if(m.role==='user'){actUI='<div style="display:flex;justify-content:flex-end;align-items:center;margin-top:4px"><div class="msg-acts"><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delScriptMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}}
 
         h += '<div class="mr '+cls+hidCls+'" style="padding:0 14px; margin-bottom:10px">';
         h += metaHtml;
