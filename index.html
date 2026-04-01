@@ -895,18 +895,9 @@ function editMsg(idx){
     $('em-txt').value = txt;
 }
 function expandEditMsg(idx){closeBS();var ch=gch(D.curChat);if(!ch)return;var m=getMsgs(ch)[idx];var txt=(m.type==='image'&&!m.src)?(m.desc||''):(m.content||'');_wbEditKey='_editmsg_'+idx;$('wbef-t').textContent='编辑消息';$('wbef-ta').value=txt;$('wbEditOV').classList.add('on')}
-function doEditMsg(idx){
-    var ch=gch(D.curChat);if(!ch)return;
-    var m = getMsgs(ch)[idx];
-    var val = $('em-txt').value;
-    if (m.type === 'image' && !m.src) {
-        m.desc = val;
-        m.content = '[图片:' + val + ']';
-    } else {
-        m.content = val;
-    }
-    save();closeBS();renderBub()
-}
+
+function doEditMsg(idx){var ch=gch(D.curChat);if(!ch)return;var msgs=getMsgs(ch);var m=msgs[idx];var val=$('em-txt').value;if(m.type==='image'&&!m.src){m.desc=val;m.content='[图片:'+val+']'}else{m.content=val}var realMsgs=msgs.filter(function(x){return x.role!=='system'});if(realMsgs.length>0&&m===realMsgs[realMsgs.length-1]){ch.lastM=m.content||'['+m.type+']';ch.lastT=m.time||''}save();closeBS();renderBub();renderML()}
+
 function delMsg(idx){var ch=gch(D.curChat);if(!ch)return;$('map').classList.remove('on');var arc=getCurArc(ch);arc.msgs.splice(idx,1);var realMsgs=arc.msgs.filter(function(m){return m.role!=='system'});if(realMsgs.length>0){ch.lastM=realMsgs[realMsgs.length-1].content||'['+realMsgs[realMsgs.length-1].type+']';ch.lastT=realMsgs[realMsgs.length-1].time||''}else{ch.lastM='';ch.lastT=''}save();renderBub();renderML()}
 function editSysMsg(idx){var ch=gch(D.curChat);if(!ch)return;showBS('<div class="bs-hd"></div><div class="mt">系统消息</div><div class="fg"><textarea class="fta" id="esm-txt" rows="4">'+esc(getMsgs(ch)[idx].content||'')+'</textarea></div><button class="fbtn" onclick="getMsgs(gch(D.curChat))['+idx+'].content=$(\'esm-txt\').value;save();closeBS();renderBub()">保存</button><button class="fbtn r" style="margin-top:5px" onclick="delMsg('+idx+');closeBS()">删除</button>')}
 function extractTextR(resp){var t='';var tm=resp.match(/<think>([\s\S]*?)<\/think>/i);if(tm)resp=resp.replace(tm[0],'');try{var cl=resp.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();var s=cl.indexOf('['),en=cl.lastIndexOf(']');if(s>=0&&en>s)cl=cl.slice(s,en+1);var arr=JSON.parse(cl);if(!Array.isArray(arr))arr=[arr];arr.forEach(function(i){var c=i.msg||i.message||i.content||i.text;if(c)t+=c})}catch(ex){t=resp.trim()}return t||resp}
@@ -916,10 +907,10 @@ function trigAI(){var ch=gch(D.curChat);if(!ch)return;var btn=$('ai-btn');if(btn
 
 /* ===== 6: Expand input to fullscreen ===== */
 function expandInput(){var inp=$('ci-inp');_wbEditKey='_chatinput';$('wbef-t').textContent='编辑消息';$('wbef-ta').value=inp.value||'';$('wbEditOV').classList.add('on')}
-function buildPr(ch){var sys='';ensureArcs(ch);var ordered=D.wbOrder.slice();var allKeys=['chatSys','chatFmt','charFmt','coupleP','stkP'];allKeys.forEach(function(k){if(ordered.indexOf(k)<0)ordered.push(k)});var msgs=getMsgs(ch);
-var ignoreKeys=['momReplyUser','momReplyChar','momPost','crossRP','momPostSys','momCharPostSys','momCmtSys','musicSysP','stkP'];
-ordered.forEach(function(k){if(ignoreKeys.indexOf(k)>=0)return;if(k==='coupleP'&&!ch.coupleAv)return;if(D.wbToggles&&D.wbToggles[k]===false)return;var v=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');if(v)sys+=v+'\n\n'});
 
+function buildPr(ch){var sys='';ensureArcs(ch);var ordered=D.wbOrder.slice();var allKeys=['chatSys','chatFmt','charFmt','coupleP','stkP'];allKeys.forEach(function(k){if(ordered.indexOf(k)<0)ordered.push(k)});var msgs=getMsgs(ch);
+var ignoreKeys=['momReplyUser','momReplyChar','momPost','crossRP','momPostSys','momCharPostSys','momCmtSys','musicSysP','stkP','chatFmt'];
+ordered.forEach(function(k){if(ignoreKeys.indexOf(k)>=0)return;if(k==='coupleP'&&!ch.coupleAv)return;if(D.wbToggles&&D.wbToggles[k]===false)return;var v=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');if(v)sys+=v+'\n\n'});
 var charStk=D.stickers.filter(function(s){return!s.usage||s.usage==='all'||s.usage==='char'});
 if(charStk.length>0&&!(D.wbToggles&&D.wbToggles['stkP']===false)){var stkPrompt=D.wb.stkP!=null?D.wb.stkP:(WB_DEFAULTS.stkP||'');sys+=stkPrompt+'\n可用表情包：'+charStk.map(function(s){return s.name}).join(', ')+'\n\n'}
 var countP=ch.msgCountPrompt||'';
@@ -931,9 +922,13 @@ var chatUN=getChatUN(ch);sys+='[用户信息]\n用户名：'+chatUN+'\n';if(D.us
 var mem=getMemory(ch);
 var sArc = D.scriptApp ? D.scriptApp.archives.find(function(a){return a.id===D.scriptApp.curArc}) : null;
 if(sArc && sArc.syncOfflineMem && sArc.memory) mem = (mem ? mem + '\n\n' : '') + '[线下记忆摘要]\n' + sArc.memory;
-if(mem)sys+='[记忆摘要]\n'+mem+'\n\n';if(D.cust.syncT)sys+='当前时间：'+ft()+' '+fd()+'\n';
+if(mem)sys+='[记忆摘要]\n'+mem+'\n\n';
 var out=[{role:'system',content:sys}];var recent=msgs.slice(-(ch.ctxL||20));
-recent.forEach(function(m){if(m.role==='system')out.push({role:'system',content:m.content});else if(m.role==='user'){var c=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];c=getChatUN(ch)+' 引用了"'+(qm.content||'').substring(0,60)+'"的消息：'+c}if(m.type==='image'&&m.src)out.push({role:'user',content:[{type:'text',text:c},{type:'image_url',image_url:{url:m.src}}]});else out.push({role:'user',content:c})}else{var cc=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm2=msgs[m.quoteIdx];cc=(ch.nick||ch.name)+' 引用了"'+(qm2.content||'').substring(0,60)+'"的消息：'+cc}out.push({role:'assistant',content:cc})}});return out}
+recent.forEach(function(m){var timeStr=D.cust.syncT?'\n[发送时间: '+(m.time||'')+']':'';if(m.role==='system')out.push({role:'system',content:m.content});else if(m.role==='user'){var c=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];c=getChatUN(ch)+' 引用了"'+(qm.content||'').substring(0,60)+'"的消息：'+c}c+=timeStr;if(m.type==='image'&&m.src)out.push({role:'user',content:[{type:'text',text:c},{type:'image_url',image_url:{url:m.src}}]});else out.push({role:'user',content:c})}else{var cc=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm2=msgs[m.quoteIdx];cc=(ch.nick||ch.name)+' 引用了"'+(qm2.content||'').substring(0,60)+'"的消息：'+cc}cc+=timeStr;out.push({role:'assistant',content:cc})}});
+var fmtPrompt=D.wb.chatFmt!=null?D.wb.chatFmt:(WB_DEFAULTS.chatFmt||'');
+if(fmtPrompt&&!(D.wbToggles&&D.wbToggles['chatFmt']===false))out.push({role:'system',content:fmtPrompt});
+return out}
+
 function callAPI(msgs,p){var base=normalizeURL(p.url);if(!base)return Promise.reject(new Error('请输入API地址'));var url=base;if(!/\/chat\/completions/i.test(url))url+='/chat/completions';var h={'Content-Type':'application/json'};if(p.key)h['Authorization']='Bearer '+p.key;return fetch(url,{method:'POST',headers:h,body:JSON.stringify({model:p.model||'gpt-4o-mini',messages:msgs,temperature:p.temp!=null?p.temp:.7,max_tokens:30000})}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error('HTTP '+r.status+' '+t.substring(0,100))});return r.json()}).then(function(d){return d.choices&&d.choices[0]?d.choices[0].message.content||'':''})}
 
 function parseR(ch,resp,cb){var parsed=[];var rcvCnt=0;var refCnt=0;
@@ -950,7 +945,7 @@ function checkAutoSum(ch){if(!ch.autoS)return;var arc=getCurArc(ch);var since=ar
 
 function doAutoSum(ch){var p=D.apis[D.aApi];if(!p||!p.url)return;var arc=getCurArc(ch);var start=arc._lastSumAt||0;var toSum=arc.msgs.slice(start).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum)return;var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;
 callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],p).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();arc._lastSumAt=arc.msgs.length;save();toast('自动总结完成')}).catch(function(){})}
-function manualSum(ch,from,to){var p=D.apis[D.aApi];if(!p||!p.url){toast('请配置API');return}var arc=getCurArc(ch);var toSum=arc.msgs.slice(from,to).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum){toast('无内容');return}toast('总结中...');var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],p).then(function(r){arc.memory=r.trim();save();toast('总结完成');openCFS()}).catch(function(){toast('失败')})}
+function manualSum(ch,from,to){var p=D.apis[D.aApi];if(!p||!p.url){toast('请配置API');return}var arc=getCurArc(ch);var toSum=arc.msgs.slice(from,to).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum){toast('无内容');return}toast('总结中...');var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],p).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();save();toast('总结完成');openCFS()}).catch(function(){toast('失败')})}
 
 var _offlineTimers={};
 function startOfflineLoop(){D.chars.forEach(function(ch){resetOfflineTimer(ch)})}
@@ -1079,7 +1074,7 @@ function saveWBEdit(){
 if(_wbEditKey==='_memory'){var ch=gch(_cfsId||D.curChat);if(ch){getCurArc(ch).memory=$('wbef-ta').value;save();var mm=$('cf-mm');if(mm)mm.value=$('wbef-ta').value}closeWBEdit();toast('记忆已保存');return}
 if(_wbEditKey==='_chatinput'){var inp=$('ci-inp');if(inp)inp.value=$('wbef-ta').value;closeWBEdit();return}
 if(_wbEditKey.startsWith('_cffield_')){var fid=_wbEditKey.replace('_cffield_','');var fel=$(fid);if(fel)fel.value=$('wbef-ta').value;closeWBEdit();toast('已同步');return}
-if(_wbEditKey.startsWith('_editmsg_')){var midx=parseInt(_wbEditKey.replace('_editmsg_',''));var ch2=gch(D.curChat);if(ch2){var m2=getMsgs(ch2)[midx];if(m2){if(m2.type==='image'&&!m2.src){m2.desc=$('wbef-ta').value;m2.content='[图片:'+$('wbef-ta').value+']'}else m2.content=$('wbef-ta').value;save();renderBub()}}closeWBEdit();toast('已保存');return}
+if(_wbEditKey.startsWith('_editmsg_')){var midx=parseInt(_wbEditKey.replace('_editmsg_',''));var ch2=gch(D.curChat);if(ch2){var msgs2=getMsgs(ch2);var m2=msgs2[midx];if(m2){if(m2.type==='image'&&!m2.src){m2.desc=$('wbef-ta').value;m2.content='[图片:'+$('wbef-ta').value+']'}else m2.content=$('wbef-ta').value;var rm2=msgs2.filter(function(x){return x.role!=='system'});if(rm2.length>0&&m2===rm2[rm2.length-1]){ch2.lastM=m2.content||'['+m2.type+']';ch2.lastT=m2.time||''}save();renderBub();renderML()}}closeWBEdit();toast('已保存');return}
 if(_wbEditKey.startsWith('_pv_')){closeWBEdit();toast('预览仅查看');return}
 if(_wbEditKey==='_chatcss'){var ci=D.chatCssProfiles[D.aChatCss];if(ci)ci.css=$('wbef-ta').value;D.cust.chatCss=ci?ci.css:'';applyCustCss();save();closeWBEdit();toast('已保存');return}
 if(_wbEditKey==='_bubcss'){var bi=D.bubCssProfiles[D.aBubCss];if(bi)bi.css=$('wbef-ta').value;D.cust.bubCss=bi?bi.css:'';applyCustCss();applyBubStyle();save();closeWBEdit();toast('已保存');return}
@@ -1346,7 +1341,7 @@ function expAll(){var j=JSON.stringify(D);try{localStorage.setItem('mp8',j)}catc
 function impAll(){upJSON(function(txt){try{JSON.parse(txt);localStorage.setItem('mp8',txt);toast('导入成功');setTimeout(function(){location.reload()},800)}catch(x){toast('失败')}})}
 function clearAllData(){if(confirm('确定要清空所有数据并恢复初始设置吗？此操作不可逆！建议先导出备份。')){localStorage.removeItem('mp8');location.reload()}}
 
-function compressImage(e,t){if(!e||!e.startsWith("data:image"))return t(e);var a=new Image;a.onload=function(){var e=document.createElement("canvas"),r=e.getContext("2d"),n=a.width,o=a.height;if(n>600||o>600){var i=Math.min(600/n,600/o);n=Math.round(n*i),o=Math.round(o*i)}e.width=n,e.height=o,r.drawImage(a,0,0,n,o);var c=e.toDataURL("image/jpeg",0.6);t(c.length<a.src.length?c:a.src)},a.onerror=function(){t(e)},a.src=e}
+function compressImage(e,t){if(!e||!e.startsWith("data:image"))return t(e);var a=new Image;a.onload=function(){var e=document.createElement("canvas"),r=e.getContext("2d"),n=a.width,o=a.height;if(n>1200||o>1200){var i=Math.min(1200/n,1200/o);n=Math.round(n*i),o=Math.round(o*i)}e.width=n,e.height=o,r.drawImage(a,0,0,n,o);var c=e.toDataURL("image/jpeg",0.9);t(c.length<a.src.length?c:a.src)},a.onerror=function(){t(e)},a.src=e}
 
 function showBS(h){$('bss').innerHTML=h;$('bso').classList.add('on')}
 function closeBS(){$('bso').classList.remove('on');_tav=null;_tuav=null;_timg=null}
