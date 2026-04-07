@@ -587,7 +587,7 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div class="stk-bn" onclick="setStkFilter('char', this)">Char</div>
 </div>
 </div>
-<div class="ov" id="ovWB"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovWB')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn-text" onclick="saveWB()">保存</button></div><div class="ov-bd" id="wb-bd"></div><button class="m-fab" style="bottom:24px;z-index:999" onclick="addWBEntry()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
+<div class="ov" id="ovWB"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovWB')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn-text" onclick="saveWB()">保存</button></div><div class="ov-bd" id="wb-bd"></div><button class="m-fab" style="bottom:80px;background:#007aff;border-color:#007aff;z-index:999" onclick="addWBEntry()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#fff"/></svg></button></div>
 
 <div class="ov" id="ovCFS"><div class="ov-hb"><button class="hbtn hbtn-bare" onclick="closeOV('ovCFS')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">角色设置</div><button class="hbtn-text" onclick="saveCFS()">保存</button></div><div class="ov-bd" id="cfs-bd"></div></div>
 
@@ -1058,7 +1058,7 @@ $('wb-bd').innerHTML=h;$('ovWB').classList.add('on');
 var ovhb = document.querySelector('#ovWB .ov-hb');
 if(ovhb) ovhb.innerHTML = '<button class="hbtn hbtn-bare" onclick="closeOV(\'ovWB\')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn-text" onclick="saveWB()">保存</button>';
 }
-function addWBEntry(){var n=prompt('输入新条目英文或拼音ID (如: rule1)','custom_'+uid().slice(0,4));if(!n)return;var l=prompt('输入显示名称',n);if(!l)return;wbKeys.push([n, l]);D.wb[n] = '';D.wbOrder.push(n);save();openWB();}
+function addWBEntry(){var n=prompt('输入新条目名称','自定义条目');if(!n)return;var id='c_'+uid().slice(0,4);wbKeys.push([id,n]);D.wb[id]='';D.wbOrder.push(id);save();openWB();}
 function saveMusicWB(v){D.wb.music=v.split('\n').filter(function(l){return l.trim()&&l.indexOf('|')>=0}).map(function(l){var p=l.split('|');return{name:p[0].trim(),artist:(p[1]||'').trim(),url:(p[2]||'').trim(),lyrics:(p[3]||'').trim()}});save();initMu();toast('已保存');}
 
 function togWBE(k){_wbExp[k]=!_wbExp[k];var parent=document.querySelector('.wbs[data-k="'+k+'"]');if(parent){var bd=parent.querySelector('.wbs-body');if(bd)bd.classList.toggle('on',_wbExp[k])}}
