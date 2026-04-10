@@ -912,7 +912,7 @@ var ignoreKeys=['momReplyUser','momReplyChar','momPost','crossRP','momPostSys','
 ordered.forEach(function(k){if(ignoreKeys.indexOf(k)>=0)return;if(k==='coupleP'&&!ch.coupleAv)return;if(D.wbToggles&&D.wbToggles[k]===false)return;var v=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');if(v)sys+=v+'\n\n'});
 var charStk=D.stickers.filter(function(s){return!s.usage||s.usage==='all'||s.usage==='char'});
 if(charStk.length>0&&!(D.wbToggles&&D.wbToggles['stkP']===false)){var stkPrompt=D.wb.stkP!=null?D.wb.stkP:(WB_DEFAULTS.stkP||'');sys+=stkPrompt+'\n可用表情包：'+charStk.map(function(s){return s.name}).join(', ')+'\n\n'}
-var countP=ch.msgCountPrompt||'';
+if(D.cust.syncT){var tsp=D.wb.timeSyncP!=null?D.wb.timeSyncP:'【时间感知】\n请注意每条消息前的时间戳，体会现实时间的流逝与间隔，并在回复的情境和语气中合理地体现出来。';if(tsp)sys+=tsp+'\n\n';}var countP=ch.msgCountPrompt||'';
 if(countP)sys+=countP+'\n\n';
 else if(ch.msgMin&&ch.msgMax)sys+='[回复要求]\n每次回复根据情境**不固定**发送 '+ch.msgMin+' ~ '+ch.msgMax+' 条消息，每条消息不超过25字。\n\n';
 if(ch.thinkMode) sys+=(ch.thinkPrompt || '[重要指令]请务必在最终回复前，将你的思考过程放在 <think> 和 </think> 标签之间，思考过程简化。')+'\n\n';
@@ -1053,7 +1053,7 @@ var _wbExp={};
 function openWB(){var h='';D.wbOrder=D.wbOrder.filter(function(k){return wbKeys.some(function(s){return s[0]===k})});wbKeys.forEach(function(s){if(D.wbOrder.indexOf(s[0])<0)D.wbOrder.push(s[0])});var order=D.wbOrder.slice();
 order.forEach(function(k,oi){var entry=wbKeys.find(function(e){return e[0]===k});if(!entry)return;var l=entry[1];var cur=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');var wbIdx=D.wbOrder.indexOf(k);var isOff=D.wbToggles&&D.wbToggles[k]===false;var togHtml='<div class="tog-sm'+(!isOff?' on':'')+'" onclick="e(event);togWBT(\''+k+'\',this)" style="margin-left:4px;flex-shrink:0"><div class="tok"></div></div>';h+='<div class="wbs" data-k="'+k+'" id="wbs_'+k+'"><div class="wbs-h" onclick="togWBE(\''+k+'\')"><span>'+l+'</span><div class="wba" style="align-items:center" onclick="e(event)"><button class="wbb" onclick="openItemMenu(event,\'wb\','+wbIdx+')" style="padding:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="var(--text2)"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button><button class="wbb" onclick="openWBEditFS(\''+k+'\',\''+l.replace(/'/g,"\\'")+'\')">↗</button>'+togHtml+'</div></div><div class="wbs-body'+(_wbExp[k]?' on':'')+'"><textarea class="fta" id="wb_'+k+'" rows="3" onchange="D.wb[\''+k+'\']=this.value;save();toast(\'已保存\')">'+esc(cur)+'</textarea></div></div>'});
 h+='<div class="wbs" data-k="_notifs"><div class="wbs-h" onclick="togWBE(\'_notifs\')"><span>系统通知</span></div><div class="wbs-body'+(_wbExp._notifs?' on':'')+'">';notifKeys.forEach(function(s){var cur=D.wb[s[0]]!=null?D.wb[s[0]]:(WB_DEFAULTS[s[0]]||'');h+='<div style="padding:6px 12px;border-bottom:1px solid var(--sep)"><div class="fl">'+s[1]+' <span style="font-size:10px;color:var(--accent);cursor:pointer" onclick="openWBEditFS(\''+s[0]+'\',\''+s[1].replace(/'/g,"\\'")+'\')">展开</span></div><textarea class="fta" id="wb_'+s[0]+'" rows="2" onchange="D.wb[\''+s[0]+'\']=this.value;save();toast(\'已保存\')">'+esc(cur)+'</textarea></div>'});h+='</div></div>';
-h+='<div class="wbs" data-k="music"><div class="wbs-h" onclick="togWBE(\'music\')"><span>音乐列表</span><div class="wba" onclick="e(event)"><button class="wbb" onclick="openMuEditFS()">↗</button></div></div><div class="wbs-body'+(_wbExp.music?' on':'')+'"><div style="padding:6px 12px;font-size:10px;color:var(--text3);border-bottom:1px solid var(--sep)">格式：歌曲名|歌手|音乐链接|歌词(可选)<br>示例：晴天|周杰伦|https://example.com/qt.mp3|故事的小黄花...</div><textarea class="fta" id="wb_music" rows="4" onchange="saveMusicWB(this.value)">'+(D.wb.music||[]).map(function(m){return m.name+'|'+(m.artist||'')+'|'+(m.url||'')+'|'+(m.lyrics||'')}).join('\n')+'</textarea></div></div>';
+h+='<div class="wbs" data-k="timeSyncP"><div class="wbs-h" onclick="togWBE(\'timeSyncP\')"><span>时间感知提示词</span></div><div class="wbs-body'+(_wbExp.timeSyncP?' on':'')+'"><div style="padding:6px 12px;font-size:10px;color:var(--text3);border-bottom:1px solid var(--sep)">开启设置中的"同步时间给AI"后，此提示词将自动生效。</div><textarea class="fta" id="wb_timeSyncP" rows="3" onchange="D.wb.timeSyncP=this.value;save();toast(\'已保存\')">'+esc(D.wb.timeSyncP!=null?D.wb.timeSyncP:'【时间感知】\n请注意每条消息后的时间戳，体会现实时间的流逝与间隔，并在回复的情境和语气中合理地体现出来。')+'</textarea></div></div><div class="wbs" data-k="music"><div class="wbs-h" onclick="togWBE(\'music\')"><span>音乐列表</span><div class="wba" onclick="e(event)"><button class="wbb" onclick="openMuEditFS()">↗</button></div></div><div class="wbs-body'+(_wbExp.music?' on':'')+'"><div style="padding:6px 12px;font-size:10px;color:var(--text3);border-bottom:1px solid var(--sep)">格式：歌曲名|歌手|音乐链接|歌词(可选)<br>示例：晴天|周杰伦|https://example.com/qt.mp3|故事的小黄花...</div><textarea class="fta" id="wb_music" rows="4" onchange="saveMusicWB(this.value)">'+(D.wb.music||[]).map(function(m){return m.name+'|'+(m.artist||'')+'|'+(m.url||'')+'|'+(m.lyrics||'')}).join('\n')+'</textarea></div></div>';
 $('wb-bd').innerHTML=h;$('ovWB').classList.add('on');
 var ovhb = document.querySelector('#ovWB .ov-hb');
 if(ovhb) ovhb.innerHTML = '<button class="hbtn hbtn-bare" onclick="closeOV(\'ovWB\')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="ov-t">世界书</div><button class="hbtn-text" onclick="saveWB()">保存</button>';
@@ -1062,7 +1062,7 @@ function addWBEntry(){wbKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el)D.wb
 function saveMusicWB(v){D.wb.music=v.split('\n').filter(function(l){return l.trim()&&l.indexOf('|')>=0}).map(function(l){var p=l.split('|');return{name:p[0].trim(),artist:(p[1]||'').trim(),url:(p[2]||'').trim(),lyrics:(p[3]||'').trim()}});save();initMu();toast('已保存');}
 
 function togWBE(k){_wbExp[k]=!_wbExp[k];var parent=document.querySelector('.wbs[data-k="'+k+'"]');if(parent){var bd=parent.querySelector('.wbs-body');if(bd)bd.classList.toggle('on',_wbExp[k])}}
-function togWBE(k){_wbExp[k]=!_wbExp[k];var sel=k==='music'?'#wb-bd .wbs:last-child':'.wbs[data-k="'+k+'"]';var parent=document.querySelector(sel);if(parent){var bd=parent.querySelector('.wbs-body');if(bd)bd.classList.toggle('on',_wbExp[k])}}
+function togWBE(k){_wbExp[k]=!_wbExp[k];var parent=document.querySelector('.wbs[data-k="'+k+'"]');if(parent){var bd=parent.querySelector('.wbs-body');if(bd)bd.classList.toggle('on',_wbExp[k])}}
 function togWBT(k,el){el.classList.toggle('on');if(!D.wbToggles)D.wbToggles={};D.wbToggles[k]=el.classList.contains('on');save();toast(D.wbToggles[k]?'已启用':'已停用')}
 var _wbEditKey='';
 function togWBT(k,el){el.classList.toggle('on');if(!D.wbToggles)D.wbToggles={};D.wbToggles[k]=el.classList.contains('on');save();toast(D.wbToggles[k]?'已启用':'已停用')}
@@ -1089,7 +1089,8 @@ if(_wbEditKey==='_sinfo'){var ch=gch(D.curScriptChar);if(ch){if(D.scriptInfoTab=
 if(_wbEditKey.startsWith('_seditmsg_')){var midx=parseInt(_wbEditKey.replace('_seditmsg_',''));var m=getSArc().msgs[midx];if(m){m.content=$('wbef-ta').value;m.tokens=estTok(m.content);if(typeof updateScriptSync==='function')updateScriptSync(midx);save();renderScriptBub();}closeWBEdit();toast('已保存');return;}
 if(_wbEditKey==='_scriptinput'){var inp=$('script-inp');if(inp)inp.value=$('wbef-ta').value;closeWBEdit();return;}
 var el=$('wb_'+_wbEditKey);if(el)el.value=$('wbef-ta').value;closeWBEdit();toast('已同步')}
-function saveWB(){wbKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el)D.wb[s[0]]=el.value});notifKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el)D.wb[s[0]]=el.value});var mt=$('wb_music')&&$('wb_music').value||'';D.wb.music=mt.split('\n').filter(function(l){return l.trim()&&l.indexOf('|')>=0}).map(function(l){var p=l.split('|');return{name:p[0].trim(),artist:(p[1]||'').trim(),url:(p[2]||'').trim(),lyrics:(p[3]||'').trim()}});save();initMu();closeOV('ovWB');toast('已保存')}
+function saveWB(){wbKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el)D.wb[s[0]]=el.value});
+notifKeys.forEach(function(s){var el=$('wb_'+s[0]);if(el)D.wb[s[0]]=el.value});if($('wb_timeSyncP'))D.wb.timeSyncP=$('wb_timeSyncP').value;var mt=$('wb_music')&&$('wb_music').value||'';D.wb.music=mt.split('\n').filter(function(l){return l.trim()&&l.indexOf('|')>=0}).map(function(l){var p=l.split('|');return{name:p[0].trim(),artist:(p[1]||'').trim(),url:(p[2]||'').trim(),lyrics:(p[3]||'').trim()}});save();initMu();closeOV('ovWB');toast('已保存')}
 function openBeauty(){var h='<div class="bs-hd"></div><div class="mt">美化</div>';
 h+='<div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px">';
 h+='<button class="fbtn n" style="flex:0 0 auto;width:auto;padding:0 12px;height:32px;font-size:11px;margin:0" onclick="saveBProf()">+ 存为新配置</button>';
@@ -1444,7 +1445,7 @@ function renderScriptBub() {
         h += '<div class="bub" style="cursor:pointer; max-width:100%" onclick="'+(_msMode==='script'?'togMS('+i+')':'showScriptMA(event,'+i+')')+'">'+escH(m.content)+'</div>'+actUI;
         h += '</div>'+preU+'</div></div>';
     });
-    el.innerHTML = h; cb.scrollTop = cb.scrollHeight;
+    el.innerHTML=h;if(!_msMode)cb.scrollTop=cb.scrollHeight;
 }
 function showScriptMA(ev, idx) {
     ev.stopPropagation(); var mp=$('map'); var m = getSArc().msgs[idx];
@@ -1579,7 +1580,7 @@ function buildScriptPr(ch, arc) {
     var sys = '';
     arc.reqs.filter(function(r){return r.on}).forEach(function(r){ sys += r.content + '\n\n'; });
     if(arc.thinkMode) sys += (arc.thinkPrompt || '[重要指令]请务必在最终回复前，将你的思考过程放在 <think> 和 </think> 标签之间，思考过程简化。') + '\n\n';
-    if (arc.syncOnline !== false) {
+if(D.cust.syncT){var tsp=D.wb.timeSyncP!=null?D.wb.timeSyncP:'【时间感知】\n请注意每条消息前的时间戳，体会现实时间的流逝与间隔，并在回复的情境和语气中合理地体现出来。';if(tsp)sys+=tsp+'\n\n';}if (arc.syncOnline !== false) {
         var chatArc = ch.archives.find(function(a){return a.id===ch.curArc}) || ch.archives[0];
         sys += '[角色人设]\n' + (ch.persona||'') + '\n\n';
         sys += '[用户人设]\n' + (ch.chatUserPersona||D.user.sig||'') + '\n\n';
