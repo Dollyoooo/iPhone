@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<!-- 网页标签页显示的名字 -->
+<!-- 下面是网页标签页显示的名字 -->
 <title>多莉机</title>
-<!-- 添加到手机主屏幕时显示的名字 -->
+<!-- 下面是添加到手机主屏幕时显示的名字 -->
 <meta name="apple-mobile-web-app-title" content="多莉机">
-<!-- 网页标签页的小图标 -->
+<!-- 下面是网页标签页的小图标 (把里面的链接换成你自己的图片链接) -->
 <link rel="icon" href="https://pic4.fukit.cn/autoupload/oXcKVIwhXjk9PHl872qrR9iO_OyvX7mIgxFBfDMDErs/20260320/YiHs/1080X1080/1040g2sg31c1k7hjpgs6g5pkbb86jurg6h9p1jn8%21nd_dft_wlteh_jpg_3.jpeg">
-<!-- 添加到手机主屏幕时的封面图标 -->
+<!-- 下面是添加到手机主屏幕时的封面图标 -->
 <link rel="apple-touch-icon" href="https://pic4.fukit.cn/autoupload/oXcKVIwhXjk9PHl872qrR9iO_OyvX7mIgxFBfDMDErs/20260320/YiHs/1080X1080/1040g2sg31c1k7hjpgs6g5pkbb86jurg6h9p1jn8%21nd_dft_wlteh_jpg_3.jpeg">
 <style>
 
@@ -775,8 +775,7 @@ function upCAv(el){var opt=prompt("输入图片URL (留空则选择本地文件)
 function saveChar(eid){var nk=$('nc-nk').value.trim(),nm=$('nc-nm').value.trim(),ps=$('nc-ps').value;if(!nm){toast('请输入角色名');return}if(eid){var ch=gch(eid);if(ch){var oldN=ch.nick||ch.name;ch.nick=nk;ch.name=nm;ch.persona=ps;if(_tav)ch.avatar=_tav;var newN=ch.nick||ch.name;if(oldN!==newN){D.moments.forEach(function(m){if(m.author===ch.id)m.authorName=newN;if(m.comments)m.comments.forEach(function(c){if(c.name===oldN)c.name=newN});if(m.likes)m.likes.forEach(function(l,i){if(l===oldN)m.likes[i]=newN})})}}}
 
 else{var arc={id:uid(),name:'默认',msgs:[],memory:'',_lastSumAt:0};D.chars.push({id:uid(),name:nm,nick:nk,avatar:_tav,persona:ps,archives:[arc],curArc:arc.id,ctxL:20,autoS:false,sumI:20,lastM:'',lastT:'',chatBg:null,coupleAv:false,offlineOn:false,autoMsgMin:5,chatUserName:'',chatUserAvatar:null,chatUserPersona:'',msgMin:1,msgMax:3,msgCountPrompt:'',sumPrompt:'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：'})}_tav=null;save();closeBS();renderML();if(curScr==='scrMom')renderMom();toast('已保存')}
-
-function delChar(id){if(!confirm('确定删除？'))return;D.chars=D.chars.filter(function(c){return c.id!==id});save();closeBS();closeOV('ovCFS');renderML();if(curScr==='scrChat')go('scrMsg')}
+function delChar(id){if(!confirm('确定删除？'))return;if(_offlineTimers[id]){clearTimeout(_offlineTimers[id]);delete _offlineTimers[id]}D.chars=D.chars.filter(function(c){return c.id!==id});save();closeBS();closeOV('ovCFS');renderML();if(curScr==='scrChat')go('scrMsg')}
 function openChat(id){D.curChat=id;if(_msMode)exitMS('chat');var ch=gch(id);if(!ch)return;ensureArcs(ch);$('chat-nm').textContent=ch.nick||ch.name;go('scrChat');renderBub();applyCBg();buildFTray();if(typeof closeFT==='function')closeFT();clearQuote();D.chatRole='user';updateRoleTog()}
 function applyCBg(){var ch=gch(D.curChat);if(!ch)return;var scr=$('scrChat');var cb=$('cbody');if(ch.chatBg){scr.style.backgroundImage='url("'+ch.chatBg+'")';scr.style.backgroundSize='cover';scr.style.backgroundPosition='center';cb.style.setProperty('background','transparent','important')}else{scr.style.backgroundImage='none';cb.style.removeProperty('background')}}
 function buildFTray(){var h='';
