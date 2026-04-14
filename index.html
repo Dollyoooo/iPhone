@@ -437,6 +437,15 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 
 .stk-bn.on{color:var(--text);text-shadow:0 2px 8px var(--text3)}
 
+/* --- 论坛APP样式 --- */
+#scrForum, #scrForumDetail { background: var(--mom-bg); }
+#scrForum .hbar, #scrForumDetail .hbar { border-bottom: 1px solid var(--sep); }
+.fd-post { padding: 16px; border-bottom: 8px solid var(--sep); }
+.fd-cmts { padding: 16px; }
+.fd-cmt-item { padding: 12px 0; border-bottom: 1px solid var(--sep); }
+.fd-cmt-item:last-child { border-bottom: none; }
+.forum-post{background:var(--mom-bg);margin:0;padding:16px 16px 12px;border-bottom:8px solid var(--sep)}.forum-hdr{display:flex;justify-content:space-between;margin-bottom:8px}.forum-fname{font-size:13px;font-weight:800;background:linear-gradient(135deg,#ff2d55,#ff9500);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.forum-tag{background:linear-gradient(135deg,#ff2d55,#bf5af2);color:#fff;-webkit-text-fill-color:#fff;font-size:9px;padding:2px 6px;border-radius:6px;font-weight:700}.forum-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.4}.forum-author{display:flex;align-items:center;gap:8px;margin-bottom:12px}.forum-av{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid var(--sep)}.forum-aname{font-size:14px;color:var(--orange);font-weight:700}.forum-time{font-size:11px;color:var(--text3);margin-top:2px}.forum-content{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:14px;word-break:break-word}.forum-acts{display:flex;gap:20px;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--sep)}.forum-act-btn{background:none;border:none;color:var(--text);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;transition:opacity .2s}.forum-act-btn:active{opacity:.6}.forum-act-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.forum-cmts{background:var(--mom-bg);padding:0}.forum-cmt-item{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:8px;border-bottom:1px dashed var(--sep);padding-bottom:8px}.forum-cmt-item:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}
+
 /* --- 新增剧本APP样式 --- */
 .wave-anim { display:flex; align-items:center; gap:3px; height:12px; padding:0 8px; }
 .wave-anim i { width:3px; background:var(--text3); border-radius:1.5px; animation: dw 0.6s ease-in-out infinite alternate; }
@@ -534,6 +543,29 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 <div class="cib-row" style="align-items:flex-end;"><button class="cibtn" style="margin-bottom:2px" onclick="togFT()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button><div style="flex:1;position:relative;display:flex;align-items:flex-end"><textarea class="ci-inp" id="ci-inp" style="width:100%;padding-right:34px;resize:none;padding-top:11px;padding-bottom:11px;line-height:20px;min-height:42px;max-height:120px;overflow-y:auto;box-sizing:border-box" placeholder="消息" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}" oninput="this.style.height='42px';if(this.value)this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea><div class="exp-ico" style="position:absolute;right:4px;bottom:8px" onclick="openVoS()"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="var(--text2)" stroke-width="1.5"/><path d="M5 11a7 7 0 0014 0" fill="none" stroke="var(--text2)" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="22" stroke="var(--text2)" stroke-width="1.5" stroke-linecap="round"/></svg></div></div><button class="cibtn send-btn" id="send-btn" style="margin-bottom:2px" onclick="sendMsg()"><svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.993.993 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61a1 1 0 001.39.91z"/></svg></button><button class="cibtn ai-btn" id="ai-btn" style="margin-bottom:2px" onclick="trigAI()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></button></div>
 </div></div>
 
+<div class="screen" id="scrForum">
+    <div class="hbar">
+        <button class="hbtn hbtn-bare" onclick="go('scrHome')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+        <div class="hbar-t">论坛</div>
+        <button class="hbtn hbtn-bare" onclick="openForumSet()"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.05 7.05 0 00-1.62-.94l-.36-2.54A.484.484 0 0014 2h-3.84c-.24 0-.43.17-.47.41l-.36 2.54a7.05 7.05 0 00-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87a.488.488 0 00.12.61l2.03 1.58a7.23 7.23 0 000 1.88l-2.03 1.58a.488.488 0 00-.12.61l1.92 3.32c.12.22.37.3.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41H14c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.488.488 0 00-.12-.61l-2.09-1.58z"/></svg></button>
+    </div>
+    <div class="scr-s" id="forum-list" style="padding-bottom:90px;"></div>
+    <button class="m-fab" onclick="openNewForumPost()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+</div>
+
+<div class="screen" id="scrForumDetail"><div class="hbar"><button class="hbtn hbtn-bare" onclick="go('scrForum')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="hbar-t">帖子详情</div><div style="width:34px"></div></div><div class="scr-s" id="fd-scroll" style="padding-bottom:90px;"><div id="fd-post-area"></div><div class="fd-cmts" id="fd-cmts-area"></div></div></div>
+<div class="ov" id="ovForumSet">
+    <div class="ov-hb">
+        <button class="hbtn hbtn-bare" onclick="closeOV('ovForumSet')"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+        <div class="ov-t">论坛提示词设置</div>
+        <button class="hbtn-text" onclick="saveForumSet()">保存</button>
+    </div>
+    <div class="ov-bd" style="padding:14px">
+        <div class="fl" style="margin-bottom:6px">发帖系统提示词</div>
+        <textarea class="fta" id="forum-prompt-ta" rows="15"></textarea>
+    </div>
+</div>
+
 <div class="screen" id="scrScript">
     <div class="scr-script-bg" id="script-sbg"></div>
     <div class="script-hb">
@@ -617,14 +649,15 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 var D={theme:'dark',pw:360,ph:640,pr:46,py:0,fullscreen:false,showSB:true,wallpaper:null,diArt:null,
 iconMode:'color',customIcons:{},beautyProfiles:[],
 chatCssProfiles:[],aChatCss:0,bubCssProfiles:[],aBubCss:0,
-user:{name:'',avatar:null,sig:'',momBg:null},chars:[],moments:[],
+user:{name:'',avatar:null,sig:'',momBg:null},chars:[],moments:[],forums:[],
 apis:[{id:uid(),name:'默认',url:'',key:'',model:'',temp:.7}],aApi:0,
 wbOrder:['chatSys','chatFmt','charFmt','coupleP','stkP'],
 momOrder:['momReplyUser','momReplyChar','momReplyOneP','momSocialP','momPost','crossRP'],
 wb:{chatSys:'你是一位沉浸式角色扮演助手。根据角色设定，以角色第一人称用中文回复。',chatFmt:'【回复格式说明】\n返回JSON数组。\n- 普通：{"msg":"25字内文字信息"}\n- 发红包：{"type":"redpacket","amount":"金额","note":"15字内备注"}\n- 收取红包：{"type":"rp_receive"}\n- 退回红包：{"type":"rp_refund"}\n- 语音：{"type":"voice","content":"25字内内容","dur":"5s"}\n- 图片：{"type":"image","desc":"100字内文字描述图片内容"}\n- 点外卖：{"type":"takeout","name":"物品名","amount":"金额"}\n\n【强制格式】\n你的输出必须是且仅是一个JSON数组，以[开头，以]结尾。\n示例：[{"msg":"回复内容"},{"msg":"另一条内容"}]\n绝对不允许输出JSON之外的任何文字。',charFmt:'【角色行为准则】\n角色应自然、真实地表达情感。'
 ,coupleP:'[头像：当前正在和user使用情侣头像] ',stkP:'【可用表情包列表】\n- 表情包：{"type":"sticker","name":"名称"}\n你会在聊天中根据情景发送表情包，无适用则不发\n发送表情时name必须完全匹配：',momReplyUser:'【用户朋友圈评论】\n所有角色各自独立评论一条，不要互相回复或提及其他角色。\n返回JSON数组：[{"name":"角色备注名","content":"纯评论内容"}]\n注意：content里不要包含角色自己的名字前缀。',momReplyChar:'【角色朋友圈社交圈评论】\n根据角色人设生成3~5个与角色有关的人物评论。返回JSON数组：[{"name":"人物名","content":"评论内容"}]\n注意：content里不要包含自己的名字前缀。',momReplyOneP:'【单角色评论回复】\n自然地回复朋友圈评论区的最新对话。只返回纯文本回复内容，不要JSON，不要加自己的名字前缀。\n若回复特定人，开头写"回复 对方名：内容"。',
 momSocialP:'【社交圈角色回复】\n用户刚刚回复了社交圈角色。请生成两条评论：\n1. 该社交圈角色回复用户。\n2. 主角色发表评论（可以回复用户，也可以回复该社交圈角色）。\n返回JSON数组：[{"name":"角色名","content":"回复内容"}]\n不要在content里加名字前缀。若回复特定人，格式为"回复 对方名：内容"。',
-momPost:'根据角色设定，生成一条贴合性格的朋友圈动态。你可以选择发送纯文本，或者附带一张图片（图片描述在100字以内）。\n只返回JSON：{"content":"朋友圈内容 [图片:图片描述]"} (如果没有图片则不加[图片:描述])',crossRP:'【修罗场模式】多名角色在场，角色之间必须互相回复互动，可能产生阴阳怪气、吃醋、争抢等情节。\n回复某人时content格式为"回复 对方名：内容"。',momPostSys:'{momName} 发了一条朋友圈动态：{content}',momCharPostSys:'{char} 刚发了朋友圈：{content}',momCmtSys:'朋友圈"{title}" 新增评论：{comments}',musicSysP:'[一起听歌曲]<br>{song}<br>|<br>歌词：{lyrics}',music:[]},
+momPost:'根据角色设定，生成一条贴合性格的朋友圈动态。你可以选择发送纯文本，或者附带一张图片（图片描述在100字以内）。\n只返回JSON：{"content":"朋友圈内容 [图片:图片描述]"} (如果没有图片则不加[图片:描述])',crossRP:'【修罗场模式】多名角色在场，角色之间必须互相回复互动，可能产生阴阳怪气、吃醋、争抢等情节。\n回复某人时content格式为"回复 对方名：内容"。',momPostSys:'{momName} 发了一条朋友圈动态：{content}',momCharPostSys:'{char} 刚发了朋友圈：{content}',momCmtSys:'朋友圈"{title}" 新增评论：{comments}',musicSysP:'[一起听歌曲]<br>{song}<br>|<br>歌词：{lyrics}',music:[],
+forumPrompt:'你现在需要模拟一个网络论坛的帖子及回复。\n\n【要求】\n1. 论坛名称：根据角色身份生成。\n2. 帖子标题：具有话题性或争议性。\n3. 发帖人：必须是当前角色。\n4. 帖子内容：符合角色人设，200字以内的正文。\n5. 回帖：生成20楼以上的回复，有来有回，风格带网感。\n6. 随机生成合理的点赞数(likes，使用k或w作为单位)和评论数(comments)。\n7. 回复其他人时，回复格式："角色A 回复 X楼 角色B：回复内容"。\n\n【强制输出格式】\n必须且只能输出一个合法的JSON对象，格式如下：\n{\n"forumName":"论坛名称",\n"title":"帖子标题",\n"content":"帖子正文",\n"likes":"带k或w的字符串",\n"comments":"数字字符串",\n"replies":[\n{"floor":1,"name":"角色A","content":"回复内容"},\n{"floor":2,"name":"角色B","content":"角色A 回复 1楼 角色B：回复内容"}\n]\n}'},
 
 cust:{uColor:'#007aff',cColor:'#e5e5ea',uAlpha:1,cAlpha:.85,fontColor:'#ffffff',fontAlpha:1,charFontColor:'#000000',charFontAlpha:1,syncT:false,crossR:true,musicSys:false,hideSys:false,bubStyle:1,setWp:null,msgWp:null,setWpA:.35,msgWpA:.35,chatUiAlpha:0.9,appColor:'#ffffff',appAlpha:0.06,appSvgColor:'#888888',chatCss:'',bubCss:''},
 stickers:[],wallet:{balance:0,txns:[]},songI:0,playing:false,playSpd:1,
@@ -689,7 +722,8 @@ var appDefs=[
 {id:'wallet',label:'钱包',grad:'linear-gradient(135deg,#666,#333)',svg:'<path d="M21 7H3a2 2 0 00-2 2v10a2 2 0 002 2h18a2 2 0 002-2V9a2 2 0 00-2-2zm-4 8a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM3 5h18v2H3V5z"/>',fn:"openWallet()"},
 {id:'wifi',label:'WiFi设置',grad:'linear-gradient(135deg,#4facfe,#00f2fe)',svg:'<path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>',fn:"openAPI()"},
 {id:'stk',label:'表情包',grad:'linear-gradient(135deg,#11998e,#38ef7d)',svg:'<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-7 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>',fn:"go('scrStk')"},
-{id:'script',label:'剧本',grad:'linear-gradient(135deg,#a18cd1,#fbc2eb)',svg:'<path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>',fn:"go('scrScript')"}
+{id:'script',label:'剧本',grad:'linear-gradient(135deg,#a18cd1,#fbc2eb)',svg:'<path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>',fn:"go('scrScript')"},
+{id:'forum',label:'论坛',grad:'linear-gradient(135deg,#ff9a9e,#fecfef)',svg:'<path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM6 12h8v2H6zM6 9h12v2H6zM6 6h12v2H6z"/>',fn:"go('scrForum')"}
 ];
 function renderApps(){var h='';var m=D.iconMode||'color';appDefs.forEach(function(a){var cls='ab',style='';if(m==='theme')cls='ab theme-icon';else if(m==='custom'&&D.customIcons&&D.customIcons[a.id]){cls='ab cust-icon';style='style="background-image:url('+D.customIcons[a.id]+')"'}else style='style="background:'+a.grad+'"';h+='<div class="ai" onclick="'+a.fn+'"><div class="'+cls+'" '+style+'><svg viewBox="0 0 24 24" fill="#fff">'+a.svg+'</svg></div><span class="al">'+a.label+'</span></div>'});$('appGrid').innerHTML=h}
 
@@ -751,7 +785,8 @@ function togSB(){D.showSB=!D.showSB;applySB();save();renderSet()}
 function togG(k,el){el.classList.toggle('on');D.cust[k]=el.classList.contains('on');save();if(k==='hideSys'&&D.curChat)renderBub()}
 var curScr='scrHome';
 function go(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});$(id).classList.add('active');curScr=id;document.querySelectorAll('.bn').forEach(function(n){n.classList.toggle('on',n.dataset.s===id)});
-$('bnav').style.display=['scrChat','scrMD','scrStk','scrScript'].indexOf(id)>=0?'none':'flex';if(id==='scrMsg'){renderML();applyScreenBgs()}if(id==='scrMom')renderMom();if(id==='scrStk')renderStkApp();if(id==='scrSet'){renderSet();applyScreenBgs()}if(id==='scrScript'){openScriptApp();applyScriptBg()}}
+$('bnav').style.display=['scrChat','scrMD','scrStk','scrScript','scrForum','scrForumDetail'].indexOf(id)>=0?'none':'flex';
+if(id==='scrMsg'){renderML();applyScreenBgs()}if(id==='scrMom')renderMom();if(id==='scrStk')renderStkApp();if(id==='scrSet'){renderSet();applyScreenBgs()}if(id==='scrScript'){openScriptApp();applyScriptBg()}if(id==='scrForum')renderForum();}
 function exitChat(){if(_msMode)exitMS('chat');go('scrMsg')}
 function upFile(cb){var i=$('f-inp');i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(v){if(typeof compressImage==='function'){compressImage(v.target.result, function(res){cb(res);});}else{cb(v.target.result);}};r.readAsDataURL(f);i.value=''};i.click()}
 function upJSON(cb){var i=$('j-inp');i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(v){cb(v.target.result)};r.readAsText(f);i.value=''};i.click()}
@@ -815,7 +850,7 @@ var preU = isU?chkBox:''; var preC = isU?'':chkBox;
 if(m.type==='redpacket'){var statTxt='';if(isU){statTxt=m.charRefund?'已退回':(m.charRecv?'已被领取':'等待领取')}else{statTxt=m.recv?'已领取':'轻触领取'}var opac=m.charRefund?'opacity:0.6':'';h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub rp-bub" style="'+opac+'" onclick="'+(_msMode==='chat'?'togMS('+i+')':'showMA(event,'+i+',\'rp\')')+'">'+inQuoteHtml+'<div class="rp-top"><div class="rp-ico"><svg viewBox="0 0 24 24"><rect x="2" y="1" width="20" height="22" rx="3" fill="#fff" opacity=".3"/></svg></div><div><div class="rp-note">'+esc(m.note||'恭喜发财')+'</div>'+(m.amount?'<div class="rp-amt">\u00A5'+m.amount+'</div>':'')+'</div></div><div class="rp-bot"><span>'+statTxt+'</span><span>红包</span></div></div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>';return}
 if(m.type==='takeout'){h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub rp-bub" style="background:#FFD000;color:#333;border:1px solid #E5BB00" onclick="'+(_msMode==='chat'?'togMS('+i+')':'showMA(event,'+i+')')+'">'+inQuoteHtml+'<div class="rp-top" style="background:#FFD000;padding-bottom:8px"><div class="rp-ico" style="background:rgba(0,0,0,0.05)"><svg viewBox="0 0 24 24"><path d="M12 2L4 5v14l8 3 8-3V5l-8-3zm0 2.5l5.5 2-5.5 2-5.5-2 5.5-2zM6 17.5V8.5l6 2.5v9l-6-2.5zm12 0l-6 2.5v-9l6-2.5v9z" fill="#333"/></svg></div><div><div class="rp-note" style="color:#333;font-size:13px">'+esc(m.name||'外卖订单')+'</div><div class="rp-amt" style="color:#333;font-size:18px;font-weight:800;margin-top:2px">\u00A5'+(m.amount||'0.00')+'</div></div></div><div class="rp-bot" style="background:#FFC000;color:#665000;border-top:1px dashed rgba(0,0,0,0.1)"><span>美团外卖</span><span>已支付</span></div></div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>';return}
 
-if(m.type==='voice'){var bars='';for(var b=0;b<8;b++)bars+='<i style="height:'+[5,9,16,11,18,13,8,15][b]+'px"></i>';h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="vo-container"><div class="bub vb"'+oi+'>'+inQuoteHtml+'<div class="vw">'+bars+'</div><div class="vd">'+(m.dur||'0"')+'</div></div><div class="vo-sub"><span class="vo-t2t" onclick="e(event);togVoTxt('+i+')">转文字</span></div><div class="vo-exp" id="vo-tx-'+i+'">'+escH((m.content||'').replace(/\[语音[:：]/,'').replace(/\]$/,''))+'</div></div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>';return}
+if(m.type==='voice'){var bars='';for(var b=0;b<8;b++)bars+='<i style="height:'+[5,9,16,11,18,13,8,15][b]+'px"></i>';h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub" style="padding:10px 14px;min-width:120px"'+oi+'>'+inQuoteHtml+'<div style="display:flex;align-items:center;gap:8px"><div class="vw">'+bars+'</div><div class="vd">'+(m.dur||'0"')+'</div></div><div class="vo-sub" style="margin-top:6px;border-top:1px solid var(--sep);padding-top:6px"><span class="vo-t2t" onclick="e(event);togVoTxt('+i+')">转文字</span></div><div class="vo-exp" id="vo-tx-'+i+'" style="background:transparent;border:none;padding:0;margin-top:4px">'+escH((m.content||'').replace(/\[语音[:：]/,'').replace(/\]$/,''))+'</div></div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>';return}
 if(m.type==='image'){var clickFn=_msMode==='chat'?'togMS('+i+')':'viewDummyImg('+i+')';var imgCnt=m.src?'<img src="'+m.src+'">':'<div style="width:165px;height:100px;background:var(--card);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px"><span style="font-size:10px;color:var(--text3)">[图片]</span></div>';h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub ib" style="padding:3px!important" onclick="'+clickFn+'">'+inQuoteHtml+imgCnt+'</div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>';return}
 if(m.type==='sticker'){h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub skb"'+oi+'>'+inQuoteHtml+(m.url?'<img src="'+m.url+'">':'?')+'</div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>';return}
 h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub"'+oi+'>'+inQuoteHtml+escH(m.content)+'</div>'+actUI+'</div>'+preU+'</div>'+ts+'</div>'});var isB=el.scrollHeight-el.scrollTop-el.clientHeight<40,oS=el.scrollTop;el.innerHTML=h;applyBubStyle();applyCBg();if(!_msMode){if(isB)el.scrollTop=el.scrollHeight;else el.scrollTop=oS}}
@@ -1063,7 +1098,7 @@ function addApiC(){D.apis.push({id:uid(),name:'配置'+(D.apis.length+1),url:'',
 function delApiC(){if(D.apis.length<=1)return;D.apis.splice(D.aApi,1);D.aApi=0;save();closeBS();openAPI()}
 function saveAPI(){var p=D.apis[D.aApi];p.name=$('ap-n').value;p.url=$('ap-u').value.trim();p.key=$('ap-k').value.trim();p.model=$('ap-m').value.trim();p.temp=parseFloat($('ap-t').value)||.7;p.sumOn=$('sum-api-box').style.display==='block';p.sumUrl=$('ap-su').value.trim();p.sumKey=$('ap-sk').value.trim();p.sumModel=$('ap-sm').value.trim();save();closeBS();toast('已保存')}
 function testAPI(){var raw=$('ap-u').value.trim();var base=normalizeURL(raw);if(!base){toast('请输入地址');return}toast('测试中...');var h={};var k=$('ap-k').value;if(k)h['Authorization']='Bearer '+k;var url=base.replace(/\/v1$/,'')+'/v1/models';fetch(url,{headers:h}).then(function(r){if(r.ok)return r.json();throw new Error('HTTP '+r.status)}).then(function(d){toast('连接成功 '+(d.data?d.data.length:'?')+' 个模型')}).catch(function(er){toast('失败: '+er.message)})}
-function fetchM(tid){var raw=$('ap-u').value.trim();var base=normalizeURL(raw);if(!base){toast('请输入地址');return}toast('获取中...');var h={};var k=$('ap-k').value;if(k)h['Authorization']='Bearer '+k;var url=base.replace(/\/v1$/,'')+'/v1/models';fetch(url,{headers:h}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(d){_fm=(d.data||[]).map(function(m){return m.id}).sort();if(tid==='ap-m'){$('ap-sr').style.display='block';}else{$('ap-ssr').style.display='block';}renderMList(_fm, tid);toast(_fm.length+' 个模型')}).catch(function(er){toast('错误: '+er.message)})}
+function fetchM(tid){var raw=$(tid==='ap-sm'?'ap-su':'ap-u').value.trim();var base=normalizeURL(raw);if(!base){toast('请输入地址');return}toast('获取中...');var h={};var k=$(tid==='ap-sm'?'ap-sk':'ap-k').value;if(k)h['Authorization']='Bearer '+k;var url=base.replace(/\/v1$/,'')+'/v1/models';fetch(url,{headers:h}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(d){_fm=(d.data||[]).map(function(m){return m.id}).sort();if(tid==='ap-m'){$('ap-sr').style.display='block';}else{$('ap-ssr').style.display='block';}renderMList(_fm,tid);toast(_fm.length+' 个模型')}).catch(function(er){toast('错误: '+er.message)})}
 function filtM(q, tid){renderMList(_fm.filter(function(m){return m.toLowerCase().indexOf(q.toLowerCase())>=0}), tid)}
 function renderMList(list, tid){var elId=tid==='ap-m'?'m-list':'sm-list';var el=$(elId);if(!el)return;el.style.display='block';var cur=$(tid)&&$(tid).value;var h='';list.forEach(function(m){h+='<div style="padding:9px 12px;cursor:pointer;font-size:12px;color:var(--text);border-bottom:1px solid var(--sep)'+(m===cur?';color:var(--accent);font-weight:600':'')+'" onclick="$(\''+tid+'\').value=\''+m+'\';$(\''+elId+'\').style.display=\'none\'">'+m+'</div>'});el.innerHTML=h||'<div style="padding:12px;text-align:center;color:var(--text3);font-size:12px">无匹配</div>'}
 var wbKeys=[['chatSys','聊天系统提示词'],['chatFmt','消息格式'],['charFmt','角色准则'],['coupleP','情侣头像']];if(D.customWbKeys){D.customWbKeys.forEach(function(ck){if(!wbKeys.some(function(wk){return wk[0]===ck[0]}))wbKeys.push(ck);});}
@@ -1291,18 +1326,18 @@ function postUM(){var c=$('um-c')&&$('um-c').value.trim();var img=$('um-img')&&$
 function createCM(cid){var ch=gch(cid);if(!ch)return;toast('生成中...');var p=D.apis[D.aApi];if(!p||!p.url){toast('请配置API');return}
 ensureArcs(ch);var mem=getMemory(ch);var allCtx=getMsgs(ch).filter(function(m){return m.role!=='system'}).slice(-20).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');
 var sysP=(D.wb.momPost||WB_DEFAULTS.momPost)+'\n\n[角色设定]\n'+ch.persona;
-if(mem)sysP+='\n\n[记忆摘要]\n'+mem;
-if(allCtx)sysP+='\n\n[聊天上下文]\n'+allCtx;
+if(mem)sysP+='\n\n[记忆摘要]\n'+mem;sysP+='\n\n[用户设定]\n'+(ch.chatUserPersona||D.user.sig||'无');if(allCtx)sysP+='\n\n[聊天上下文]\n'+allCtx;
 callAPI([{role:'system',content:sysP},{role:'user',content:'生成一条朋友圈'}],p).then(function(r){var c=r.trim();try{var j=JSON.parse(r.replace(/```json?\n?/g,'').replace(/```/g,'').trim());c=j.content||c}catch(x){}var m={id:uid(),author:cid,authorName:ch.nick||ch.name,content:c,comments:[],likes:[],ts:fdFull()+' '+ft()};D.moments.push(m);
 var charPostSys=(D.wb.momCharPostSys||WB_DEFAULTS.momCharPostSys).replace('{char}',ch.nick||ch.name).replace('{content}',c);getMsgs(ch).push({role:'system',content:charPostSys,time:ft()});
 save();renderMom();toast('已发布')}).catch(function(e){toast('失败:\n'+(e.message||e))})}
 
 /* ===== 3: refreshC syncs last 20 context messages + memory ===== */
 function refreshC(mid){var m=D.moments.find(function(x){return x.id===mid});if(!m)return;var p=D.apis[D.aApi];if(!p||!p.url){toast('请配置API');return}toast('刷新中...');var isUser=m.author==='user';
-if(isUser){if(!D.chars.length)return;var ci='';D.chars.forEach(function(c){ci+=(c.nick||c.name)+': '+c.persona.substring(0,120)+'\n'});var sysP=(D.wb.momReplyUser||WB_DEFAULTS.momReplyUser);if(D.cust.crossR)sysP+='\n\n'+(D.wb.crossRP||WB_DEFAULTS.crossRP);sysP+='\n\n[角色列表]\n'+ci+'\n[朋友圈内容]\n'+m.content;
-D.chars.forEach(function(c){ensureArcs(c);var mem=getMemory(c);if(mem)sysP+='\n\n['+(c.nick||c.name)+'的记忆摘要]\n'+mem;var recent=getMsgs(c).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent.length){sysP+='\n['+(c.nick||c.name)+'最近上下文]\n';recent.forEach(function(rm){sysP+=(rm.role==='user'?getChatUN(c):(c.nick||c.name))+': '+(rm.content||'')+'\n'})}});
+if(isUser){if(!D.chars.length)return;var ci='';D.chars.forEach(function(c){ci+='名字：'+(c.nick||c.name)+' | 人设：'+c.persona.substring(0,120)+'\n'});var sysP=(D.wb.momReplyUser||WB_DEFAULTS.momReplyUser);if(D.cust.crossR)sysP+='\n\n'+(D.wb.crossRP||WB_DEFAULTS.crossRP);sysP+='\n\n[角色列表]\n'+ci+'\n[朋友圈内容]\n'+m.content;
+D.chars.forEach(function(c){ensureArcs(c);var mem=getMemory(c);if(mem)sysP+='\n\n['+(c.nick||c.name)+'的记忆摘要]\n'+mem;sysP+='\n[用户设定]\n'+(c.chatUserPersona||D.user.sig||'无');
+var recent=getMsgs(c).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent.length){sysP+='\n['+(c.nick||c.name)+'最近上下文]\n';recent.forEach(function(rm){sysP+=(rm.role==='user'?getChatUN(c):(c.nick||c.name))+': '+(rm.content||'')+'\n'})}});
 callAPI([{role:'system',content:sysP},{role:'user',content:'所有'+D.chars.length+'个角色分别评论'}],p).then(function(r){m.comments=[];parseMomCmts(m,r);var newCmts=m.comments.map(function(c){return c.name+': '+c.content}).join('\n');syncMomToChat(m,'comment',newCmts);save();renderMom();toast('已更新');if(curScr==='scrMD'&&D.curMom===mid)openMD(mid)}).catch(function(e){toast('失败:\n'+(e.message||e))})}else{var ch=gch(m.author);if(!ch)return;ensureArcs(ch);var sysP2=(D.wb.momReplyChar||WB_DEFAULTS.momReplyChar)+'\n\n[角色设定]\n'+ch.persona+'\n\n[朋友圈内容]\n'+m.content;
-var mem2=getMemory(ch);if(mem2)sysP2+='\n\n[记忆摘要]\n'+mem2;var recent2=getMsgs(ch).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent2.length){sysP2+='\n\n[最近上下文]\n';recent2.forEach(function(rm){sysP2+=(rm.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(rm.content||'')+'\n'})}
+var mem2=getMemory(ch);if(mem2)sysP2+='\n\n[记忆摘要]\n'+mem2;sysP2+='\n\n[用户设定]\n'+(ch.chatUserPersona||D.user.sig||'无');var recent2=getMsgs(ch).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent2.length){sysP2+='\n\n[最近上下文]\n';recent2.forEach(function(rm){sysP2+=(rm.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(rm.content||'')+'\n'})}
 callAPI([{role:'system',content:sysP2},{role:'user',content:'生成评论'}],p).then(function(r){m.comments=[];parseMomCmts(m,r);save();renderMom();if(curScr==='scrMD'&&D.curMom===mid)openMD(mid);toast('已更新')}).catch(function(e){toast('失败:\n'+(e.message||e))})}}
 function parseMomCmts(m,r){try{var cl=r.replace(/```json?\n?/gi,'').replace(/```/g,'').trim();var arr=null;try{var s=cl.indexOf('['),en=cl.lastIndexOf(']');arr=JSON.parse(s>=0&&en>s?cl.slice(s,en+1):cl)}catch(e){var ms=cl.match(/\[\s*{[\s\S]*?}\s*\]/g);if(ms)for(var i=ms.length-1;i>=0;i--){try{arr=JSON.parse(ms[i]);break;}catch(x){}}}if(!arr)throw new Error();if(Array.isArray(arr))arr.forEach(function(a){if(a.name&&a.content){
 var mc=D.chars.find(function(c){return c.name===a.name||c.nick===a.name||(c.nick||c.name)===a.name});var dn=mc?(mc.nick||mc.name):a.name;var ct=a.content;try{var re=new RegExp('^\\s*'+dn.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*[:：]\\s*','i');ct=ct.replace(re,'')}catch(ex){}m.comments.push({name:dn,content:ct.trim(),time:fdFull()+' '+ft()})}})}catch(x){m.comments.push({name:'AI',content:r.substring(0,200),time:fdFull()+' '+ft()})}}
@@ -1341,7 +1376,7 @@ if(isUser&&D.chars.length){toast('回复中...');momReplyAll(m,cmtHist,p)}else i
 function momReplyOne(m,ch,cmtHist,p){ensureArcs(ch);var sysP=(D.wb.momReplyOneP||WB_DEFAULTS.momReplyOneP)+'\n\n[角色设定]\n'+ch.persona+'\n\n';var mem=getMemory(ch);if(mem)sysP+='[记忆摘要]\n'+mem+'\n\n';var recent=getMsgs(ch).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent.length){sysP+='[最近聊天上下文]\n';recent.forEach(function(rm){sysP+=(rm.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(rm.content||'')+'\n'});sysP+='\n'}sysP+='[朋友圈内容]\n'+m.content+'\n\n[评论区历史]\n'+cmtHist;callAPI([{role:'system',content:sysP},{role:'user',content:'请回复评论区最新对话'}],p).then(function(r){var content=r.trim();try{var re=new RegExp('^\\s*'+(ch.nick||ch.name).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*[:：]\\s*','i');content=content.replace(re,'')}catch(ex){}m.comments.push({name:ch.nick||ch.name,content:content.trim(),time:fdFull()+' '+ft()});syncMomToChat(m,'comment',(ch.nick||ch.name)+': '+content);save();_rTo=null;$('md-inp').placeholder='评论...';openMD(D.curMom);renderMom()}).catch(function(e){toast('失败:\n'+(e.message||e))})}
 function momReplySocial(m,socialName,cmtHist,p){var ch=gch(m.author);if(!ch)return;ensureArcs(ch);var sysP=(D.wb.momSocialP||WB_DEFAULTS.momSocialP)+'\n\n[主角色：'+(ch.nick||ch.name)+']\n'+ch.persona+'\n\n[被回复的社交圈角色：'+socialName+']\n\n';var mem=getMemory(ch);if(mem)sysP+='[记忆摘要]\n'+mem+'\n\n';var recent=getMsgs(ch).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent.length){sysP+='[最近聊天上下文]\n';recent.forEach(function(rm){sysP+=(rm.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(rm.content||'')+'\n'});sysP+='\n'}sysP+='[朋友圈内容]\n'+m.content+'\n\n[评论区历史]\n'+cmtHist;
 callAPI([{role:'system',content:sysP},{role:'user',content:'用户刚刚回复了 '+socialName+'。请让 '+socialName+' 回复用户，并让主角色 '+(ch.nick||ch.name)+' 也发表一条评论。'}],p).then(function(r){var oldLen=m.comments?m.comments.length:0;try{var arr=JSON.parse(r.replace(/```json?\n?/gi,'').replace(/```/g,'').trim());if(Array.isArray(arr))arr.forEach(function(a){if(a.name&&a.content){var ct=a.content;try{var re=new RegExp('^\\s*'+a.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*[:：]\\s*','i');ct=ct.replace(re,'')}catch(ex){}m.comments.push({name:a.name,content:ct.trim(),time:fdFull()+' '+ft()})}})}catch(x){m.comments.push({name:socialName,content:r.trim(),time:fdFull()+' '+ft()})}var newCmts=m.comments.slice(oldLen).map(function(c){return c.name+': '+c.content}).join('\n');syncMomToChat(m,'comment',newCmts);save();_rTo=null;$('md-inp').placeholder='评论...';openMD(D.curMom);renderMom()}).catch(function(e){toast('失败:\n'+(e.message||e))})}
-function momReplyAll(m,cmtHist,p){var ci='';D.chars.forEach(function(c){ci+=(c.nick||c.name)+': '+c.persona.substring(0,120)+'\n'});var sysP=(D.wb.momReplyUser||WB_DEFAULTS.momReplyUser);if(D.cust.crossR)sysP+='\n\n'+(D.wb.crossRP||WB_DEFAULTS.crossRP);sysP+='\n\n[角色列表]\n'+ci+'\n[朋友圈内容]\n'+m.content+'\n\n[评论区历史]\n'+cmtHist;D.chars.forEach(function(c){ensureArcs(c);var mem2=getMemory(c);if(mem2)sysP+='\n\n['+(c.nick||c.name)+'的记忆摘要]\n'+mem2;var recent2=getMsgs(c).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent2.length){sysP+='\n['+(c.nick||c.name)+'最近上下文]\n';recent2.forEach(function(rm){sysP+=(rm.role==='user'?getChatUN(c):(rm.role==='char'?(c.nick||c.name):''))+': '+(rm.content||'')+'\n'})}});callAPI([{role:'system',content:sysP},{role:'user',content:'根据评论区最新对话，所有角色分别回复'}],p).then(function(r){var oldLen=m.comments?m.comments.length:0;parseMomCmts(m,r);var newCmts=m.comments.slice(oldLen).map(function(c){return c.name+': '+c.content}).join('\n');syncMomToChat(m,'comment',newCmts);save();openMD(D.curMom);renderMom();toast('已更新')}).catch(function(e){toast('失败:\n'+(e.message||e))})}
+function momReplyAll(m,cmtHist,p){var ci='';D.chars.forEach(function(c){ci+='名字：'+(c.nick||c.name)+' | 人设：'+c.persona.substring(0,120)+'\n'});var sysP=(D.wb.momReplyUser||WB_DEFAULTS.momReplyUser);if(D.cust.crossR)sysP+='\n\n'+(D.wb.crossRP||WB_DEFAULTS.crossRP);sysP+='\n\n[角色列表]\n'+ci+'\n[朋友圈内容]\n'+m.content+'\n\n[评论区历史]\n'+cmtHist;D.chars.forEach(function(c){ensureArcs(c);var mem2=getMemory(c);if(mem2)sysP+='\n\n['+(c.nick||c.name)+'的记忆摘要]\n'+mem2;var recent2=getMsgs(c).filter(function(rm){return rm.role!=='system'}).slice(-20);if(recent2.length){sysP+='\n['+(c.nick||c.name)+'最近上下文]\n';recent2.forEach(function(rm){sysP+=(rm.role==='user'?getChatUN(c):(rm.role==='char'?(c.nick||c.name):''))+': '+(rm.content||'')+'\n'})}});callAPI([{role:'system',content:sysP},{role:'user',content:'根据评论区最新对话，所有角色分别回复'}],p).then(function(r){var oldLen=m.comments?m.comments.length:0;parseMomCmts(m,r);var newCmts=m.comments.slice(oldLen).map(function(c){return c.name+': '+c.content}).join('\n');syncMomToChat(m,'comment',newCmts);save();openMD(D.curMom);renderMom();toast('已更新')}).catch(function(e){toast('失败:\n'+(e.message||e))})}
 function showNotif(ch, prev) {
     var cont = $('notif-container');
     if (!cont) return;
@@ -1764,6 +1799,82 @@ function togMS(idx){if(_msSet.has(idx))_msSet.delete(idx);else _msSet.add(idx);$
 function selectAllMS(){var arr=_msMode==='chat'?getMsgs(gch(D.curChat)):getSArc().msgs;arr.forEach(function(m,i){if(m.role!=='system')_msSet.add(i);});$('ms-cnt-'+_msMode).textContent=_msSet.size;if(_msMode==='chat')renderBub();else renderScriptBub();}
 function hideMS(){if(!_msSet.size)return;var arr=_msMode==='chat'?getMsgs(gch(D.curChat)):getSArc().msgs;var state=!arr[Array.from(_msSet)[0]].hidden;Array.from(_msSet).forEach(function(i){arr[i].hidden=state;});save();exitMS(_msMode);}
 function execMS(){if(!_msSet.size)return;if(!confirm('确定删除选中的 '+_msSet.size+' 条消息？'))return;var arr=Array.from(_msSet).sort((a,b)=>b-a);if(_msMode==='chat'){var ch=gch(D.curChat);var arc=getCurArc(ch);arr.forEach(i=>arc.msgs.splice(i,1));var realMsgs=arc.msgs.filter(function(m){return m.role!=='system'});if(realMsgs.length>0){ch.lastM=realMsgs[realMsgs.length-1].content||'['+realMsgs[realMsgs.length-1].type+']';ch.lastT=realMsgs[realMsgs.length-1].time||''}else{ch.lastM='';ch.lastT=''}}else{var arc=getSArc();arr.forEach(i=>arc.msgs.splice(i,1));}save();exitMS(_msMode);if(_msMode==='chat')renderML();}
+
+/* --- 论坛功能核心逻辑 --- */
+function renderForum(){var el=$('forum-list');if(!D.forums||!D.forums.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">暂无帖子</div>';return}var h='';D.forums.slice().reverse().forEach(function(f){var ch=gch(f.authorId);var avSrc=ch?ch.avatar:null;var av=avSrc?'<img class="forum-av" src="'+avSrc+'">':'<svg class="forum-av" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="var(--text3)"/></svg>';h+='<div class="forum-post"><div class="forum-hdr"><div class="forum-fname">'+esc(f.forumName)+' <span class="forum-tag">HOT🔥</span></div></div><div class="forum-title">'+escH(f.title)+'</div><div class="forum-author">'+av+'<div><div class="forum-aname">'+esc(f.authorName)+'</div><div class="forum-time">'+esc(f.postTime||'')+'</div></div></div><div class="forum-content">'+escH(f.content)+'</div>';h+='<div class="forum-acts"><button class="forum-act-btn"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg> '+(f.likes||Math.floor(Math.random()*500+50))+'</button><button class="forum-act-btn" onclick="openForumDetail(\''+f.id+'\')"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> '+(f.comments||(f.replies?f.replies.length:0))+'</button><button class="forum-act-btn" onclick="forwardForum(\''+f.id+'\')"><svg viewBox="0 0 24 24"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v14"/></svg> 转发</button><button class="forum-act-btn" onclick="delForumPost(\''+f.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> 删除</button></div></div>'});el.innerHTML=h}
+function delForumPost(fid){if(!confirm('确定删除这篇帖子吗？'))return;D.forums=D.forums.filter(function(x){return x.id!==fid});save();if(curScr==='scrForumDetail')go('scrForum');else renderForum();toast('已删除')}
+function openForumDetail(fid){var f=D.forums.find(function(x){return x.id===fid});if(!f)return;go('scrForumDetail');var ch=gch(f.authorId);var avSrc=ch?ch.avatar:null;var av=avSrc?'<img class="forum-av" src="'+avSrc+'">':'<svg class="forum-av" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="var(--text3)"/></svg>';var ph='<div class="fd-post"><div class="forum-hdr"><div class="forum-fname">'+esc(f.forumName)+' <span class="forum-tag">HOT🔥</span></div></div><div class="forum-title" style="font-size:20px;margin-bottom:14px">'+escH(f.title)+'</div><div class="forum-author">'+av+'<div><div class="forum-aname">'+esc(f.authorName)+'</div><div class="forum-time">'+esc(f.postTime||'')+'</div></div></div><div class="forum-content" style="font-size:15px;line-height:1.7">'+escH(f.content)+'</div></div>';$('fd-post-area').innerHTML=ph;var cmh='<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px">全部回复 '+(f.replies?f.replies.length:0)+'</div>';if(f.replies&&f.replies.length){f.replies.forEach(function(r){cmh+='<div class="fd-cmt-item"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><b style="color:var(--text);font-size:13px">'+r.floor+'楼 '+esc(r.name||r.user)+'</b></div><div style="font-size:14px;color:var(--text);line-height:1.6">'+escH(r.content)+'</div></div>'})}else{cmh+='<div style="text-align:center;padding:20px;font-size:13px;color:var(--text3)">暂无回复</div>'}$('fd-cmts-area').innerHTML=cmh}
+
+function openNewForumPost() {
+    var co = '';
+    D.chars.forEach(function(c) {
+        co += '<span class="chip" onclick="createForumPost(\''+c.id+'\');closeBS()">' + (c.nick||c.name) + '</span>';
+    });
+    showBS('<div class="bs-hd"></div><div class="mt">选择发帖角色</div><div class="fg"><div style="display:flex;flex-wrap:wrap;gap:4px">' + co + '</div></div>');
+}
+
+function createForumPost(cid) {
+    var ch = gch(cid); if (!ch) return;
+    var p = D.apis[D.aApi]; if (!p || !p.url) { toast('请配置API'); return; }
+    toast('论坛发帖生成中...');
+
+    ensureArcs(ch);
+    var mem = getMemory(ch);
+    var allCtx = getMsgs(ch).filter(function(m){return m.role!=='system'}).slice(-20).map(function(m){return (m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');
+
+    var sysP=(D.wb.forumPrompt||WB_DEFAULTS.forumPrompt)+'\n\n[发帖角色设定]\n'+ch.persona+'\n\n[用户设定]\n'+(ch.chatUserPersona||D.user.sig||'无');
+    if (mem) sysP += '\n\n[记忆摘要]\n' + mem;
+    if (allCtx) sysP += '\n\n[最近20条聊天记录]\n' + allCtx;
+
+    callAPI([{role:'system', content:sysP}, {role:'user', content:'请以该角色的身份发布一篇论坛帖子及回复。'}], p).then(function(r) {
+        try {
+            var cl = r.replace(/```json?\n?/gi, '').replace(/```/g, '').trim();
+            var s = cl.indexOf('{'), en = cl.lastIndexOf('}');
+            var j = JSON.parse(s >= 0 && en > s ? cl.slice(s, en + 1) : cl);
+
+            D.forums.push({
+                id: uid(),
+                authorId: cid,
+                authorName: ch.nick || ch.name,
+                forumName: j.forumName || '匿名主页',
+                title: j.title || '无标题',
+                content: j.content || '',
+                postTime: fdFull() + ' ' + ft(),
+                likes: j.likes || 0,
+                comments: j.comments || 0,
+                replies: j.replies || []
+            });
+            save(); renderForum(); toast('发帖成功');
+        } catch (x) {
+            toast('解析失败，模型未返回标准JSON格式');
+        }
+    }).catch(function(e) { toast('失败:\n' + (e.message || e)); });
+}
+
+function forwardForum(fid) {
+    var f = D.forums.find(function(x){return x.id===fid}); if (!f) return;
+    var ch = gch(f.authorId); if (!ch) { toast('找不到发帖角色'); return; }
+
+    var str = '【论坛转发】\n板块：' + f.forumName + '\n标题：' + f.title + '\n楼主：' + f.authorName + '\n正文：' + f.content + '\n\n[评论区]';
+    if (f.replies && f.replies.length) {
+        f.replies.forEach(function(r) {
+            str += '\n' + r.floor + '楼 ' + (r.name||r.user) + '：' + r.content;
+        });
+    }
+
+    getMsgs(ch).push({role:'system', content:str, time:ft()});
+    save(); toast('已成功转发至与 ' + (ch.nick||ch.name) + ' 的聊天界面');
+}
+
+function openForumSet() {
+    $('forum-prompt-ta').value = D.wb.forumPrompt || WB_DEFAULTS.forumPrompt;
+    $('ovForumSet').classList.add('on');
+}
+
+function saveForumSet() {
+    D.wb.forumPrompt = $('forum-prompt-ta').value;
+    save(); closeOV('ovForumSet'); toast('论坛提示词已保存');
+}
 
 init();
 var l=$('script-role-lbl');if(l)l.textContent=D.scriptRole==='char'?'角色':'我';
