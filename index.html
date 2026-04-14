@@ -854,7 +854,7 @@ if(m.type==='takeout'){h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+fle
 if(m.type==='voice'){var bars='';for(var b=0;b<8;b++)bars+='<i style="height:'+[5,9,16,11,18,13,8,15][b]+'px"></i>';h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub" style="padding:10px 14px;min-width:120px"'+oi+'>'+inQuoteHtml+'<div style="display:flex;align-items:center;gap:8px"><div class="vw">'+bars+'</div><div class="vd">'+(m.dur||'0"')+'</div></div><div class="vo-sub" style="margin-top:6px;border-top:1px solid var(--sep);padding-top:6px"><span class="vo-t2t" onclick="e(event);togVoTxt('+i+')">转文字</span></div><div class="vo-exp" id="vo-tx-'+i+'" style="background:transparent;border:none;padding:0;margin-top:4px">'+escH((m.content||'').replace(/\[(?:发送)?语音[:：]/,'').replace(/\]$/,''))+'</div></div>'+ts+actUI+'</div>'+preU+'</div></div>';return}
 if(m.type==='image'){var clickFn=_msMode==='chat'?'togMS('+i+')':'viewDummyImg('+i+')';var txt=m.desc||(m.content||'').replace(/^\[(?:发送)?图片[:：]?/i,'').replace(/\]$/,'');var imgCnt=m.src?'<img src="'+m.src+'">':'<div style="width:165px;min-height:100px;background:var(--card);border-radius:13px;display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box;text-align:center;word-break:break-word"><span style="font-size:12px;color:var(--text2)">'+escH(txt)+'</span></div>';h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub ib" style="padding:3px!important" onclick="'+clickFn+'">'+inQuoteHtml+imgCnt+'</div>'+ts+actUI+'</div>'+preU+'</div></div>';return}
 if(m.type==='sticker'){h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub skb"'+oi+'>'+inQuoteHtml+(m.url?'<img src="'+m.url+'">':'?')+'</div>'+ts+actUI+'</div>'+preU+'</div></div>';return}
-h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub"'+oi+'>'+inQuoteHtml+escH(m.content)+'</div>'+ts+actUI+'</div>'+preU+'</div></div>'});var isB=el.scrollHeight-el.scrollTop-el.clientHeight<40,oS=el.scrollTop;el.innerHTML=h;applyBubStyle();applyCBg();if(!_msMode){if(isB)el.scrollTop=el.scrollHeight;else el.scrollTop=oS}}
+h+='<div class="mr '+cls+'"><div class="mw">'+preC+av+flexCol+outQuoteHtml+'<div class="bub"'+oi+'>'+inQuoteHtml+escH(m.content)+'</div>'+ts+actUI+'</div>'+preU+'</div></div>'});var isB=el.scrollHeight-el.scrollTop-el.clientHeight<40,oS=el.scrollTop;el.innerHTML=h;applyBubStyle();applyCBg();if(isB&&!_msMode)el.scrollTop=el.scrollHeight;else el.scrollTop=oS;}
 
 function viewDummyImg(i){
     var ch=gch(D.curChat);if(!ch)return;var m=getMsgs(ch)[i];
@@ -1491,7 +1491,7 @@ function renderScriptBub() {
         h += '<div class="bub" style="cursor:pointer; max-width:100%" onclick="'+(_msMode==='script'?'togMS('+i+')':'showScriptMA(event,'+i+')')+'">'+escH(m.content)+'</div>'+actUI;
         h += '</div>'+preU+'</div></div>';
     });
-    var isB=cb.scrollHeight-cb.scrollTop-cb.clientHeight<40,oS=cb.scrollTop;el.innerHTML=h;if(!_msMode){if(isB)cb.scrollTop=cb.scrollHeight;else cb.scrollTop=oS}
+    var isB=cb.scrollHeight-cb.scrollTop-cb.clientHeight<40,oS=cb.scrollTop;el.innerHTML=h;if(isB&&!_msMode)cb.scrollTop=cb.scrollHeight;else cb.scrollTop=oS;
 }
 function showScriptMA(ev, idx) {
     ev.stopPropagation(); var mp=$('map'); var m = getSArc().msgs[idx];
