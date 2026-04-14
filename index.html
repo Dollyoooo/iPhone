@@ -621,7 +621,8 @@ user:{name:'',avatar:null,sig:'',momBg:null},chars:[],moments:[],
 apis:[{id:uid(),name:'默认',url:'',key:'',model:'',temp:.7}],aApi:0,
 wbOrder:['chatSys','chatFmt','charFmt','coupleP','stkP'],
 momOrder:['momReplyUser','momReplyChar','momReplyOneP','momSocialP','momPost','crossRP'],
-wb:{chatSys:'你是一位沉浸式角色扮演助手。根据角色设定，以角色第一人称用中文回复。',chatFmt:'【回复格式说明】\n返回JSON数组。\n- 普通：{"msg":"内容"}\n- 引用回复：{"quote":"引用的具体内容","msg":"回复内容"}\n- 发红包：{"type":"redpacket","amount":"金额","note":"备注"}\n- 收取用户红包：{"type":"rp_receive"}\n- 退回用户红包：{"type":"rp_refund"}\n- 语音：{"type":"voice","content":"内容","dur":"5s"}\n- 图片：{"type":"image","desc":"描述"}\n\n【强制格式】\n你的输出必须是且仅是一个JSON数组，以[开头，以]结尾。\n示例：[{"quote":"引用的具体内容","msg":"回复内容"},{"msg":"另一条内容"}]\n绝对不允许输出JSON之外的任何文字。',charFmt:'【角色行为准则】\n角色应自然、真实地表达情感。',coupleP:'[头像：当前正在和user使用情侣头像] ',stkP:'【可用表情包列表】\n- 表情包：{"type":"sticker","name":"名称"}\n你会在聊天中根据情景发送表情包，无适用则不发\n发送表情时name必须完全匹配：',momReplyUser:'【用户朋友圈评论】\n所有角色各自独立评论一条，不要互相回复或提及其他角色。\n返回JSON数组：[{"name":"角色备注名","content":"纯评论内容"}]\n注意：content里不要包含角色自己的名字前缀。',momReplyChar:'【角色朋友圈社交圈评论】\n根据角色人设生成3~5个与角色有关的人物评论。返回JSON数组：[{"name":"人物名","content":"评论内容"}]\n注意：content里不要包含自己的名字前缀。',momReplyOneP:'【单角色评论回复】\n自然地回复朋友圈评论区的最新对话。只返回纯文本回复内容，不要JSON，不要加自己的名字前缀。\n若回复特定人，开头写"回复 对方名：内容"。',
+wb:{chatSys:'你是一位沉浸式角色扮演助手。根据角色设定，以角色第一人称用中文回复。',chatFmt:'【回复格式说明】\n返回JSON数组。\n- 普通：{"msg":"25字内信息"}\n- 发红包：{"type":"redpacket","amount":"金额","note":"15字内备注"}\n- 收取红包：{"type":"rp_receive"}\n- 退回红包：{"type":"rp_refund"}\n- 语音：{"type":"voice","content":"25字内内容","dur":"5s"}\n- 图片：{"type":"image","desc":"≤100字文字描述"}\n\n【强制格式】\n你的输出必须是且仅是一个JSON数组，以[开头，以]结尾。\n示例：[{"msg":"回复内容"},{"msg":"另一条内容"}]\n绝对不允许输出JSON之外的任何文字。',charFmt:'【角色行为准则】\n角色应自然、真实地表达情感。'
+,coupleP:'[头像：当前正在和user使用情侣头像] ',stkP:'【可用表情包列表】\n- 表情包：{"type":"sticker","name":"名称"}\n你会在聊天中根据情景发送表情包，无适用则不发\n发送表情时name必须完全匹配：',momReplyUser:'【用户朋友圈评论】\n所有角色各自独立评论一条，不要互相回复或提及其他角色。\n返回JSON数组：[{"name":"角色备注名","content":"纯评论内容"}]\n注意：content里不要包含角色自己的名字前缀。',momReplyChar:'【角色朋友圈社交圈评论】\n根据角色人设生成3~5个与角色有关的人物评论。返回JSON数组：[{"name":"人物名","content":"评论内容"}]\n注意：content里不要包含自己的名字前缀。',momReplyOneP:'【单角色评论回复】\n自然地回复朋友圈评论区的最新对话。只返回纯文本回复内容，不要JSON，不要加自己的名字前缀。\n若回复特定人，开头写"回复 对方名：内容"。',
 momSocialP:'【社交圈角色回复】\n用户刚刚回复了社交圈角色。请生成两条评论：\n1. 该社交圈角色回复用户。\n2. 主角色发表评论（可以回复用户，也可以回复该社交圈角色）。\n返回JSON数组：[{"name":"角色名","content":"回复内容"}]\n不要在content里加名字前缀。若回复特定人，格式为"回复 对方名：内容"。',
 momPost:'根据角色设定，生成一条贴合性格的朋友圈动态。你可以选择发送纯文本，或者附带一张图片（图片描述在100字以内）。\n只返回JSON：{"content":"朋友圈内容 [图片:图片描述]"} (如果没有图片则不加[图片:描述])',crossRP:'【修罗场模式】多名角色在场，角色之间必须互相回复互动，可能产生阴阳怪气、吃醋、争抢等情节。\n回复某人时content格式为"回复 对方名：内容"。',momPostSys:'{momName} 发了一条朋友圈动态：{content}',momCharPostSys:'{char} 刚发了朋友圈：{content}',momCmtSys:'朋友圈"{title}" 新增评论：{comments}',musicSysP:'[一起听歌曲]<br>{song}<br>|<br>歌词：{lyrics}',music:[]},
 
@@ -695,15 +696,14 @@ function renderApps(){var h='';var m=D.iconMode||'color';appDefs.forEach(functio
 function init(){
 if(D.wb.momPost==='根据角色设定，生成一条贴合性格的朋友圈动态。只返回JSON：{"content":"朋友圈内容"}') D.wb.momPost=WB_DEFAULTS.momPost;
 if(D.wb.chatFmt&&D.wb.chatFmt.indexOf('{"type":"sticker"')>-1){D.wb.chatFmt=D.wb.chatFmt.replace(/\n- 表情包：{"type":"sticker","name":"名称"}/g,'');if(D.wb.stkP&&D.wb.stkP.indexOf('{"type":"sticker"')===-1)D.wb.stkP=D.wb.stkP.replace('【可用表情包列表】','【可用表情包列表】\n- 表情包：{"type":"sticker","name":"名称"}');save();}
-if(D.wb.chatFmt&&D.wb.chatFmt.indexOf('{"quote"')===-1){D.wb.chatFmt=D.wb.chatFmt.replace('- 普通：{"msg":"内容"}','- 普通：{"msg":"内容"}\n- 引用回复：{"quote":"引用的具体内容","msg":"回复内容"}');save();}
-if(D.wb.chatFmt&&D.wb.chatFmt.indexOf('示例：[{"msg":"内容1"},{"msg":"内容2"}]')>-1){D.wb.chatFmt=D.wb.chatFmt.replace('示例：[{"msg":"内容1"},{"msg":"内容2"}]','示例：[{"quote":"引用的具体内容","msg":"回复内容"},{"msg":"另一条内容"}]');save();}
+if(D.wb.chatFmt&&D.wb.chatFmt.indexOf('{"quote"')>-1){D.wb.chatFmt=D.wb.chatFmt.replace('\n- 引用回复：{"quote":"引用的具体内容","msg":"回复内容"}','').replace('示例：[{"quote":"引用的具体内容","msg":"回复内容"},{"msg":"另一条内容"}]','示例：[{"msg":"回复内容"},{"msg":"另一条内容"}]');save();}
 ['rpFmt','rpRecvP','voFmt','imgFmt'].forEach(function(k){delete D.wb[k]; var idx=D.wbOrder.indexOf(k); if(idx>=0) D.wbOrder.splice(idx,1);});
 if(D.wb.chatFmt.indexOf('rp_refund')<0) D.wb.chatFmt=WB_DEFAULTS.chatFmt;
 applyTheme();applyPh();applyCol();buildDIVis();updateClock();setInterval(updateClock,15000);renderML();renderMom();renderSet();initMu();applyWP();applyScreenBgs();renderApps();applyCustCss();
 
 if(D.user.avatar)si('mb-av-i',D.user.avatar);if(D.user.momBg)si('mb-bg',D.user.momBg);if(D.user.sig)$('m-sig').textContent=D.user.sig;if(D.diArt)$('dif-art').innerHTML='<div class="dif-spin"></div><img src="'+D.diArt+'">';$('mb-un').textContent=D.user.name||'用户名';applyBubStyle();applyFS();applySB();
 $('phone').addEventListener('click',function(ev){var di=$('di');if(di.classList.contains('exp')&&!di.contains(ev.target))di.classList.remove('exp');var mp=$('map');if(mp.classList.contains('on')&&!mp.contains(ev.target))mp.classList.remove('on')});renderStkApp();updateRoleTog();startOfflineLoop()}
-function si(id,src){var i=$(id);if(i){i.src=src;i.style.display='block'}}
+function si(id,src){var i=$(id);if(i){i.src=src;i.style.display='block';if(i.nextElementSibling&&i.nextElementSibling.tagName.toLowerCase()==='svg')i.nextElementSibling.style.display='none';}}
 function applyTheme(){$('phone').classList.toggle('dark',D.theme==='dark')}
 function applyPh(){var p=$('phone');p.style.setProperty('--pw',D.pw+'px');p.style.setProperty('--ph',D.ph+'px');p.style.setProperty('--pr',D.pr+'px');p.style.setProperty('--py',(D.py||0)+'px')}
 function applyFS(){$('phone').classList.toggle('phone-fs',!!D.fullscreen)}
@@ -884,7 +884,6 @@ function sendStk(i){var s=D.stickers[i];if(!s)return;var ch=gch(D.curChat);if(!c
 
 function showMA(ev,idx,tp){ev.stopPropagation();if(tp==='rp'){var ch2=gch(D.curChat);if(ch2){var mm=getMsgs(ch2)[idx];if(mm.role==='char'&&!mm.recv){clkRP(idx);return}}}var mp=$('map');var ch=gch(D.curChat);if(!ch)return;var msgs=getMsgs(ch);var m=msgs[idx];
 var acts='<div class="ma-i" onclick="copyMsg('+idx+')">复制</div><div class="ma-i" onclick="editMsg('+idx+')">编辑</div><div class="ma-i" onclick="togHideMsg('+idx+')">'+(m.hidden?'取消隐藏':'隐藏')+'</div>';
-acts+='<div class="ma-i a" onclick="setQuote('+idx+')">引用</div>';
 acts+='<div class="ma-i a" onclick="branchMsg('+idx+')">分支</div><div class="ma-i d" onclick="enterMS(\'chat\');$(\'map\').classList.remove(\'on\')">多选</div>';
 mp.innerHTML=acts;
 mp.style.left='-9999px'; mp.style.top='0'; mp.classList.add('on');
@@ -953,11 +952,9 @@ while(rcvCnt>0&&unrecv.length>0){var m2=unrecv.shift();m2.charRecv=true;msgs.pus
 appendMsgAnim(ch,parsed,cb)}
 
 function checkAutoSum(ch){if(!ch.autoS)return;var arc=getCurArc(ch);var since=arc._lastSumAt||0;if(arc.msgs.length-since>=(ch.sumI||20))doAutoSum(ch)}
-
-function doAutoSum(ch){var p=D.apis[D.aApi];if(!p||!p.url)return;var arc=getCurArc(ch);var start=arc._lastSumAt||0;var toSum=arc.msgs.slice(start).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum)return;var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;
-callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],p).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();arc._lastSumAt=arc.msgs.length;save();toast('自动总结完成')}).catch(function(){})}
-function manualSum(ch,from,to){var p=D.apis[D.aApi];if(!p||!p.url){toast('请配置API');return}var arc=getCurArc(ch);var toSum=arc.msgs.slice(from,to).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum){toast('无内容');return}toast('总结中...');var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],p).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();save();toast('总结完成');openCFS()}).catch(function(e){toast('失败:\n'+(e.message||e))})}
-
+function doAutoSum(ch){var p=D.apis[D.aApi];if(!p)return;var sp=p.sumOn?{url:p.sumUrl,key:p.sumKey,model:p.sumModel,temp:p.temp}:p;if(!sp.url)return;var arc=getCurArc(ch);var start=arc._lastSumAt||0;var toSum=arc.msgs.slice(start).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum)return;var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;
+callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],sp).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();arc._lastSumAt=arc.msgs.length;save();toast('自动总结完成')}).catch(function(){})}
+function manualSum(ch,from,to){var p=D.apis[D.aApi];if(!p){toast('请配置API');return}var sp=p.sumOn?{url:p.sumUrl,key:p.sumKey,model:p.sumModel,temp:p.temp}:p;if(!sp.url){toast('请配置总结API');return}var arc=getCurArc(ch);var toSum=arc.msgs.slice(from,to).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum){toast('无内容');return}toast('总结中...');var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'');if(arc.memory)sysP+='\n\n[已有记忆摘要]\n'+arc.memory;callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],sp).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();save();toast('总结完成');openCFS()}).catch(function(e){toast('失败:\n'+(e.message||e))})}
 var _offlineTimers={};
 function startOfflineLoop(){D.chars.forEach(function(ch){resetOfflineTimer(ch)})}
 function resetOfflineTimer(ch){if(_offlineTimers[ch.id])clearTimeout(_offlineTimers[ch.id]);if(!ch.offlineOn||!ch.autoMsgMin)return;_offlineTimers[ch.id]=setTimeout(function(){trigOffline(ch)},(ch.autoMsgMin||5)*60000)}
@@ -1050,11 +1047,18 @@ h+='<div class="fg"><div class="fl">API 地址</div><input class="fi" id="ap-u" 
 h+='<div class="fg"><div class="fl">API Key</div><input class="fi" id="ap-k" value="'+(p.key||'')+'" type="password" placeholder="sk-..."></div>';
 h+='<div class="fg"><div class="fl">模型 <button onclick="fetchM()" style="background:var(--btn-p);color:var(--btn-pf);border:1px solid var(--sep);border-radius:6px;padding:3px 10px;font-size:10px;cursor:pointer">获取</button></div><input class="fi" id="ap-m" value="'+(p.model||'')+'" placeholder="输入模型名称"><input class="fi" id="ap-sr" placeholder="搜索..." style="margin-top:4px;display:none" oninput="filtM(this.value)"><div id="m-list" style="max-height:145px;overflow-y:auto;margin-top:4px;border:1px solid var(--sep);border-radius:12px;background:var(--card);display:none"></div></div>';
 h+='<div class="fg"><div class="fl">温度 <span class="badge" id="ap-tb">'+(p.temp||.7)+'</span></div><input type="range" class="rs" id="ap-t" min="0" max="2" step=".1" value="'+(p.temp||.7)+'" oninput="$(\'ap-tb\').textContent=parseFloat(this.value).toFixed(1)"></div>';
+h+='<div class="sg-t" style="padding:10px 0 4px">独立总结 API</div>';
+h+='<div class="fg"><div class="fl">启用独立总结 API</div><div class="tog-sm'+(p.sumOn?' on':'')+'" onclick="this.classList.toggle(\'on\');$(\'sum-api-box\').style.display=this.classList.contains(\'on\')?\'block\':\'none\'"><div class="tok"></div></div></div>';
+h+='<div id="sum-api-box" style="display:'+(p.sumOn?'block':'none')+'">';
+h+='<div class="fg"><div class="fl">总结 API 地址</div><input class="fi" id="ap-su" value="'+(p.sumUrl||'')+'" placeholder="https://api.openai.com"></div>';
+h+='<div class="fg"><div class="fl">总结 API Key</div><input class="fi" id="ap-sk" value="'+(p.sumKey||'')+'" type="password" placeholder="sk-..."></div>';
+h+='<div class="fg"><div class="fl">总结 模型</div><input class="fi" id="ap-sm" value="'+(p.sumModel||'')+'" placeholder="输入模型名称"></div>';
+h+='</div>';
 h+='<button class="fbtn" onclick="saveAPI()">保存</button><button class="fbtn g" style="margin-top:5px" onclick="testAPI()">测试连接</button>';
 if(D.apis.length>1)h+='<button class="fbtn r" style="margin-top:5px" onclick="delApiC()">删除</button>';showBS(h)}
-function addApiC(){D.apis.push({id:uid(),name:'配置'+(D.apis.length+1),url:'',key:'',model:'',temp:.7});D.aApi=D.apis.length-1;save();closeBS();openAPI()}
+function addApiC(){D.apis.push({id:uid(),name:'配置'+(D.apis.length+1),url:'',key:'',model:'',temp:.7,sumOn:false,sumUrl:'',sumKey:'',sumModel:''});D.aApi=D.apis.length-1;save();closeBS();openAPI()}
 function delApiC(){if(D.apis.length<=1)return;D.apis.splice(D.aApi,1);D.aApi=0;save();closeBS();openAPI()}
-function saveAPI(){var p=D.apis[D.aApi];p.name=$('ap-n').value;p.url=$('ap-u').value.trim();p.key=$('ap-k').value.trim();p.model=$('ap-m').value.trim();p.temp=parseFloat($('ap-t').value)||.7;save();closeBS();toast('已保存')}
+function saveAPI(){var p=D.apis[D.aApi];p.name=$('ap-n').value;p.url=$('ap-u').value.trim();p.key=$('ap-k').value.trim();p.model=$('ap-m').value.trim();p.temp=parseFloat($('ap-t').value)||.7;p.sumOn=$('sum-api-box').style.display==='block';p.sumUrl=$('ap-su').value.trim();p.sumKey=$('ap-sk').value.trim();p.sumModel=$('ap-sm').value.trim();save();closeBS();toast('已保存')}
 function testAPI(){var raw=$('ap-u').value.trim();var base=normalizeURL(raw);if(!base){toast('请输入地址');return}toast('测试中...');var h={};var k=$('ap-k').value;if(k)h['Authorization']='Bearer '+k;var url=base.replace(/\/v1$/,'')+'/v1/models';fetch(url,{headers:h}).then(function(r){if(r.ok)return r.json();throw new Error('HTTP '+r.status)}).then(function(d){toast('连接成功 '+(d.data?d.data.length:'?')+' 个模型')}).catch(function(er){toast('失败: '+er.message)})}
 function fetchM(){var raw=$('ap-u').value.trim();var base=normalizeURL(raw);if(!base){toast('请输入地址');return}toast('获取中...');var h={};var k=$('ap-k').value;if(k)h['Authorization']='Bearer '+k;var url=base.replace(/\/v1$/,'')+'/v1/models';fetch(url,{headers:h}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(d){_fm=(d.data||[]).map(function(m){return m.id}).sort();$('ap-sr').style.display='block';renderMList(_fm);toast(_fm.length+' 个模型')}).catch(function(er){toast('错误: '+er.message)})}
 function filtM(q){renderMList(_fm.filter(function(m){return m.toLowerCase().indexOf(q.toLowerCase())>=0}))}
@@ -1703,7 +1707,7 @@ function delSArc(id) { D.scriptApp.archives=D.scriptApp.archives.filter(function
 function renameSArc(id) { var a=D.scriptApp.archives.find(function(x){return x.id===id}); var n=prompt('修改名称',a.name); if(n&&n.trim()){ a.name=n.trim(); save(); openScriptSet(); } }
 function clearScriptMsgs() { if(confirm('确定清空剧本内容及线下信息？')){ var arc = getSArc(); arc.msgs=[]; arc.memory=''; arc.charInfo=''; arc.userInfo=''; arc._lastSumAt=0; save(); renderScriptHeaderDOM(); renderScriptBub(); openScriptSet(); toast('已清空'); } }
 function doScriptSum(manual) {
-    var arc=getSArc(); var p=D.apis[D.aApi]; if(!p||!p.url){toast('请配置API');return;}
+    var arc=getSArc(); var p=D.apis[D.aApi]; if(!p){toast('请配置API');return;}var sp=p.sumOn?{url:p.sumUrl,key:p.sumKey,model:p.sumModel,temp:p.temp}:p;if(!sp.url){toast('请配置总结API');return;}
     var msgsToSum = arc.msgs;
     if(manual) {
         var f = parseInt($('ss-sf').value)||1; var t = parseInt($('ss-st').value)||arc.msgs.length;
@@ -1716,7 +1720,7 @@ function doScriptSum(manual) {
     var ch = gch(D.curScriptChar);
     var basePr = buildScriptPr(ch, arc);
     var sysContent = basePr[0].content + '\n\n[总结要求]\n' + arc.sumPrompt;
-    callAPI([{role:'system',content:sysContent},{role:'user',content:'[需要总结的对话记录]\n'+toSum}], p).then(function(r){
+    callAPI([{role:'system',content:sysContent},{role:'user',content:'[需要总结的对话记录]\n'+toSum}], sp).then(function(r){
         arc.memory = (arc.memory ? arc.memory + '\n\n' : '') + r.trim();
         if(!manual) arc._lastSumAt = arc.msgs.length;
         save(); openScriptSet(); toast('总结完成');
@@ -1751,12 +1755,12 @@ function togScriptRole(){if(D.scriptRole==='user')D.scriptRole='char';else D.scr
 function sendScriptMsg(){var inp=$('script-inp');var txt=inp.value.trim();if(!txt)return;var arc=getSArc();var mId=uid();arc.msgs.push({id:mId,role:D.scriptRole==='char'?'char':'user',charId:D.curScriptChar,content:txt,tokens:estTok(txt),hidden:false,time:ft()});inp.value='';inp.style.height='42px';save();renderScriptBub();var cb=$('script-body');if(cb)cb.scrollTop=cb.scrollHeight;checkScriptAutoSum();if(arc.syncOfflineCtx&&D.curScriptChar){var ch=gch(D.curScriptChar);if(ch){getMsgs(ch).push({role:'system',content:'[线下通知] 线下模式 '+(D.scriptRole==='user'?getChatUN(ch):(ch.nick||ch.name))+'新增: '+txt,time:ft(),refId:'script_'+mId});save();}}}
 function doSwipe(type,idx,dir){var arr=type==='chat'?getMsgs(gch(D.curChat)):getSArc().msgs;var m=arr[idx];if(!m||!m.swipes)return;var nx=(m.swipeIdx||0)+dir;if(nx<0)nx=m.swipes.length-1;if(nx>=m.swipes.length)nx=0;m.swipeIdx=nx;m.content=m.swipes[nx];if(type==='script')m.tokens=estTok(m.content);save();if(type==='chat')renderBub();else renderScriptBub();}
 var _msMode=false;var _msSet=new Set();
-function enterMS(type){_msMode=type;_msSet.clear();$('ms-bar-'+type).style.display='flex';if(typeof closeFT==='function')closeFT();var cib=document.querySelector(type==='chat'?'#scrChat .cib':'#scrScript .cib');if(cib)cib.style.display='none';if(type==='chat'){$('chat-hb-normal').style.display='none';$('chat-hb-ms').style.display='flex';renderBub();}else renderScriptBub();}
-function exitMS(type){_msMode=false;_msSet.clear();$('ms-bar-'+type).style.display='none';var cib=document.querySelector(type==='chat'?'#scrChat .cib':'#scrScript .cib');if(cib)cib.style.display='flex';if(type==='chat'){$('chat-hb-normal').style.display='flex';$('chat-hb-ms').style.display='none';renderBub();}else renderScriptBub();}
+function enterMS(type){var cb=$(type==='chat'?'cbody':'script-body');var st=cb?cb.scrollTop:0;_msMode=type;_msSet.clear();$('ms-bar-'+type).style.display='flex';if(typeof closeFT==='function')closeFT();var cib=document.querySelector(type==='chat'?'#scrChat .cib':'#scrScript .cib');if(cib)cib.style.display='none';if(type==='chat'){$('chat-hb-normal').style.display='none';$('chat-hb-ms').style.display='flex';renderBub();}else renderScriptBub();if(cb)cb.scrollTop=st;}
+function exitMS(type){var cb=$(type==='chat'?'cbody':'script-body');var st=cb?cb.scrollTop:0;_msMode=false;_msSet.clear();$('ms-bar-'+type).style.display='none';var cib=document.querySelector(type==='chat'?'#scrChat .cib':'#scrScript .cib');if(cib)cib.style.display='flex';if(type==='chat'){$('chat-hb-normal').style.display='flex';$('chat-hb-ms').style.display='none';renderBub();}else renderScriptBub();if(cb)cb.scrollTop=st;}
 function togMS(idx){if(_msSet.has(idx))_msSet.delete(idx);else _msSet.add(idx);$('ms-cnt-'+_msMode).textContent=_msSet.size;if(_msMode==='chat')renderBub();else renderScriptBub();}
 function selectAllMS(){var arr=_msMode==='chat'?getMsgs(gch(D.curChat)):getSArc().msgs;arr.forEach(function(m,i){if(m.role!=='system')_msSet.add(i);});$('ms-cnt-'+_msMode).textContent=_msSet.size;if(_msMode==='chat')renderBub();else renderScriptBub();}
 function hideMS(){if(!_msSet.size)return;var arr=_msMode==='chat'?getMsgs(gch(D.curChat)):getSArc().msgs;var state=!arr[Array.from(_msSet)[0]].hidden;Array.from(_msSet).forEach(function(i){arr[i].hidden=state;});save();exitMS(_msMode);}
-function execMS(){if(!_msSet.size)return;if(!confirm('确定删除选中的 '+_msSet.size+' 条消息？'))return;var arr=Array.from(_msSet).sort((a,b)=>b-a);if(_msMode==='chat'){var ch=gch(D.curChat);var arc=getCurArc(ch);arr.forEach(i=>arc.msgs.splice(i,1));}else{var arc=getSArc();arr.forEach(i=>arc.msgs.splice(i,1));}save();exitMS(_msMode);}
+function execMS(){if(!_msSet.size)return;if(!confirm('确定删除选中的 '+_msSet.size+' 条消息？'))return;var arr=Array.from(_msSet).sort((a,b)=>b-a);if(_msMode==='chat'){var ch=gch(D.curChat);var arc=getCurArc(ch);arr.forEach(i=>arc.msgs.splice(i,1));var realMsgs=arc.msgs.filter(function(m){return m.role!=='system'});if(realMsgs.length>0){ch.lastM=realMsgs[realMsgs.length-1].content||'['+realMsgs[realMsgs.length-1].type+']';ch.lastT=realMsgs[realMsgs.length-1].time||''}else{ch.lastM='';ch.lastT=''}}else{var arc=getSArc();arr.forEach(i=>arc.msgs.splice(i,1));}save();exitMS(_msMode);if(_msMode==='chat')renderML();}
 
 init();
 var l=$('script-role-lbl');if(l)l.textContent=D.scriptRole==='char'?'角色':'我';
