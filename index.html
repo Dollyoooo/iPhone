@@ -832,13 +832,12 @@ $('ft-row').innerHTML=h}
 var _quoteIdx=-1;
 function setQuote(idx){var ch=gch(D.curChat);if(!ch)return;var m=getMsgs(ch)[idx];if(!m)return;_quoteIdx=idx;var qc=$('cib-quote');qc.classList.add('on');$('cib-quote-c').textContent=(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'').substring(0,60);$('ci-inp').focus();$('map').classList.remove('on')}
 function clearQuote(){_quoteIdx=-1;var qc=$('cib-quote');if(qc)qc.classList.remove('on')}
-
-function renderBub(){var ch=gch(D.curChat);if(!ch)return;ensureArcs(ch);var msgs=getMsgs(ch);var el=$('cbody');var hide=D.cust.hideSys;var uav=getChatUAv(ch);var h='';var lastRealMsgIdx=-1;for(var k=msgs.length-1;k>=0;k--){if(msgs[k].role!=='system'){lastRealMsgIdx=k;break;}}
+function renderBub(){var ch=gch(D.curChat);if(!ch)return;ensureArcs(ch);var msgs=getMsgs(ch);var el=$('cbody');var hide=D.cust.hideSys;var uav=getChatUAv(ch);var h='';var lastRealMsgIdx=-1,lastCharMsgIdx=-1;for(var k=msgs.length-1;k>=0;k--){if(msgs[k].role!=='system'&&lastRealMsgIdx===-1)lastRealMsgIdx=k;if(msgs[k].role==='char'&&lastCharMsgIdx===-1)lastCharMsgIdx=k;}
 msgs.forEach(function(m,i){
 if(m.role==='system'){if(hide)return;var sc=(_msMode==='chat'?'<div class="msg-chk'+(_msSet.has(i)?' on':'')+'" onclick="togMS('+i+')"></div>':'');h+='<div class="mr s" style="flex-direction:row;justify-content:center">'+sc+'<div class="sm-w"><div class="sm-i" onclick="'+(_msMode==='chat'?'togMS('+i+')':'editSysMsg('+i+')')+'"><span class="sm-tag">系统</span> '+escH(m.content)+'</div></div></div>';return}
 var isU=m.role==='user';var cls=(isU?'u':'c')+(m.hidden?' is-hidden':'');var eyeIcon=m.hidden?'<span style="display:inline-flex;align-items:center;margin-left:4px;opacity:0.6"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/><line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2"/></svg></span>':'';var avSrc=isU?uav:ch.avatar;
-var avHtml=avSrc?'<img src="'+avSrc+'">':'<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';var av='<div class="mav">'+avHtml+'</div>';
-var oi=_msMode==='chat'?' onclick="togMS('+i+')"':(' onclick="showMA(event,'+i+')"');var ts='<div class="mts">'+(m.time||'')+eyeIcon+'</div>';
+var avHtml=avSrc?'<img src="'+avSrc+'">':'<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';var av='<div class="mav" '+(isU?'':'style="cursor:pointer" onclick="e(event);openVoiceModal()"')+'>'+avHtml+'</div>';
+var oi=_msMode==='chat'?' onclick="togMS('+i+')"':(' onclick="showMA(event,'+i+')"');var dt=m.time||'';var ts='<div class="mts">'+dt+eyeIcon+'</div>';
 var quoteHtml='';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];quoteHtml='<div class="q-block" style="margin-bottom:4px">'+(qm.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+esc((qm.content||'').substring(0,60))+'</div>'}else if(m.quoteTxt){quoteHtml='<div class="q-block" style="margin-bottom:4px">'+getChatUN(ch)+': '+esc(m.quoteTxt.substring(0,60))+'</div>'}
 var thinkHtml=''; if(m.think) thinkHtml='<details class="think-box"><summary>思考过程</summary><div style="margin-top:6px;white-space:pre-wrap;">'+escH(m.think)+'</div></details>';
 var actUI='';if(!_msMode&&i===lastRealMsgIdx){if(m.role==='char'){var swUI='';if(m.swipes&&m.swipes.length>1)swUI='<div class="swipe-bar"><span class="swipe-btn" onclick="e(event);doSwipe(\'chat\','+i+',-1)"><</span><span>'+((m.swipeIdx||0)+1)+'/'+m.swipes.length+'</span><span class="swipe-btn" onclick="e(event);doSwipe(\'chat\','+i+',1)">></span></div>';actUI='<div style="display:flex;justify-content:flex-start;align-items:center;margin-top:4px">'+swUI+'<div class="msg-acts"><span class="re-svg" onclick="e(event);refreshMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}else if(m.role==='user'){actUI='<div style="display:flex;justify-content:flex-end;align-items:center;margin-top:4px"><div class="msg-acts"><span class="del-svg" onclick="e(event);if(confirm(\'确定删除吗？\'))delMsg('+i+')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span></div></div>';}}
@@ -961,7 +960,7 @@ var ignoreKeys=['momReplyUser','momReplyChar','momPost','crossRP','momPostSys','
 ordered.forEach(function(k){if(ignoreKeys.indexOf(k)>=0)return;if(k==='coupleP'&&!ch.coupleAv)return;if(D.wbToggles&&D.wbToggles[k]===false)return;var v=D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||'');if(v)sys+=v+'\n\n'});
 var charStk=D.stickers.filter(function(s){return!s.usage||s.usage==='all'||s.usage==='char'});
 if(charStk.length>0&&!(D.wbToggles&&D.wbToggles['stkP']===false)){var stkPrompt=D.wb.stkP!=null?D.wb.stkP:(WB_DEFAULTS.stkP||'');sys+=stkPrompt+'\n可用表情包：'+charStk.map(function(s){return s.name}).join(', ')+'\n\n'}
-if(D.cust.syncT){var tsp=D.wb.timeSyncP!=null?D.wb.timeSyncP:'[时间感知]\n请注意每条消息末尾的回复时间，体会现实时间的流逝与间隔，并在回复的情境和语气中合理地体现出来，在聊天中无需输出回复时间。';if(tsp)sys+=tsp+'\n\n';}var countP=ch.msgCountPrompt||'';
+if(D.cust.syncT){var tsp=D.wb.timeSyncP!=null?D.wb.timeSyncP:'[时间感知]\n请注意每条消息末尾的回复时间，体会现实时间的流逝与间隔，并在回复的情境和语气中合理地体现出来，在聊天中无需输出回复时间。';var nd=new Date();var ct=nd.getFullYear()+'年'+(nd.getMonth()+1)+'月'+nd.getDate()+'日 '+ft(nd);if(tsp)sys+=tsp+'\n当前时间：'+ct+'\n\n';}var countP=ch.msgCountPrompt||'';
 if(countP)sys+=countP+'\n\n';
 else if(ch.msgMin&&ch.msgMax)sys+='[回复要求]\n每次回复根据情境**不固定**发送 '+ch.msgMin+' ~ '+ch.msgMax+' 条消息，每条消息不超过25字。\n\n';
 if(ch.thinkMode) sys+=(ch.thinkPrompt || '[重要指令]请务必在最终回复前，将你的思考过程放在 <think> 和 </think> 标签之间，思考过程简化。')+'\n\n';
@@ -972,7 +971,7 @@ var sArc = D.scriptApp ? D.scriptApp.archives.find(function(a){return a.id===D.s
 if(sArc && sArc.syncOfflineMem && sArc.memory) mem = (mem ? mem + '\n\n' : '') + '[线下记忆摘要]\n' + sArc.memory;
 if(mem)sys+='[记忆摘要]\n'+mem+'\n\n';
 var out=[{role:'system',content:sys, _origIdx:-1}];var recent=msgs.map(function(m,i){return {m:m, i:i}}).filter(function(x){return !x.m.hidden}).slice(-(ch.ctxL||20));
-recent.forEach(function(item){var m=item.m;var origIdx=item.i;var timeStr=D.cust.syncT?'\n[回复时间：'+((m.time||'').length<8?fdFull()+' ':'')+(m.time||'')+']':'';if(m.role==='system')out.push({role:'system',content:m.content, _origIdx:origIdx});else if(m.role==='user'){var c=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];c=getChatUN(ch)+' 引用了"'+(qm.content||'').substring(0,60)+'"的消息：'+c}c+=timeStr;if(m.type==='image'&&m.src)out.push({role:'user',content:[{type:'text',text:c},{type:'image_url',image_url:{url:m.src}}], _origIdx:origIdx});else out.push({role:'user',content:c, _origIdx:origIdx})}else{var cc=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm2=msgs[m.quoteIdx];cc=(ch.nick||ch.name)+' 引用了"'+(qm2.content||'').substring(0,60)+'"的消息：'+cc}cc+=timeStr;out.push({role:'assistant',content:cc, _origIdx:origIdx})}});
+recent.forEach(function(item){var m=item.m;var origIdx=item.i;var nd=new Date();var timeStr=D.cust.syncT?'\n[回复时间：'+((m.time||'').length<8?(nd.getMonth()+1)+'月'+nd.getDate()+'日 ':'')+(m.time||'')+']':'';if(m.role==='system')out.push({role:'system',content:m.content, _origIdx:origIdx});else if(m.role==='user'){var c=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm=msgs[m.quoteIdx];c=getChatUN(ch)+' 引用了"'+(qm.content||'').substring(0,60)+'"的消息：'+c}c+=timeStr;if(m.type==='image'&&m.src)out.push({role:'user',content:[{type:'text',text:c},{type:'image_url',image_url:{url:m.src}}], _origIdx:origIdx});else out.push({role:'user',content:c, _origIdx:origIdx})}else{var cc=m.content||'';if(m.quoteIdx!=null&&msgs[m.quoteIdx]){var qm2=msgs[m.quoteIdx];cc=(ch.nick||ch.name)+' 引用了"'+(qm2.content||'').substring(0,60)+'"的消息：'+cc}cc+=timeStr;out.push({role:'assistant',content:cc, _origIdx:origIdx})}});
 var fmtPrompt=D.wb.chatFmt!=null?D.wb.chatFmt:(WB_DEFAULTS.chatFmt||'');
 if(fmtPrompt&&!(D.wbToggles&&D.wbToggles['chatFmt']===false))out.push({role:'system',content:fmtPrompt, _origIdx:-1});
 return out}
@@ -1075,22 +1074,22 @@ function filterPV(){var q=($('pv-si')?$('pv-si').value:'').trim().toLowerCase();
 _pvMsgs.forEach(function(m,i){var c=typeof m.content==='string'?m.content:JSON.stringify(m.content);var tok=estTok(c);totalTok+=tok;if(m.role!=='system')msgCount++;var vis=!q||c.toLowerCase().indexOf(q)>=0;if(q&&vis)matchCount++;if(!vis)return;
 var rc=m.role==='system'?'sy':m.role==='user'?'us':'as';var rn={system:'SYS',user:'USER',assistant:'CHAR'}[m.role]||'';
 var dispC=escH(c);if(q){var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');dispC=dispC.replace(re,'<mark>$1</mark>')}
-h+='<div class="pv-m" onclick="jumpToMsg('+m._origIdx+', \''+(curScr==='scrScript'?'script':'chat')+'\')"><div class="pv-tag '+rc+'">'+rn+'</div><div class="pv-tok">~ '+tok+' tok</div><div class="pv-c">'+dispC+'</div></div>'});
+h+='<div class="pv-m" onclick="'+(m._origIdx<0?'openPVEdit('+i+')':'jumpToMsg('+m._origIdx+',\''+(curScr==='scrScript'?'script':'chat')+'\')')+'"><div class="pv-tag '+rc+'">'+rn+'</div><div class="pv-tok">~ '+tok+' tok</div><div class="pv-c">'+dispC+'</div></div>'});
 if(!h)h='<div style="text-align:center;padding:36px;color:var(--text3);font-size:13px">暂无</div>';el.innerHTML=h;
 var info=$('pv-info');if(info)info.textContent=msgCount+' 条消息 | ~ '+totalTok+' tok'+(q?' | '+matchCount+' 条匹配':'')}
-function openPVEdit(i){var m=_pvMsgs[i];if(!m)return;var c=typeof m.content==='string'?m.content:JSON.stringify(m.content);_wbEditKey='_pv_'+i;$('wbef-t').textContent={system:'系统提示词',user:'用户消息',assistant:'角色消息'}[m.role]||'编辑';$('wbef-ta').value=c;$('wbEditOV').classList.add('on')}
+function openPVEdit(i){var m=_pvMsgs[i];if(!m)return;var c=typeof m.content==='string'?m.content:JSON.stringify(m.content);_wbEditKey='_pv_'+i;$('wbef-t').textContent={system:'系统提示词',user:'用户消息',assistant:'角色消息'}[m.role]||'编辑';$('wbef-ta').value=c;$('wbef-ta').readOnly=true;var b=$('wbEditOV').querySelector('.hbtn-text');if(b)b.style.visibility='hidden';$('wbEditOV').classList.add('on')}
 var _fm=[];
 function openAPI(){var p=D.apis[D.aApi]||D.apis[0];var chips='';D.apis.forEach(function(a,i){chips+='<span class="chip'+(i===D.aApi?' on':'')+'" onclick="D.aApi='+i+';save();closeBS();openAPI()">'+a.name+'</span>'});var h='<div class="bs-hd"></div><div class="mt">WiFi设置</div>';h+='<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:12px">'+chips+'<span class="chip" onclick="addApiC()" style="color:var(--accent)">+ 新建</span></div>';
 h+='<div class="fg"><div class="fl">名称</div><input class="fi" id="ap-n" value="'+p.name+'"></div>';
 h+='<div class="fg"><div class="fl">API 地址</div><input class="fi" id="ap-u" value="'+(p.url||'')+'" placeholder="https://api.openai.com"><div style="font-size:10px;color:var(--text3);margin-top:3px">自动补全 /v1/chat/completions</div></div>';
-h+='<div class="fg"><div class="fl">API Key</div><input class="fi" id="ap-k" value="'+(p.key||'')+'" type="password" placeholder="sk-..."></div>';
+h+='<div class="fg"><div class="fl">API Key <span style="font-size:10px;color:var(--accent);cursor:pointer" onclick="var i=$(\'ap-k\');i.type=i.type===\'password\'?\'text\':\'password\';this.textContent=i.type===\'password\'?\'隐藏\':\'显示\'">显示</span></div><input class="fi" id="ap-k" value="'+(p.key||'')+'" type="password" placeholder="sk-..."></div>';
 h+='<div class="fg"><div class="fl">模型 <button onclick="fetchM(\'ap-m\')" style="background:var(--btn-p);color:var(--btn-pf);border:1px solid var(--sep);border-radius:6px;padding:3px 10px;font-size:10px;cursor:pointer">获取</button></div><input class="fi" id="ap-m" value="'+(p.model||'')+'" placeholder="输入模型名称"><input class="fi" id="ap-sr" placeholder="搜索..." style="margin-top:4px;display:none" oninput="filtM(this.value, \'ap-m\')"><div id="m-list" style="max-height:145px;overflow-y:auto;margin-top:4px;border:1px solid var(--sep);border-radius:12px;background:var(--card);display:none"></div></div>';
 h+='<div class="fg"><div class="fl">温度 <span class="badge" id="ap-tb">'+(p.temp||.7)+'</span></div><input type="range" class="rs" id="ap-t" min="0" max="2" step=".1" value="'+(p.temp||.7)+'" oninput="$(\'ap-tb\').textContent=parseFloat(this.value).toFixed(1)"></div>';
 h+='<div class="sg-t" style="padding:10px 0 4px">独立总结 API</div>';
 h+='<div class="fg"><div class="fl">启用独立总结 API</div><div class="tog-sm'+(p.sumOn?' on':'')+'" onclick="this.classList.toggle(\'on\');$(\'sum-api-box\').style.display=this.classList.contains(\'on\')?\'block\':\'none\'"><div class="tok"></div></div></div>';
 h+='<div id="sum-api-box" style="display:'+(p.sumOn?'block':'none')+'">';
 h+='<div class="fg"><div class="fl">总结 API 地址</div><input class="fi" id="ap-su" value="'+(p.sumUrl||'')+'" placeholder="https://api.openai.com"></div>';
-h+='<div class="fg"><div class="fl">总结 API Key</div><input class="fi" id="ap-sk" value="'+(p.sumKey||'')+'" type="password" placeholder="sk-..."></div>';
+h+='<div class="fg"><div class="fl">总结 API Key <span style="font-size:10px;color:var(--accent);cursor:pointer" onclick="var i=$(\'ap-sk\');i.type=i.type===\'password\'?\'text\':\'password\';this.textContent=i.type===\'password\'?\'隐藏\':\'显示\'">显示</span></div><input class="fi" id="ap-sk" value="'+(p.sumKey||'')+'" type="password" placeholder="sk-..."></div>';
 h+='<div class="fg"><div class="fl">总结 模型 <button onclick="fetchM(\'ap-sm\')" style="background:var(--btn-p);color:var(--btn-pf);border:1px solid var(--sep);border-radius:6px;padding:3px 10px;font-size:10px;cursor:pointer">获取</button></div><input class="fi" id="ap-sm" value="'+(p.sumModel||'')+'" placeholder="输入模型名称"><input class="fi" id="ap-ssr" placeholder="搜索..." style="margin-top:4px;display:none" oninput="filtM(this.value, \'ap-sm\')"><div id="sm-list" style="max-height:145px;overflow-y:auto;margin-top:4px;border:1px solid var(--sep);border-radius:12px;background:var(--card);display:none"></div></div>';
 h+='</div>';
 h+='<button class="fbtn" onclick="saveAPI()">保存</button><button class="fbtn g" style="margin-top:5px" onclick="testAPI()">测试连接</button>';
@@ -1124,7 +1123,7 @@ var _wbEditKey='';
 function togWBT(k,el){el.classList.toggle('on');if(!D.wbToggles)D.wbToggles={};D.wbToggles[k]=el.classList.contains('on');save();toast(D.wbToggles[k]?'已启用':'已停用')}
 var _wbEditKey='';
 function openWBEditFS(k,l){_wbEditKey=k;$('wbef-t').textContent=l;var el=$('wb_'+k);$('wbef-ta').value=el?el.value:(D.wb[k]!=null?D.wb[k]:(WB_DEFAULTS[k]||''));$('wbEditOV').classList.add('on')}
-function closeWBEdit(){$('wbEditOV').classList.remove('on')}
+function closeWBEdit(){$('wbEditOV').classList.remove('on');$('wbef-ta').readOnly=false;var b=$('wbEditOV').querySelector('.hbtn-text');if(b)b.style.visibility='visible';}
 function saveWBEdit(){
 if(_wbEditKey==='_memory'){var ch=gch(_cfsId||D.curChat);if(ch){getCurArc(ch).memory=$('wbef-ta').value;save();var mm=$('cf-mm');if(mm)mm.value=$('wbef-ta').value}closeWBEdit();toast('记忆已保存');return}
 if(_wbEditKey==='_chatinput'){var inp=$('ci-inp');if(inp)inp.value=$('wbef-ta').value;closeWBEdit();return}
@@ -1181,7 +1180,6 @@ h+='<div class="fg"><div class="fl">角色字体颜色</div><div class="cs-row">
 h+='<div class="fg"><div class="fl">气泡样式</div><div class="bub-sel">';
 [['0','无'],['1','圆角'],['2','方角'],['3','云朵'],['4','描边'],['5','胶囊'],['6','直角']].forEach(function(s){h+='<div class="bub-sel-i'+(D.cust.bubStyle==s[0]?' on':'')+'" onclick="setBubStyle('+s[0]+')">'+s[1]+'</div>'});
 h+='</div></div>';
-h+='<div class="fg"><div class="fl">引用区颜色</div><div class="cs-row"><input type="color" class="cs-swatch" id="b-qc" value="'+(D.cust.qColor||'#888888')+'"><div class="cs-preview" style="background:'+(D.cust.qColor||'#888888')+'"></div></div></div>';
 
 /* ===== 剧本 CSS profiles ===== */
 h+='<div class="fg"><div class="fl">剧本界面CSS</div>';
@@ -1221,7 +1219,7 @@ function setIconMode(m){D.iconMode=m;save();closeBS();renderApps();openBeauty()}
 function upCustomIcon(appId,el){var opt=prompt("输入图片URL (留空则选择本地文件):","");if(opt){if(!D.customIcons)D.customIcons={};D.customIcons[appId]=opt;el.innerHTML='<img src="'+opt+'" style="border-radius:12px">';save();renderApps();return}upFile(function(d){if(!D.customIcons)D.customIcons={};D.customIcons[appId]=d;el.innerHTML='<img src="'+d+'" style="border-radius:12px">';save();renderApps()})}
 function setBubStyle(n){D.cust.bubStyle=n;save();applyBubStyle();closeBS();openBeauty()}
 function upScreenBg(type){var opt=prompt("输入图片URL (留空则选择本地文件):","");if(opt){if(type==='set')D.cust.setWp=opt;else if(type==='script')D.cust.scriptWp=opt;else D.cust.msgWp=opt;save();applyScreenBgs();applyScriptBg();toast('已设置');return}upFile(function(d){if(type==='set')D.cust.setWp=d;else if(type==='script')D.cust.scriptWp=d;else D.cust.msgWp=d;save();applyScreenBgs();applyScriptBg();toast('已设置')})}
-function saveBeauty(){D.cust.chatFontSize=parseInt($('b-fs').value)||14;D.cust.uColor=$('b-uc').value;D.cust.cColor=$('b-cc').value;D.cust.uAlpha=parseFloat($('b-ua').value);D.cust.cAlpha=parseFloat($('b-ca').value);D.cust.fontColor=$('b-ufc').value;D.cust.charFontColor=$('b-cfc').value;if($('b-qc'))D.cust.qColor=$('b-qc').value;D.cust.msgWpA=parseFloat($('b-ma').value);D.cust.setWpA=parseFloat($('b-sa').value);if($('b-sca'))D.cust.scriptWpA=parseFloat($('b-sca').value);D.cust.chatUiAlpha=parseFloat($('b-cua').value);if($('b-ac')){D.cust.appColor=$('b-ac').value;D.cust.appAlpha=parseFloat($('b-aa').value);D.cust.appSvgColor=$('b-asc').value}applyCol();applyScreenBgs();applyScriptBg();applyCustCss();applyBubStyle();save();closeBS();toast('已保存');if(D.curChat)renderBub();if(D.iconMode==='theme')renderApps()}
+function saveBeauty(){D.cust.chatFontSize=parseInt($('b-fs').value)||14;D.cust.uColor=$('b-uc').value;D.cust.cColor=$('b-cc').value;D.cust.uAlpha=parseFloat($('b-ua').value);D.cust.cAlpha=parseFloat($('b-ca').value);D.cust.fontColor=$('b-ufc').value;D.cust.charFontColor=$('b-cfc').value;D.cust.msgWpA=parseFloat($('b-ma').value);D.cust.setWpA=parseFloat($('b-sa').value);if($('b-sca'))D.cust.scriptWpA=parseFloat($('b-sca').value);D.cust.chatUiAlpha=parseFloat($('b-cua').value);if($('b-ac')){D.cust.appColor=$('b-ac').value;D.cust.appAlpha=parseFloat($('b-aa').value);D.cust.appSvgColor=$('b-asc').value}applyCol();applyScreenBgs();applyScriptBg();applyCustCss();applyBubStyle();save();closeBS();toast('已保存');if(D.curChat)renderBub();if(D.iconMode==='theme')renderApps()}
 function saveBProf(){var n=prompt("给新配置起个名字：","配置 "+((D.beautyProfiles||[]).length+1));if(!n)return;if(!D.beautyProfiles)D.beautyProfiles=[];D.beautyProfiles.push({id:uid(),name:n,data:JSON.parse(JSON.stringify(D.cust))});save();toast('已存为新配置')}
 function openBProfs(){if(!D.beautyProfiles||!D.beautyProfiles.length){toast('暂无保存的配置');return}var h='<div class="bs-hd"></div><div class="mt">配置存档管理</div><div style="max-height:300px;overflow-y:auto;padding:4px">';D.beautyProfiles.forEach(function(p,i){h+='<div class="prof-item"><div class="prof-nm" onclick="loadBProf('+i+')">'+p.name+'</div><div><button class="prof-btn" onclick="e(event);loadBProf('+i+')">应用</button><button class="prof-btn" onclick="e(event);updateBProf('+i+')">更新</button><button class="prof-btn" onclick="e(event);editBProf('+i+')">改名</button><button class="prof-del" onclick="e(event);delBProf('+i+')">删除</button></div></div>'});h+='</div><button class="fbtn n" onclick="openBeauty()">返回</button>';showBS(h)}
 function loadBProf(i){var p=D.beautyProfiles[i];if(!p)return;D.cust=JSON.parse(JSON.stringify(p.data));applyCol();applyScreenBgs();applyCustCss();applyBubStyle();save();closeBS();toast('已加载配置：'+p.name);if(D.curChat)renderBub();if(D.iconMode==='theme')renderApps()}
@@ -1483,7 +1481,7 @@ function expandScriptInfo() {
 function renderScriptBub() {
     var msgs = getSArc().msgs; var el = $('script-msg-area'); var h = '';
     var cb = $('script-body'); cb.className = cb.className.replace(/\bbs\d\b/g,'').trim(); if(D.cust.bubStyle!=0) cb.className+=' bs'+(D.cust.bubStyle||1);
-    var lastRealMsgIdx=-1;for(var k=msgs.length-1;k>=0;k--){if(msgs[k].role!=='system'){lastRealMsgIdx=k;break;}}
+    var lastRealMsgIdx=-1,lastCharMsgIdx=-1;for(var k=msgs.length-1;k>=0;k--){if(msgs[k].role!=='system'&&lastRealMsgIdx===-1)lastRealMsgIdx=k;if(msgs[k].role==='char'&&lastCharMsgIdx===-1)lastCharMsgIdx=k;}
     msgs.forEach(function(m, i){
         var isU = m.role==='user'; var cls = isU?'u':'c'; var hidCls = m.hidden ? ' is-hidden' : '';
         var speakerCh = m.charId ? gch(m.charId) : gch(D.curScriptChar);
@@ -1660,15 +1658,15 @@ if(ch.coupleAv&&!(D.wbToggles&&D.wbToggles['coupleP']===false)) sys += (D.wb.cou
     if(arc.charInfo) sys += '[角色线下信息]\n' + arc.charInfo + '\n\n';
     if(arc.memory) sys += '[线下记忆摘要]\n' + arc.memory + '\n\n';
 
-    var msgs = [{role:'system', content:sys.trim()}];
-    arc.msgs.forEach(function(m){
+        var msgs = [{role:'system', content:sys.trim(), _origIdx:-1}];
+    arc.msgs.forEach(function(m, i){
         if(!m.hidden) {
-            msgs.push({role: m.role==='user'?'user':'assistant', content: m.content});
+            msgs.push({role: m.role==='user'?'user':'assistant', content: m.content, _origIdx:i});
         }
     });
     var advSys = '';
     if(arc.advReqs) { arc.advReqs.filter(function(r){return r.on}).forEach(function(r){ advSys += r.content + '\n\n'; }); }
-    if(advSys) msgs.push({role: 'system', content: advSys.trim()});
+    if(advSys) msgs.push({role: 'system', content: advSys.trim(), _origIdx:-1});
     return msgs;
 }
 function openScriptSet() {
