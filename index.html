@@ -871,40 +871,7 @@ function viewDummyImg(i){
 }
 function togVoTxt(i){var el=$('vo-tx-'+i);if(el)el.classList.toggle('on')}
 
-function appendMsgAnim(ch,arr,cb){
-    var arc=getCurArc(ch); var i=0;
-    function nx(){
-        if(i>=arr.length){
-            ch.lastM=arr[arr.length-1].content||'['+arr[arr.length-1].type+']';
-            ch.lastT=ft(); save(); renderML(); checkAutoSum(ch); if(cb)cb(); return;
-        }
-        var m=arr[i]; arc.msgs.push(m);
-        if(D.curChat===ch.id&&curScr==='scrChat'){
-            if(ch.streamMode && (!m.type || m.type==='text')) {
-                var fullC = m.content||''; var fullT = m.think||'';
-                m.content = ''; m.think = fullT ? ' ' : '';
-                var curT = 0, curC = 0;
-                var timer = setInterval(function(){
-                    if(window._abortChatStream) {
-                        clearInterval(timer); m.content = fullC; m.think = fullT; save(); renderBub();
-                        window._abortChatStream = false; var btn=$('ai-btn'); if(btn) btn.classList.remove('ld');
-                        i++; setTimeout(nx, 100); return;
-                    }
-                    var doneT = true, doneC = true;
-                    if(curT < fullT.length) { curT += 4; m.think = fullT.substring(0, curT); doneT = false; }
-                    else if(curC < fullC.length) { curC += 4; m.content = fullC.substring(0, curC); doneC = false; }
-                    renderBub();
-                    if(doneT && doneC) { clearInterval(timer); m.content = fullC; m.think = fullT; save(); i++; setTimeout(nx, 100); }
-                }, 30);
-            } else {
-                renderBub(); i++; setTimeout(nx, 500);
-            }
-        } else {
-            showNotif(ch,m.content||'['+m.type+']'); i++; setTimeout(nx, 500);
-        }
-    }
-    nx();
-}
+function appendMsgAnim(ch,arr,cb){var arc=getCurArc(ch);var i=0;function nx(){if(i>=arr.length){ch.lastM=arr[arr.length-1].content||'['+arr[arr.length-1].type+']';ch.lastT=ft();save();renderML();checkAutoSum(ch);if(cb)cb();return}var m=arr[i];arc.msgs.push(m);if(D.curChat===ch.id&&curScr==='scrChat'){if(ch.streamMode&&(!m.type||m.type==='text')){var fullC=m.content||'';var fullT=m.think||'';m.content='';m.think=fullT?' ':'';var curT=0,curC=0;var timer=setInterval(function(){if(window._abortChatStream){clearInterval(timer);m.content=fullC;m.think=fullT;save();renderBub();window._abortChatStream=false;var btn=$('ai-btn');if(btn)btn.classList.remove('ld');i++;setTimeout(nx,100);return}var doneT=true,doneC=true;if(curT<fullT.length){curT+=4;m.think=fullT.substring(0,curT);doneT=false}else if(curC<fullC.length){curC+=4;m.content=fullC.substring(0,curC);doneC=false}renderBub();if(doneT&&doneC){clearInterval(timer);m.content=fullC;m.think=fullT;save();i++;setTimeout(nx,100)}},30)}else{renderBub();save();i++;setTimeout(nx,100)}}else{showNotif(ch,m.content||'['+m.type+']');save();renderBub();i++;setTimeout(nx,100)}}nx()}
 
 function clkRP(idx){var ch=gch(D.curChat);if(!ch)return;var msgs=getMsgs(ch);var m=msgs[idx];if(m.role==='char'&&!m.recv){m.recv=true;var amt=parseFloat(m.amount)||0;D.wallet.balance+=amt;D.wallet.balance=Math.round(D.wallet.balance*100)/100;D.wallet.txns.push({id:uid(),type:'recv',from:ch.nick||ch.name,amount:amt,note:m.note||'',time:ft()+' '+fd()});getMsgs(ch).push({role:'system',content:'已领取 '+(ch.nick||ch.name)+' 的红包 \u00A5'+amt,time:ft()});save();renderBub();renderML();toast('已领取 \u00A5'+amt.toFixed(2))}}
 function closeFT(){var t=$('ft-tray'),c=$('cib'),cb=$('cbody');if(t)t.classList.remove('on');if(c)c.style.bottom='0';if(cb)cb.style.paddingBottom='80px'}
