@@ -1037,7 +1037,7 @@ if(oldN!==newN){D.moments.forEach(function(m){if(m.author===ch.id)m.authorName=n
 if(oldNick&&newNick&&oldNick!==newNick){var un=getChatUN(ch);getMsgs(ch).push({role:'system',content:un+'更改了'+ch.name+'的备注，从"'+oldNick+'"改为"'+newNick+'"',time:ft()})}
 _tav=null;_tuav=null;if($('chat-nm'))$('chat-nm').textContent=ch.nick||ch.name;save();closeOV('ovCFS');renderBub();renderML();renderSet();resetOfflineTimer(ch);toast('已保存')}
 function expChat(){var ch=gch(D.curChat);if(!ch)return;var b=new Blob([JSON.stringify(getMsgs(ch),null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(ch.nick||ch.name)+'_chat.json';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
-function expChatTxt(){var ch=gch(D.curChat);if(!ch)return;var un=getChatUN(ch);var cn=ch.nick||ch.name;var txt=getMsgs(ch).map(function(m){var r=m.role==='user'?un:m.role==='char'?cn:'[系统]';return'['+m.time+'] '+r+': '+(m.content||'['+m.type+']')}).join('\n');var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(ch.nick||ch.name)+'_chat.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
+function expChatTxt(){var ch=gch(D.curChat);if(!ch)return;var un=getChatUN(ch);var cn=ch.nick||ch.name;var txt=getMsgs(ch).map(function(m){var r=m.role==='user'?un:m.role==='char'?cn:'[系统]';return r+': '+(m.content||'['+m.type+']')}).join('\n');var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(ch.nick||ch.name)+'_chat.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
 var _pvMsgs=[];
 function openPV(){var ch=gch(D.curChat);if(!ch)return;_pvMsgs=buildPr(ch);filterPV();$('ovPV').classList.add('on')}
 function filterPV(){var q=($('pv-si')?$('pv-si').value:'').trim().toLowerCase();var el=$('pv-list');if(!el)return;var h='';var totalTok=0;var msgCount=0;var matchCount=0;
@@ -1106,7 +1106,7 @@ if(_wbEditKey==='_scriptcss'){var si=D.scriptCssProfiles[D.aScriptCss];if(si)si.
 if(_wbEditKey.startsWith('_mom_')){var mk=_wbEditKey.replace('_mom_','');var mel=$('mom_'+mk);if(mel)mel.value=$('wbef-ta').value;closeWBEdit();toast('已同步');openMomPrompts();return}
 if(_wbEditKey.startsWith('_sreq_')){
     var parts = _wbEditKey.split('_'); var type = parts[2]; var idx = parseInt(parts[3]);
-    var ch=gch(D.curScriptChar); if(ch){ var arr = type==='adv' ? getSArc(ch).advReqs : getSArc(ch).reqs; arr[idx].content=$('wbef-ta').value; save(); }
+    var ch=gch(D.curScriptChar); if(ch){ var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; arr[idx].content=$('wbef-ta').value; save(); }
     closeWBEdit(); toast('已保存'); openScriptSet(); return;
 }
 if(_wbEditKey==='_ssum'){var ch=gch(D.curScriptChar);if(ch){getSArc(ch).sumPrompt=$('wbef-ta').value;save();openScriptSet();}closeWBEdit();toast('已保存');return;}
@@ -1368,30 +1368,7 @@ D.scriptInfoTab = D.scriptInfoTab || 'char';
 
 function expandScriptInput() { _wbEditKey='_scriptinput'; $('wbef-t').textContent='编辑剧本动作/对话'; $('wbef-ta').value=$('script-inp').value||''; $('wbEditOV').classList.add('on'); }
 
-function ensureScriptApp() {
-    if(!D.scriptApp) {
-        D.scriptApp = {
-            name: '默认剧本',
-            archives: [{
-                id: uid(), name: '默认存档',
-                reqs: [{id:uid(), name:'默认要求', content:'你现在处于线下剧本模式，请根据要求推进剧情。', on:true}],
-                advReqs: [], sumPrompt: '请总结以下剧本剧情，提取关键情节，200字以内第三人称叙述。',
-                endPrompt: '[以上为线上聊天上下文，接下来进入线下剧本模式]',
-                charInfo: '', userInfo: '', memory: '', msgs: [], syncOnline: true, syncOfflineCtx: false, syncOfflineMem: false, thinkMode: false
-            }],
-            curArc: null
-        };
-        D.scriptApp.curArc = D.scriptApp.archives[0].id;
-    }
-    var arc = D.scriptApp.archives.find(function(a){return a.id===D.scriptApp.curArc});
-    if(!arc) { D.scriptApp.curArc = D.scriptApp.archives[0].id; arc = D.scriptApp.archives[0]; }
-    if(arc.syncOfflineCtx === undefined) arc.syncOfflineCtx = false;
-    if(arc.syncOfflineMem === undefined) arc.syncOfflineMem = false;
-    if(arc.ctxL === undefined) arc.ctxL = 20;
-    if(arc.thinkMode === undefined) arc.thinkMode = false;
-    if(arc.streamMode === undefined) arc.streamMode = false;
-    return D.scriptApp;
-}
+function ensureScriptApp(){if(!D.scriptApp){D.scriptApp={name:'默认剧本',reqs:[{id:uid(),name:'默认要求',content:'你现在处于线下剧本模式，请根据要求推进剧情。',on:true}],advReqs:[],archives:[{id:uid(),name:'默认存档',sumPrompt:'请总结以下剧本剧情，提取关键情节，200字以内第三人称叙述。',endPrompt:'[以上为线上聊天上下文，接下来进入线下剧本模式]',charInfo:'',userInfo:'',memory:'',msgs:[],syncOnline:true,syncOfflineCtx:false,syncOfflineMem:false,thinkMode:false}],curArc:null};D.scriptApp.curArc=D.scriptApp.archives[0].id}if(!D.scriptApp.reqs&&D.scriptApp.archives[0]){D.scriptApp.reqs=D.scriptApp.archives[0].reqs||[];D.scriptApp.advReqs=D.scriptApp.archives[0].advReqs||[]}var arc=D.scriptApp.archives.find(function(a){return a.id===D.scriptApp.curArc});if(!arc){D.scriptApp.curArc=D.scriptApp.archives[0].id;arc=D.scriptApp.archives[0]}if(arc.syncOfflineCtx===undefined)arc.syncOfflineCtx=false;if(arc.syncOfflineMem===undefined)arc.syncOfflineMem=false;if(arc.ctxL===undefined)arc.ctxL=20;if(arc.thinkMode===undefined)arc.thinkMode=false;if(arc.streamMode===undefined)arc.streamMode=false;return D.scriptApp}
 function getSArc() { ensureScriptApp(); return D.scriptApp.archives.find(function(a){return a.id===D.scriptApp.curArc}); }
 function applyScriptBg(){var ms=$('script-sbg');if(ms){if(D.cust.scriptWp){ms.style.backgroundImage='url('+D.cust.scriptWp+')';ms.style.opacity=D.cust.scriptWpA||0.35;}else{ms.style.backgroundImage='none';ms.style.opacity=0;}}}
 function openScriptApp() {
@@ -1593,7 +1570,7 @@ function checkScriptAutoSum() {
 }
 function buildScriptPr(ch, arc) {
     var sys = '';
-    arc.reqs.filter(function(r){return r.on}).forEach(function(r){ sys += r.content + '\n\n'; });
+    D.scriptApp.reqs.filter(function(r){return r.on}).forEach(function(r){ sys += r.content + '\n\n'; });
     if(arc.thinkMode) sys += (arc.thinkPrompt || '[重要指令]特许在JSON数组外输出思考过程。请务必在输出JSON前，将思考过程放在 <think> 和 </think> 标签之间。') + '\n\n';
 if (arc.syncOnline !== false) {
         var chatArc = ch.archives.find(function(a){return a.id===ch.curArc}) || ch.archives[0];
@@ -1625,7 +1602,7 @@ if(ch.coupleAv&&!(D.wbToggles&&D.wbToggles['coupleP']===false)) sys += (D.wb.cou
         }
     });
     var advSys = '';
-    if(arc.advReqs) { arc.advReqs.filter(function(r){return r.on}).forEach(function(r){ advSys += r.content + '\n\n'; }); }
+    if(D.scriptApp.advReqs) { D.scriptApp.advReqs.filter(function(r){return r.on}).forEach(function(r){ advSys += r.content + '\n\n'; }); }
     if(advSys) msgs.push({role: 'system', content: advSys.trim(), _origIdx:-1});
     return msgs;
 }
@@ -1636,7 +1613,7 @@ function openScriptSet() {
     var h = '<div class="sec-d"><div class="sec-t">统计</div><div style="padding:6px 13px"><div class="info-row"><div class="info-box"><div class="v">'+arc.msgs.length+'</div><div class="l">剧本条数</div></div><div class="info-box"><div class="v">~ '+toks+'</div><div class="l">Tokens(仅未隐藏)</div></div></div></div></div>';
 
     h += '<div class="sec-d"><div class="sec-t">剧本要求（置于开头）</div><div style="padding:8px 13px">';
-    arc.reqs.forEach(function(r, i){
+    D.scriptApp.reqs.forEach(function(r, i){
         h += '<div class="sreq-item" onclick="editSReq(\'req\','+i+')"><div class="sreq-title">'+esc(r.name)+'</div><div class="sreq-bot"><div class="tog-sm'+(r.on?' on':'')+'" onclick="e(event); togSReq(\'req\','+i+', this)"><div class="tok"></div></div></div><div class="sreq-dots" onclick="e(event);openSReqMenu(event,\'req\','+i+')"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></div></div>';
     });
     h += '<button class="fbtn n" style="width:100%;height:32px;font-size:11px" onclick="addSReq(\'req\')">+ 添加要求</button></div></div>';
@@ -1650,7 +1627,7 @@ function openScriptSet() {
     h += '<div class="sec-r" style="padding:10px 13px;border-top:none;border-bottom:1px solid var(--sep)"><div class="sec-rl" style="font-weight:600">同步线上设定与上下文</div><div class="sec-rr"><div class="tog-sm'+(arc.syncOnline?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().syncOnline=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div></div>';
     h += '<div class="sec-r" style="padding:10px 13px;border-top:none;border-bottom:none"><div class="sec-rl" style="font-weight:600">同步线下上下文至线上 </div><div class="sec-rr"><div class="tog-sm'+(arc.syncOfflineCtx?' on':'')+'" onclick="this.classList.toggle(\'on\'); getSArc().syncOfflineCtx=this.classList.contains(\'on\'); save()"><div class="tok"></div></div></div></div></div>';
     h += '<div class="sec-d"><div class="sec-t">高级要求 (置于末尾)</div><div style="padding:8px 13px">';
-    arc.advReqs.forEach(function(r, i){
+    D.scriptApp.advReqs.forEach(function(r, i){
         h += '<div class="sreq-item" onclick="editSReq(\'adv\','+i+')"><div class="sreq-title">'+esc(r.name)+'</div><div class="sreq-bot"><div class="tog-sm'+(r.on?' on':'')+'" onclick="e(event); togSReq(\'adv\','+i+', this)"><div class="tok"></div></div></div><div class="sreq-dots" onclick="e(event);openSReqMenu(event,\'adv\','+i+')"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></div></div>';
     });
     h += '<button class="fbtn n" style="width:100%;height:32px;font-size:11px" onclick="addSReq(\'adv\')">+ 添加高级要求</button></div></div>';
@@ -1676,13 +1653,13 @@ function openScriptSet() {
     h += '<button class="fbtn n" style="margin:0 13px 4px;width:calc(100% - 26px);font-size:11px;height:34px" onclick="expScriptJSON()">导出 JSON</button>';
     h += '<button class="fbtn n" style="margin:0 13px 4px;width:calc(100% - 26px);font-size:11px;height:34px" onclick="expScriptTxt()">导出 TXT</button>';
     h += '<button class="fbtn n" style="margin:0 13px 4px;width:calc(100% - 26px);font-size:11px;height:34px" onclick="impScriptJSON()">导入剧本记录</button>';
-    h += '<button class="fbtn r" style="margin:0 13px 8px;width:calc(100% - 26px);font-size:11px;height:34px" onclick="clearScriptMsgs()">清空剧本内容及信息</button></div>';
+    h += '<button class="fbtn r" style="margin:0 13px 8px;width:calc(100% - 26px);font-size:11px;height:34px" onclick="clearScriptMsgs()">清空消息</button></div>';
     $('script-set-bd').innerHTML = h; $('ovScriptSet').classList.add('on');
 }
 function expandScriptSumP() { _wbEditKey='_ssum'; $('wbef-t').textContent='总结提示词'; $('wbef-ta').value=getSArc().sumPrompt; $('wbEditOV').classList.add('on'); }
-function addSReq(type) { var n=prompt('要求名称','新要求'); if(n) { var arr = type==='adv' ? getSArc().advReqs : getSArc().reqs; arr.push({id:uid(), name:n, content:'', on:true}); save(); openScriptSet(); } }
-function editSReq(type, i) { _wbEditKey='_sreq_'+type+'_'+i; $('wbef-t').textContent='编辑要求'; var arr = type==='adv' ? getSArc().advReqs : getSArc().reqs; $('wbef-ta').value=arr[i].content; $('wbEditOV').classList.add('on'); }
-function togSReq(type, i, el) { el.classList.toggle('on'); var arr = type==='adv' ? getSArc().advReqs : getSArc().reqs; arr[i].on = el.classList.contains('on'); save(); }
+function addSReq(type) { var n=prompt('要求名称','新要求'); if(n) { var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; arr.push({id:uid(), name:n, content:'', on:true}); save(); openScriptSet(); } }
+function editSReq(type, i) { _wbEditKey='_sreq_'+type+'_'+i; $('wbef-t').textContent='编辑要求'; var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; $('wbef-ta').value=arr[i].content; $('wbEditOV').classList.add('on'); }
+function togSReq(type, i, el) { el.classList.toggle('on'); var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; arr[i].on = el.classList.contains('on'); save(); }
 function openSReqMenu(ev, type, i) {
     ev.stopPropagation(); var mp=$('map');
     mp.innerHTML='<div class="ma-i" onclick="renameSReq(\''+type+'\','+i+')">改名</div><div class="ma-i" onclick="moveSReq(\''+type+'\','+i+',-999)">置顶</div><div class="ma-i" onclick="moveSReq(\''+type+'\','+i+',-1)">上移</div><div class="ma-i" onclick="moveSReq(\''+type+'\','+i+',1)">下移</div><div class="ma-i d" onclick="delSReq(\''+type+'\','+i+')">删除</div>';
@@ -1691,18 +1668,18 @@ function openSReqMenu(ev, type, i) {
     var mw=mp.offsetWidth, mh=mp.offsetHeight; var x=r.left-pr.left+r.width/2-mw/2; var y=r.top-pr.top-mh-10; if(y<56) y=r.bottom-pr.top+10;
     x=Math.max(8,Math.min(x,pr.width-mw-8)); mp.style.left=x+'px'; mp.style.top=Math.max(56,y)+'px';
 }
-function renameSReq(type, i) { $('map').classList.remove('on'); var arr = type==='adv' ? getSArc().advReqs : getSArc().reqs; var n=prompt('修改名称',arr[i].name); if(n&&n.trim()){ arr[i].name=n.trim(); save(); openScriptSet(); } }
-function moveSReq(type, i, dir) { $('map').classList.remove('on'); var arr = type==='adv' ? getSArc().advReqs : getSArc().reqs; var r=arr[i]; if(dir===-999){ arr.splice(i,1); arr.unshift(r); }else{ var ni=i+dir; if(ni>=0&&ni<arr.length){ arr.splice(i,1); arr.splice(ni,0,r); } } save(); openScriptSet(); }
-function delSReq(type, i) { $('map').classList.remove('on'); var arr = type==='adv' ? getSArc().advReqs : getSArc().reqs; arr.splice(i,1); save(); openScriptSet(); }
+function renameSReq(type, i) { $('map').classList.remove('on'); var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; var n=prompt('修改名称',arr[i].name); if(n&&n.trim()){ arr[i].name=n.trim(); save(); openScriptSet(); } }
+function moveSReq(type, i, dir) { $('map').classList.remove('on'); var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; var r=arr[i]; if(dir===-999){ arr.splice(i,1); arr.unshift(r); }else{ var ni=i+dir; if(ni>=0&&ni<arr.length){ arr.splice(i,1); arr.splice(ni,0,r); } } save(); openScriptSet(); }
+function delSReq(type, i) { $('map').classList.remove('on'); var arr = type==='adv' ? D.scriptApp.advReqs : D.scriptApp.reqs; arr.splice(i,1); save(); openScriptSet(); }
 function switchSArc(id) { D.scriptApp.curArc=id; save(); renderScriptHeaderDOM(); renderScriptBub(); openScriptSet(); }
 function newSArc() {
     var n=prompt('存档名称','存档 '+(D.scriptApp.archives.length+1)); if(!n) return;
-    var na = { id:uid(), name:n, reqs: [{id:uid(), name:'默认要求', content:'你现在处于线下剧本模式，请根据要求推进剧情。', on:true}], advReqs: [], sumPrompt: '请总结以下剧本剧情，提取关键情节，200字以内第三人称叙述。', endPrompt: '[以上为线上聊天上下文，接下来进入线下剧本模式]', charInfo: '', userInfo: '', memory: '', msgs: [], syncOnline: true, syncOfflineCtx: false, syncOfflineMem: false, thinkMode: false, autoSum: false, sumInterval: 50, _lastSumAt: 0 };
+    var na={id:uid(),name:n,sumPrompt:'请总结以下剧本剧情，提取关键情节，200字以内第三人称叙述。',endPrompt:'[以上为线上聊天上下文，接下来进入线下剧本模式]',charInfo:'',userInfo:'',memory:'',msgs:[],syncOnline:true,syncOfflineCtx:false,syncOfflineMem:false,thinkMode:false,autoSum:false,sumInterval:50,_lastSumAt:0};
     D.scriptApp.archives.push(na); D.scriptApp.curArc=na.id; save(); renderScriptHeaderDOM(); renderScriptBub(); openScriptSet();
 }
 function delSArc(id) { D.scriptApp.archives=D.scriptApp.archives.filter(function(a){return a.id!==id}); if(D.scriptApp.curArc===id) D.scriptApp.curArc=D.scriptApp.archives[0].id; save(); renderScriptHeaderDOM(); renderScriptBub(); openScriptSet(); }
 function renameSArc(id) { var a=D.scriptApp.archives.find(function(x){return x.id===id}); var n=prompt('修改名称',a.name); if(n&&n.trim()){ a.name=n.trim(); save(); openScriptSet(); } }
-function clearScriptMsgs() { if(confirm('确定清空剧本内容及线下信息？')){ var arc = getSArc(); arc.msgs=[]; arc.memory=''; arc.charInfo=''; arc.userInfo=''; arc._lastSumAt=0; save(); renderScriptHeaderDOM(); renderScriptBub(); openScriptSet(); toast('已清空'); } }
+function clearScriptMsgs(){if(confirm('确定清空？')){var arc=getSArc();arc.msgs=[];arc._lastSumAt=0;save();renderScriptHeaderDOM();renderScriptBub();openScriptSet();toast('已清空')}}
 function doScriptSum(manual) {
     var arc=getSArc(); var p=D.apis[D.aApi]; if(!p){toast('请配置API');return;}var sp=p.sumOn?{url:p.sumUrl,key:p.sumKey,model:p.sumModel,temp:p.temp}:p;if(!sp.url){toast('请配置总结API');return;}
     var msgsToSum = arc.msgs;
@@ -1712,7 +1689,7 @@ function doScriptSum(manual) {
     } else {
         var start = arc._lastSumAt || 0; msgsToSum = arc.msgs.slice(start);
     }
-    var toSum = msgsToSum.filter(function(m){return !m.hidden}).map(function(m){var spName = m.role==='user' ? (D.user.name||'用户') : (m.charId ? (gch(m.charId)?(gch(m.charId).nick||gch(m.charId).name):'角色') : '角色'); return spName+': '+(m.content||'')}).join('\n'); if(!toSum){toast('无有效内容');return;}
+    var toSum = msgsToSum.filter(function(m){return !m.hidden}).map(function(m){var spName = m.role==='user' ? (D.user.name||'用户') : (m.charId ? (gch(m.charId)?(gch(m.charId).nick||gch(m.charId).name):'角色') : '角色'); return spName+':\n\n'+(m.content||'')}).join('\n'); if(!toSum){toast('无有效内容');return;}
     toast(manual?'总结中...':'触发自动总结...');
     var ch = gch(D.curScriptChar);
     var basePr = buildScriptPr(ch, arc);
@@ -1727,7 +1704,8 @@ function openScriptPV() { _pvMsgs = buildScriptPr(gch(D.curScriptChar), getSArc(
 
 function expScriptTxt() {
     var arc=getSArc();
-    var txt = arc.msgs.map(function(m){var spName = m.role==='user' ? (D.user.name||'用户') : (m.charId ? (gch(m.charId)?(gch(m.charId).nick||gch(m.charId).name):'角色') : '角色'); return spName+': '+(m.content||'')}).join('\n\n');
+    var txt = arc.msgs.map(function(m){var spName = m.role==='user' ? (D.user.name||'用户') : (m.charId ? (gch(m.charId)?(gch(m.charId).nick||gch(m.charId).name):'角色') : '角色'); 
+return spName+':\n\n'+(m.content||'')}).join('\n\n');
     var b=new Blob([txt],{type:'text/plain'}); var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=D.scriptApp.name+'_script.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); toast('已导出');
 }
 function expScriptJSON() {
