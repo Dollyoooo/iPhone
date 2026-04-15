@@ -101,7 +101,8 @@ textarea,input{-webkit-user-select:text;user-select:text;font-family:inherit}
 .screen{position:absolute;inset:0;display:none;flex-direction:column;z-index:10;overflow:hidden;background-color:var(--bg)}
 .screen.active{display:flex}
 .scr-s{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.screen-bg{position:absolute;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;filter:blur(20px);-webkit-filter:blur(20px)}
+.screen-bg{position:absolute;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;filter:blur(20px);-webkit-filter:blur(20px);transition:filter .3s}
+.dark .screen-bg{filter:blur(20px) brightness(0.35);-webkit-filter:blur(20px) brightness(0.35)}
 #scrHome{background:transparent}
 #scrMom{background:var(--mom-bg)}
 #scrMD{background:var(--mom-bg)}
