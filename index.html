@@ -740,7 +740,7 @@ applyTheme();applyPh();applyCol();buildDIVis();updateClock();setInterval(updateC
 if(D.user.avatar)si('mb-av-i',D.user.avatar);if(D.user.momBg)si('mb-bg',D.user.momBg);if(D.user.sig)$('m-sig').textContent=D.user.sig;if(D.diArt)$('dif-art').innerHTML='<div class="dif-spin"></div><img src="'+D.diArt+'">';$('mb-un').textContent=D.user.name||'用户名';applyBubStyle();applyFS();applySB();
 $('phone').addEventListener('click',function(ev){var di=$('di');if(di.classList.contains('exp')&&!di.contains(ev.target))di.classList.remove('exp');var mp=$('map');if(mp.classList.contains('on')&&!mp.contains(ev.target))mp.classList.remove('on')});renderStkApp();updateRoleTog();startOfflineLoop()}
 function si(id,src){var i=$(id);if(i){i.src=src;i.style.display='block';if(i.nextElementSibling&&i.nextElementSibling.tagName.toLowerCase()==='svg')i.nextElementSibling.style.display='none';}}
-function applyTheme(){if(D.theme==='dark'){$('phone').classList.add('dark')}else{$('phone').classList.remove('dark')}}
+function applyTheme(){$('phone').classList.toggle('dark',D.theme==='dark')}
 function applyPh(){var p=$('phone');p.style.setProperty('--pw',D.pw+'px');p.style.setProperty('--ph',D.ph+'px');p.style.setProperty('--pr',D.pr+'px');p.style.setProperty('--py',(D.py||0)+'px')}
 function applyFS(){$('phone').classList.toggle('phone-fs',!!D.fullscreen)}
 function applySB(){$('sb').classList.toggle('hidden',!D.showSB)}
