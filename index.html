@@ -892,7 +892,7 @@ function sendStk(i){var s=D.stickers[i];if(!s)return;var ch=gch(D.curChat);if(!c
 
 function showMA(ev,idx,tp){ev.stopPropagation();if(tp==='rp'){var ch2=gch(D.curChat);if(ch2){var mm=getMsgs(ch2)[idx];if(mm.role==='char'&&!mm.recv){clkRP(idx);return}}}var mp=$('map');var ch=gch(D.curChat);if(!ch)return;var msgs=getMsgs(ch);var m=msgs[idx];
 var acts='<div class="ma-i" onclick="copyMsg('+idx+')">复制</div><div class="ma-i" onclick="editMsg('+idx+')">编辑</div><div class="ma-i" onclick="togHideMsg('+idx+')">'+(m.hidden?'取消隐藏':'隐藏')+'</div>';
-acts+='<div class="ma-i a" onclick="branchMsg('+idx+')">分支</div><div class="ma-i d" onclick="enterMS(\'chat\','+idx+');$(\'map\').classList.remove(\'on\')">多选</div>';
+acts+='<div class="ma-i a" onclick="branchMsg('+idx+')">分支</div><div class="ma-i d" onclick="enterMS(\'chat\','+idx+');$(\'map\').classList.remove(\'on\')">多选</div><div class="ma-i d" onclick="if(confirm(\'确定删除吗？\'))delMsg('+idx+')">删除</div>';
 mp.innerHTML=acts;
 mp.style.left='-9999px'; mp.style.top='0'; mp.classList.add('on');
 var pr=$('phone').getBoundingClientRect();var bub=ev.currentTarget;var r=bub.getBoundingClientRect();
@@ -980,9 +980,8 @@ h+='<div class="fl" style="margin-top:5px">上下文条数</div><input class="fi
 
 /* ===== 9: msg count prompt shown above the min/max ===== */
 h+='<div class="fl" style="margin-top:5px">每次发送消息数 (条)</div>';
+h+='<div style="display:flex;gap:5px;align-items:center;margin-bottom:8px"><input class="fi" id="cf-mmin" type="number" min="1" max="10" value="'+(ch.msgMin||1)+'" style="text-align:center"><span style="font-size:11px;color:var(--text3)">~</span><input class="fi" id="cf-mmax" type="number" min="1" max="10" value="'+(ch.msgMax||3)+'" style="text-align:center"></div>';
 h+='<div class="fg" style="margin-bottom:4px"><div class="fl">聊天条数提示词自定义 <span style="font-size:10px;color:var(--accent);cursor:pointer" onclick="expandCFField(\'cf-mcp\',\'消息条数提示词\')">展开</span></div><textarea class="fta" id="cf-mcp" rows="2" placeholder="留空使用默认格式">'+(ch.msgCountPrompt||'')+'</textarea></div>';
-
-h+='<div style="display:flex;gap:5px;align-items:center"><input class="fi" id="cf-mmin" type="number" min="1" max="10" value="'+(ch.msgMin||1)+'" style="text-align:center"><span style="font-size:11px;color:var(--text3)">~</span><input class="fi" id="cf-mmax" type="number" min="1" max="10" value="'+(ch.msgMax||3)+'" style="text-align:center"></div>';
 
 h+='<div class="fg" style="margin-top:8px;margin-bottom:4px"><div class="fl">总结发给AI的提示词 <span style="font-size:10px;color:var(--accent);cursor:pointer" onclick="expandCFField(\'cf-sump\',\'总结提示词\')">展开</span></div><textarea class="fta" id="cf-sump" rows="2">'+(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'</textarea></div>';
 h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><div class="fl" style="margin:0">自动总结</div><div class="tog-sm'+(ch.autoS?' on':'')+'" id="cf-as" onclick="this.classList.toggle(\'on\')"><div class="tok"></div></div></div>';
@@ -1443,7 +1442,7 @@ function showScriptMA(ev, idx) {
     ev.stopPropagation(); var mp=$('map'); var m = getSArc().msgs[idx];
     var acts='<div class="ma-i" onclick="copyScriptMsg('+idx+')">复制</div><div class="ma-i" onclick="editScriptMsg('+idx+')">编辑</div>';
     acts+='<div class="ma-i a" onclick="toggleScriptMsgHide('+idx+')">'+(m.hidden?'取消隐藏':'隐藏')+'</div>';
-    acts+='<div class="ma-i a" onclick="branchScriptMsg('+idx+')">分支</div><div class="ma-i d" onclick="enterMS(\'script\','+idx+');$(\'map\').classList.remove(\'on\')">多选</div>';
+    acts+='<div class="ma-i a" onclick="branchScriptMsg('+idx+')">分支</div><div class="ma-i d" onclick="enterMS(\'script\','+idx+');$(\'map\').classList.remove(\'on\')">多选</div><div class="ma-i d" onclick="if(confirm(\'确定删除吗？\'))delScriptMsg('+idx+')">删除</div>';
     mp.innerHTML=acts; mp.style.left='-9999px'; mp.style.top='0'; mp.classList.add('on');
     var pr=$('phone').getBoundingClientRect(); var bub=ev.currentTarget; var r=bub.getBoundingClientRect();
     var mw=mp.offsetWidth, mh=mp.offsetHeight; var x=r.left-pr.left+r.width/2-mw/2; var y=r.top-pr.top-mh-10;
