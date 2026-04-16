@@ -963,9 +963,9 @@ while(refCnt>0&&unrecv.length>0){var m=unrecv.shift();m.charRefund=true;var amt=
 while(rcvCnt>0&&unrecv.length>0){var m2=unrecv.shift();m2.charRecv=true;msgs.push({role:'system',content:(ch.nick||ch.name)+' 已领取你的红包 \u00A5'+m2.amount,time:ft()});rcvCnt--;}
 appendMsgAnim(ch,parsed,cb)}
 
-function checkAutoSum(ch){if(!ch.autoS)return;var arc=getCurArc(ch);var since=arc._lastSumAt||0;if(arc.msgs.length-since>=(ch.sumI||20))doAutoSum(ch)}
+function checkAutoSum(ch){if(!ch.autoS)return;var arc=getCurArc(ch);var since=arc._lastSumAt||0;var intv=ch.sumI||20;if(Math.floor(arc.msgs.length/intv)>Math.floor(since/intv))doAutoSum(ch)}
 function doAutoSum(ch){var p=D.apis[D.aApi];if(!p)return;var sp=p.sumOn?{url:p.sumUrl,key:p.sumKey,model:p.sumModel,temp:p.temp}:p;if(!sp.url)return;var arc=getCurArc(ch);var start=arc._lastSumAt||0;var toSum=arc.msgs.slice(start).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum)return;toast('触发自动总结...');var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'')+'\n\n[用户设定]\n'+(ch.chatUserPersona||D.user.sig||'无');
-callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],sp).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();arc._lastSumAt=start+(ch.sumI||20);save();toast('自动总结完成')}).catch(function(){})}
+callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],sp).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();arc._lastSumAt=arc.msgs.length;save();toast('自动总结完成')}).catch(function(){})}
 function manualSum(ch,from,to){var p=D.apis[D.aApi];if(!p){toast('请配置API');return}var sp=p.sumOn?{url:p.sumUrl,key:p.sumKey,model:p.sumModel,temp:p.temp}:p;if(!sp.url){toast('请配置总结API');return}var arc=getCurArc(ch);var toSum=arc.msgs.slice(from,to).filter(function(m){return m.role!=='system'}).map(function(m){return(m.role==='user'?getChatUN(ch):(ch.nick||ch.name))+': '+(m.content||'')}).join('\n');if(!toSum){toast('无内容');return}toast('总结中...');var sysP=(ch.sumPrompt||'请总结以下对话，提取关键情节、人物关系变化，200字以内第三人称叙述：')+'\n\n[角色设定]\n'+(ch.persona||'')+'\n\n[用户设定]\n'+(ch.chatUserPersona||D.user.sig||'无');callAPI([{role:'system',content:sysP},{role:'user',content:'[新增对话记录]\n'+toSum}],sp).then(function(r){arc.memory=(arc.memory?arc.memory+'\n\n':'')+r.trim();save();toast('总结完成');openCFS()}).catch(function(e){toast('失败:\n'+(e.message||e));document.querySelectorAll('.m-fab.ld').forEach(function(f){f.classList.remove('ld')})})}
 var _offlineTimers={};
 function startOfflineLoop(){D.chars.forEach(function(ch){resetOfflineTimer(ch)})}
@@ -1040,7 +1040,7 @@ if(oldN!==newN){D.moments.forEach(function(m){if(m.author===ch.id)m.authorName=n
 if(oldNick&&newNick&&oldNick!==newNick){var un=getChatUN(ch);getMsgs(ch).push({role:'system',content:un+'更改了'+ch.name+'的备注，从"'+oldNick+'"改为"'+newNick+'"',time:ft()})}
 _tav=null;_tuav=null;if($('chat-nm'))$('chat-nm').textContent=ch.nick||ch.name;save();closeOV('ovCFS');renderBub();renderML();renderSet();resetOfflineTimer(ch);toast('已保存')}
 function expChat(){var ch=gch(D.curChat);if(!ch)return;var b=new Blob([JSON.stringify(getMsgs(ch),null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(ch.nick||ch.name)+'_chat.json';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
-function expChatTxt(){var ch=gch(D.curChat);if(!ch)return;var un=getChatUN(ch);var cn=ch.nick||ch.name;var txt=getMsgs(ch).map(function(m){var r=m.role==='user'?un:m.role==='char'?cn:'[系统]';return r+': '+(m.content||'['+m.type+']')}).join('\n');var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(ch.nick||ch.name)+'_chat.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
+function expChatTxt(){var ch=gch(D.curChat);if(!ch)return;var un=getChatUN(ch);var cn=ch.name;var txt=getMsgs(ch).map(function(m){var r=m.role==='user'?un:m.role==='char'?cn:'[系统]';return r+': '+(m.content||'['+m.type+']')}).join('\n');var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=ch.name+'_chat.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('已导出')}
 var _pvMsgs=[];
 function openPV(){var ch=gch(D.curChat);if(!ch)return;_pvMsgs=buildPr(ch);filterPV();$('ovPV').classList.add('on')}
 function filterPV(){var q=($('pv-si')?$('pv-si').value:'').trim().toLowerCase();var el=$('pv-list');if(!el)return;var h='';var totalTok=0;var msgCount=0;var matchCount=0;
@@ -1568,8 +1568,8 @@ if(arc.syncOfflineCtx) {
 }
 function checkScriptAutoSum() {
     var arc = getSArc(); if(!arc.autoSum) return;
-    var since = arc._lastSumAt || 0; var interval = arc.sumInterval || 50;
-    if(arc.msgs.length - since >= interval) doScriptSum(false);
+        var since = arc._lastSumAt || 0; var interval = arc.sumInterval || 50;
+    if(Math.floor(arc.msgs.length/interval)>Math.floor(since/interval)) doScriptSum(false);
 }
 function buildScriptPr(ch, arc) {
     var sys = '';
@@ -1699,7 +1699,7 @@ function doScriptSum(manual) {
     var sysContent=basePr[0].content.replace(/\[(?:线上|线下)记忆摘要\]\n[\s\S]*?(?=\n\n\[|$)/g,'')+'\n\n[总结要求]\n'+arc.sumPrompt;
     callAPI([{role:'system',content:sysContent},{role:'user',content:'[需要总结的对话记录]\n'+toSum}], sp).then(function(r){
         arc.memory = (arc.memory ? arc.memory + '\n\n' : '') + r.trim();
-        if(!manual) arc._lastSumAt = start+arc.sumInterval;
+                if(!manual) arc._lastSumAt = arc.msgs.length;
         save(); openScriptSet(); toast('总结完成');
     }).catch(function(e){toast('失败:\n'+(e.message||e));document.querySelectorAll('.m-fab.ld').forEach(function(f){f.classList.remove('ld')})})
 }
